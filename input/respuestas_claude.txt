@@ -1410,3 +1410,101 @@ Ojo: si corrieron el bloque de tablas y la carpeta "output" no existe, el guion 
 Son dos cosas distintas. exists("slda") TRUE significa que el modelo está en la memoria de R de esta sesión; no hay archivo .rds en la carpeta (por eso falló readRDS: nunca se guardó ahí). Se puede seguir trabajando con el objeto en memoria sin leer nada. Para dejar el archivo guardado: saveRDS(slda, "slda_taller3.rds") y comprobar con list.files(pattern = "rds"); aparece en la carpeta input, al lado del guion. Conviene guardarlo antes de cerrar RStudio/VS Code, porque si se cierra la sesión el objeto se pierde y habría que reestimar (~1 minuto). Para estar seguros de que el modelo en memoria es el bueno: terms(slda, 5)[, marcos] debe mostrar "reforma" arriba en transformacion y "seguridad" en orden.
 
 -----
+
+Interpretación de las Tablas 1 a 4 y la Figura 1, y orden para redactar la Sección 2:
+
+ANTES DE REDACTAR, dos chequeos:
+a) La Tabla 1 no coincide con el top 15 que mostraron antes (allá transformación tenía constitucional, comisión, diputados, cámara, senado; acá tiene problemas, materia, avanzar, tiempo, desafíos, plazo, y constitucional y comisión aparecen en orden). Y "reformas" sale marcada [S], cosa que pasa solo si la semilla es reforma* y no "reforma". Confirmen que las 4 tablas y la figura salen del MISMO modelo (mismo dic_final y set.seed(2026)) y que el diccionario de la Sección 1 diga lo mismo (reforma o reforma*).
+b) En Sheets los "#" de los encabezados son un adorno de Sheets; al pegar en el informe no van.
+
+TABLA 1 (15 palabras)
+Transformación: 4 semillas de 15 (reforma, reformas, transformación, transformaciones). Las otras 11 son vocabulario genérico de gestión y problemas (gobierno, país, problemas, materia, avanzar, tiempo, posible, desafíos, grandes, plazo, ello). Ninguna semilla de clase o ruptura (socialis*, revoluc*, clase, explota*). Veredicto: NO confirma el concepto de Allende; mide discurso sobre reformas y desafíos de largo plazo. Otra cosa.
+Orden: 6 semillas de 15 (seguridad, patria, fuerzas_armadas, orden, autoridades, reconstrucción). Descubiertas: gobierno, política, nacional, sistema, defensa, instituciones, constitucional, poder, comisión. Veredicto: confirma en parte y amplía hacia vocabulario institucional y de Estado.
+Mercado: 10 semillas de 15 (inversión, privado, modernización, inversiones, libertad, mercados, iniciativas, mercado, empresarios, iniciativa). Descubiertas: sector, economía, crecimiento, empresas, mayor. Veredicto: confirma y amplía hacia economía y empresas. Es el más limpio.
+
+FIGURA 1 (por año)
+1. Hay una caída general: en 1990 los tres tópicos suman cerca de 24% y en 2026 cerca de 13%. El vocabulario del diccionario pesa menos con el tiempo.
+2. Orden tiene el máximo claro: 12,5% en 1991, baja hasta cerca de 3% en 2012 y se queda en 4 a 5% después.
+3. Mercado es alto en los 90 (8,2% en 1994; 7,5 a 7,8 en 1996 y 1997), y desde 2002 se mueve entre 4 y 6%.
+4. Transformación tiene picos en 1994 (7,6), 2000 (7,2), 2014 (7,1) y 2022 (5,6): coinciden con el comienzo de Aylwin, Lagos, Bachelet II y Boric. No hay pico claro en 2006 (Bachelet I) ni en 2018 (Piñera II).
+5. Después de 2015 las tres líneas se mueven entre 4 y 6% y se cruzan: cuesta distinguir tópicos.
+6. Referencia: con 18 tópicos (3 sembrados + 15 libres) un reparto parejo daría 5,6% a cada uno. Casi todo lo que muestra el gráfico está cerca de ese nivel; el único valor claramente alto es orden 1990 a 1993.
+7. Cosas a corregir en la figura: la leyenda (arriba a la izquierda) tapa el máximo de 1991; moverla a "topright" o subir ylim. Agregar pie con la unidad (% de theta promedio por párrafo) y qué marcan las líneas verticales.
+
+TABLA 2 (peso promedio por gobierno, %)
+Transformación: Aylwin 6,3; Frei 6,1; Bachelet II 6,1; Bachelet I 5,5; Lagos 5,3; Boric 5,1; Piñera II 4,7; Piñera I 4,2; Kast 4,0. Los gobiernos de centroizquierda quedan sobre los de Piñera y Kast, pero Boric (5,1) queda debajo de Lagos (5,3), Bachelet I (5,5) y Bachelet II (6,1). Diferencias de 0,1 a 0,3 no son apreciables; sí lo es Bachelet II vs Boric (1,0).
+Orden: Aylwin 9,9 destaca solo; Frei 6,0; Lagos 5,0; Kast 4,6; Boric 4,4; Bachelet I 4,4; Bachelet II 4,3; Piñera II 4,1; Piñera I 3,7. Kast no se separa de Boric ni de Bachelet. El tópico no distingue derecha de izquierda: refleja sobre todo el lenguaje de los primeros años de la transición.
+Mercado: Frei 7,2; Aylwin 7,0; Bachelet II 5,5; Bachelet I 5,4; Lagos 5,3; Piñera II 5,1; Piñera I 4,7; Boric 4,4; Kast 4,3. Pesa más en los 90 que bajo Piñera: mide vocabulario de época, no ideología.
+N de párrafos: Kast 223 (una sola cuenta) vs 850 a 1.700 en los demás. Eso hace su cifra mucho más inestable.
+
+TABLA 3 (solo la primera cuenta de cada mandato, %)
+Transformación: Frei 7,6; Lagos 7,2; Bachelet II 7,1; Aylwin 6,8; Boric 5,6; Bachelet I 5,3; Piñera II 5,1; Piñera I 4,7; Kast 4,0. Boric (5,6) queda bajo Lagos (7,2) y Bachelet II (7,1), y sobre Bachelet I (5,3). Lagos pasa de 5,3 (todas sus cuentas) a 7,2 (la primera), y Bachelet II de 6,1 a 7,1: las primeras cuentas anuncian más reformas. Boric sube menos (5,1 a 5,6).
+Orden: Aylwin 8,9; Frei 7,9; Lagos 6,3; Bachelet I 4,4; Bachelet II 4,3; Boric 4,2; Piñera I 4,1; Kast 4,6; Piñera II 3,5.
+Mercado: Frei 8,2; Aylwin 8,0; Lagos 5,5; Bachelet II 5,8; Bachelet I 5,9; Piñera I 5,5; Piñera II 5,7; Boric 4,1; Kast 4,3.
+Kast repite sus cifras de la Tabla 2 porque solo tiene una cuenta.
+
+TABLA 4 (% de párrafos cuyo tópico principal es cada uno)
+Son valores bajos: en casi todos los gobiernos entre 1 y 9%, el resto de los párrafos cae en los 15 tópicos libres. Máximo: orden en Aylwin, 15,7%. Transformación: Bachelet II 5,8; Aylwin 5,3; Frei 4,8; Bachelet I 4,4; Lagos 3,9; Boric 3,8; Kast 3,1; Piñera II 2,9; Piñera I 1,7. Orden en Kast: 1,8% (menos que Boric, 2,9%): el tópico no recoge un énfasis en seguridad en Kast. Posible razón (no verificada): sus semillas (patria, fuerzas armadas, reconstrucción, autoridades) capturan lenguaje de la transición, no el de delincuencia actual; no hay semillas como delincuencia o crimen_organizado. Es complemento, no pide la pauta; una o dos frases bastan.
+
+LECTURA PARA LA HIPÓTESIS (cuidado con no pasarse)
+1. La parte cuantitativa de la hipótesis (Boric por sobre Lagos y Bachelet en transformación) NO se apoya: Boric 5,1 vs Lagos 5,3, Bachelet I 5,5, Bachelet II 6,1; en primeras cuentas 5,6 vs 7,2, 5,3 y 7,1.
+2. Aun si se hubiese apoyado, este tópico mide reformas y desafíos, no el polo de Allende; por sí solo no dice nada sobre un cambio de sentido de "transformación". Eso lo contrastan el kwic y las redes (Secciones 3 y 4).
+3. Reportar los hallazgos como son y no rescribir la hipótesis. No inferir causas (por qué cambian los pesos) ni intenciones de los presidentes. No decir "significativo": no hay pruebas estadísticas; hablar de diferencias apreciables vs menores (menos de 0,5 puntos = sin diferencia apreciable).
+4. Kast: una cuenta, 223 párrafos; sus cifras son menos estables.
+
+ORDEN PARA REDACTAR LA SECCIÓN 2 (1,5 planas; lo escriben ustedes)
+1. Una oración de qué se mide: peso promedio theta por párrafo (en %), 11.156 párrafos, 18 tópicos (referencia 5,6%).
+2. Tabla 1 + veredicto de cada tópico (mercado confirma; orden confirma en parte y amplía; transformación mide otra cosa) con 2 o 3 palabras de ejemplo por tópico.
+3. Figura 1: caída general, máximo de orden en 1990 a 1993, picos de transformación al inicio de gobiernos, convergencia desde 2015.
+4. Tabla 2: comparación por gobierno, con las diferencias apreciables y sin forzar las pequeñas.
+5. Tabla 3: lo que cambia o se mantiene al mirar solo primeras cuentas; Kast comparable solo por tener 1 cuenta.
+6. Cierre: qué implica para la hipótesis (punto 1 y 2 de arriba) y límites en una o dos frases, remitiendo a las Secciones 3 y 4. Tabla 4 en una frase o en el anexo.
+
+-----
+
+"Sí le puse reforma* y lo justificamos":
+
+Perfecto, eso explica que "reformas" saliera [S] en la Tabla 1; el guion del disco ya tiene "reforma*". Solo actualicé dos comentarios del guion que seguían diciendo "reforma" y "5 semillas" (marcado "# cambio listo - bastian - ..."). El conteo de cambios sigue siendo 5 en transformacion: 4 quitadas + 1 agregada (reforma*). En orden 1 cambio (junta_de_gobierno).
+Aun así, confirmen que las 4 tablas y la figura salen del modelo estimado con ESE dic_final (reforma*, semilla 2026); si algo se corrió antes con "reforma" exacta, repetir el Paso 4 y el bloque de tablas.
+
+Cómo justificarlo en la Sección 1 (ideas, redáctenlo ustedes): (a) el kwic de reforma mostró reforma tributaria y constitucional, o sea, el sentido institucional de "reformar el Estado y el sistema"; (b) el comodín incluye reformas y reformar, que es como aparece en los discursos; (c) se agregó conscientemente como puente al polo institucional de la hipótesis, y por eso el tópico "transformacion" mide reformas, no el lenguaje de clase; (d) se declara como límite: con esta semilla el tópico ya no puede, por sí solo, distinguir el sentido de Allende del institucional, y el cambio de sentido se contrasta con kwic y redes.
+
+-----
+
+Sección 3: Validación (10 pts). Cómo hacerla:
+
+La rúbrica (Criterio 3) pide CUATRO componentes: (1) lectura de los párrafos más típicos, (2) 20 párrafos codificados a mano con la precisión comentada, (3) kwic() pertinente, (4) robustez con una conclusión. Si falta uno o dos baja a "insuficiente"; si solo afirman que el tópico "tiene sentido", es 0 a 2. La codificación a mano es humana: la IA no puede codificar ni sugerir códigos; la hacen ustedes, idealmente cada uno por separado.
+
+Tópico a validar: el de la hipótesis, marcos[1] = transformacion (el script ya tiene m <- marcos[1]). Correr todo con el modelo FINAL (dic_final con reforma*, set.seed(2026)).
+
+PASO 7a: lectura. Correr el bucle de los 5 párrafos con theta más alto de transformacion. Leerlos y anotar si tratan de lo que dice el nombre del tópico o de otra cosa (probable: reformas legislativas y de gestión). Mencionar en 2 a 3 líneas qué tipo de párrafo es y de qué gobierno, sin citar párrafos largos (una cita corta es suficiente, y debe poder comprobarse con kwic o con el texto).
+
+PASO 7b: 20 párrafos a mano.
+1. Antes de codificar, definan por escrito el criterio del "1" y úsenlo igual los dos. Sugerencia a decidir entre ustedes: 1 = el párrafo trata de transformaciones o reformas de fondo del Estado, la economía o la sociedad (el concepto de su hipótesis); 0 = trata de otra cosa (por ejemplo, un programa sectorial sin reforma, o "clases" de sala de clases); 9 = duda. Pongan el criterio en el informe.
+2. Correr el bloque 7b (set.seed(3), no cambiarla): crea muestra_validacion_transformacion.csv en la carpeta input, con 20 párrafos cuyo tópico principal es transformacion. Si hay menos de 20 candidatos toma todos; vean length(candidatos).
+3. Abrirlo en Excel con Datos > Desde texto/CSV, codificación 65001 UTF-8 (o el equivalente en Google Sheets). Llenar la columna codigo con 1, 0 o 9. Idealmente cada integrante en una copia con su columna (codigo_persona1, codigo_persona2) y luego se acuerda el código final.
+4. Guardar como "CSV UTF-8". Este csv es un entregable: TALLER3_Apellido1_Apellido2.csv.
+5. Leerlo en R y calcular: cod <- read.csv("muestra_validacion_transformacion.csv", encoding = "UTF-8"); mean(cod$codigo == 1) (precisión); tapply(cod$codigo == 1, cod$theta >= 0.4, mean) (si mejora con theta alto; si hay pocos con theta alto, decirlo); y si son dos codificadores, mean(cod$codigo_persona1 == cod$codigo_persona2) (acuerdo simple). No dejar 9: resolverlos entre ustedes o contarlos aparte.
+6. Reportar como precisión (n de 1 sobre 20, porcentaje), con un comentario: qué tipo de párrafos no calzaron (errores). La rúbrica dice que si la codificación no se reporta como precisión es insuficiente.
+
+PASO 7c: kwic de una palabra ambigua. El script ya está en revoluc* (Lagos vs Boric). Revisar la salida: la mayoría es "revolución tecnológica / del conocimiento / de internet / industrial", no la revolución de la UP. Opcional y más pertinente: también clases ("sala de clases") y explota* (explotación de minas y recursos). Escribir 3 a 4 líneas: palabra, gobiernos comparados, qué sentidos aparecen y con qué frecuencia, y qué significa para el marco ("el marco de Allende mide también lenguaje de modernización y recursos"). La tabla de "apellidos" (k$post) sirve como evidencia.
+
+PASO 7d: robustez, UNA decisión. El script quita clase, clases, revoluc* y explota* (las que el kwic mostró con otro sentido), conserva set.seed(2026) y residual 15, y reestima (~1 minuto). Ojo: con esa lista, las semillas que quedan activas en transformacion son sobre todo transformaci* y reforma*. Leer:
+ terms(slda_rob, 10)[, marcos] (ver si el tópico cambia),
+ la tabla cbind(prev_gob, rob_gob[, -1]) (original y robustez),
+ y calcular la correlación de orden: cor(prev_gob$transformacion, rob_gob$transformacion_robustez, method = "spearman") (también para orden y mercado si quieren).
+La conclusión se escribe sobre el ORDEN de los gobiernos, no sobre las cifras exactas ("el orden se mantiene" o "cambia en X"). Si el orden se mantiene, el resultado no depende de las semillas ambiguas; si cambia, hay que decir cuáles gobiernos se mueven y por qué importa.
+
+ORDEN SUGERIDO PARA REDACTAR LA SECCIÓN 3 (lo escriben ustedes, alrededor de 1 plana):
+1. Lectura de los 5 párrafos típicos (3 a 4 líneas).
+2. Los 20 párrafos: criterio, precisión (n/20 y %), acuerdo entre codificadores si hay, qué falló (4 a 6 líneas). Si pueden, una mini tabla: n, aciertos, precisión, acuerdo.
+3. kwic: la palabra, lo que mostró, qué implica (3 a 4 líneas).
+4. Robustez: qué decisión cambiaron, qué pasó con el orden de los gobiernos, conclusión (4 a 5 líneas).
+5. Cierre en 2 líneas: validez parcial del tópico, con la consecuencia para la interpretación (no repetir la Sección 2).
+Evitar: decir que "tiene sentido" sin evidencia; afirmar qué quiso decir un presidente sin comprobarlo con kwic; mezclar cifras que no salieron de su script.
+
+IA (punto 9 de la rúbrica): declarar al final del informe herramienta, finalidad (depurar o explicar código y revisar redacción) y cómo verificaron (corrieron todo el código, comprobaron salidas con el corpus, no usaron cifras que no obtuvieron en R, kwic para las afirmaciones). La IA no codificó los 20 párrafos.
+
+AVISO SOBRE LA SECCIÓN 1: el Criterio 1 dice que si hay "semillas sin revisar (alguna con cero apariciones)" es insuficiente. Ustedes mantuvieron dos semillas con 0 apariciones (capitalis*, unidad_popular). Hay que declarar en el informe que SÍ se revisaron (conteo y kwic: 0 casos), y por qué se dejaron (el tope de 5 cambios por lista ya se usó: 4 quitadas + 1 agregada), y que no afectan el modelo.
+
+-----

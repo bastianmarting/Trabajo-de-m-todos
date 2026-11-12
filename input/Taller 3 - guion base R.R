@@ -177,7 +177,7 @@ head(as.data.frame(kb)[, c("docname","pre","keyword","post")], 20)
 dic_final <- dictionary(list(
   transformacion = c(setdiff(as.list(dic_A)$transformacion,
                              c("imperialis*", "oligarq*", "gobierno_popular", "área_de_propiedad_social")),
-                     "reforma*"),
+                     "reforma"),
   orden          = setdiff(as.list(dic_A)$orden, "junta_de_gobierno"),
   mercado        = as.list(dic_A)$mercado))
 # cambio listo - bastian - *se dejó UNA sola definición de dic_final (había una segunda, con las listas transformacion y orden cruzadas, que pisaba a la correcta)*
@@ -194,12 +194,6 @@ set.seed(2026)                                   # >>> puede cambiarla en el Pas
 slda <- textmodel_seededlda(dtm, dictionary = dic, residual = 15)
 saveRDS(slda, "slda_taller3.rds")   # cambio listo - bastian - *el modelo con el diccionario final se guarda aparte, sin pisar slda_taller3.rds*   # guárdelo: lo necesitarán para reproducir sus cifras
 # Para volver a cargarlo otro día sin estimarlo de nuevo:
-getwd()
-setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")
-exists("slda")
-saveRDS(slda, "slda_taller3.rds")
-list.files(pattern = "rds")
-
 slda <- readRDS("slda_taller3.rds")
 
 
@@ -252,9 +246,11 @@ round(as.matrix(cuenta_dic) / total_gob * 1000, 1)[orden_gob, ]
 
 
 # ---- TABLAS Y FIGURA PARA LA SECCIÓN 2 del informe ----------------------
-# cambio listo - bastian - *se agregó el bloque que arma las tablas (15 palabras, por gobierno, primeras cuentas, proporciones) y la figura por año, y las exporta a ../output*
+# cambio listo - bastian - *se agregó el bloque que arma las tablas (15 palabras, por gobierno, primeras cuentas, proporciones) y la figura por año; cada una se guarda en ../output justo después de crearse (tabla1 a tabla4 .xlsx y el .png), más un Excel con todas*
 dir.create("../output", showWarnings = FALSE)
 nombres_marcos <- c("Transformación", "Orden", "Mercado")   # mismo orden que marcos
+#install.packages("writexl")      # solo la primera vez
+library(writexl)                  # cada tabla se guarda en ../output apenas se crea (xlsx: tildes bien, se copia a Word o Google Docs)
 
 # Tabla 1: 15 palabras más probables por tópico; [S] = semilla, sin marca = palabra descubierta
 top15 <- terms(slda, 15)[, marcos]
@@ -264,17 +260,20 @@ tabla15 <- sapply(marcos, function(mm)
   ifelse(top15[, mm] %in% semillas_por_marco[[mm]], paste0(top15[, mm], " [S]"), top15[, mm]))
 colnames(tabla15) <- nombres_marcos
 tabla15
+write_xlsx(as.data.frame(tabla15), "../output/tabla1_15_palabras.xlsx")   # guardada
 sapply(marcos, function(mm) sum(top15[, mm] %in% semillas_por_marco[[mm]]))   # cuántas de las 15 son semillas
 
 # Tabla 2: peso promedio por gobierno (%) y n° de párrafos
 tabla_gob <- cbind(prev_gob, as.vector(table(gob)))
 names(tabla_gob) <- c("Gobierno", nombres_marcos, "N° de párrafos")
 tabla_gob
+write_xlsx(tabla_gob, "../output/tabla2_por_gobierno.xlsx")   # guardada
 
 # Tabla 3: peso promedio en la primera cuenta de cada mandato (%)
 tabla_primeras <- cbind(prev_primeras, as.vector(table(gob[primeras])))
 names(tabla_primeras) <- c("Gobierno", nombres_marcos, "N° de párrafos")
 tabla_primeras
+write_xlsx(tabla_primeras, "../output/tabla3_primeras_cuentas.xlsx")   # guardada
 
 # Proporciones: % de párrafos de cada gobierno cuyo tópico PRINCIPAL es cada tópico sembrado
 prop_principal <- round(prop.table(table(gob, principal), 1)[, marcos] * 100, 1)
@@ -282,6 +281,7 @@ tabla_prop <- cbind(Gobierno = rownames(prop_principal), as.data.frame.matrix(pr
 names(tabla_prop) <- c("Gobierno", nombres_marcos)
 rownames(tabla_prop) <- NULL
 tabla_prop
+write_xlsx(tabla_prop, "../output/tabla4_proporciones.xlsx")   # guardada
 
 # Figura 1: peso promedio por año, con los cambios de gobierno
 png("../output/grafico_peso_por_anio.png", width = 1600, height = 900, res = 150)
@@ -292,18 +292,16 @@ matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1
 legend("topleft", nombres_marcos, col = colores, lty = 1, pch = 19, bty = "n")
 abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
        lty = 3, col = "grey60")
-dev.off()
+dev.off()   # figura guardada en ../output/grafico_peso_por_anio.png
 
-# Exportar a Excel (se abre bien con tildes y se copia a Word o Google Docs)
-#install.packages("writexl")      # solo la primera vez
-library(writexl)
+# Todas las tablas juntas en un solo Excel (una hoja por tabla)
 write_xlsx(list(palabras_15 = as.data.frame(tabla15), por_gobierno = tabla_gob,
                 primeras_cuentas = tabla_primeras, proporciones = tabla_prop),
            "../output/tablas_seccion2.xlsx")
 
 
 # ---- PASO 7 · Validar ------------------------------------------------------
-m <- marcos[1]   # >>> CAMBIAR AQUÍ <<<  el tópico que van a validar (marcos[1] o marcos[2]...)
+m <- marcos[1]   # >>> CAMBIAR AQUÍ <<<  el tópico que van a validar (marcos[1] o marcos[2]...) ---- Se validará transformaciones, esto se deja tal cual
 
 # a) Los 5 párrafos más típicos del tópico (theta más alto): ¿tratan de lo que dice su nombre?
 for (i in order(theta[, m], decreasing = TRUE)[1:5]) {
