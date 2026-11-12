@@ -190,7 +190,15 @@ top20 <- terms(slda, 20)
 for (m in marcos) cat("\n", m, "->", paste(setdiff(top20[, m], semillas), collapse = ", "), "\n")
 # Pregunta para el informe: ¿las palabras descubiertas confirman su concepto,
 # lo amplían o muestran que el tópico mide OTRA cosa?
-
+# Tabla hecha junto a la IA:
+top15 <- terms(slda, 15)[, marcos]
+semillas_por_marco <- lapply(marcos, function(m) featnames(dfm_select(dtm, pattern = dic[m])))
+names(semillas_por_marco) <- marcos
+tabla15 <- sapply(marcos, function(m)
+  ifelse(top15[, m] %in% semillas_por_marco[[m]], paste0(top15[, m], " [S]"), top15[, m]))
+tabla15
+sapply(marcos, function(m) sum(top15[, m] %in% semillas_por_marco[[m]]))
+write.csv(tabla15, "../output/tabla_15_palabras.csv", row.names = FALSE, fileEncoding = "UTF-8")
 
 # ---- PASO 6 · Medir: ¿cuánto pesa cada tópico, en quién y cuándo? -------
 class(slda)
@@ -204,7 +212,9 @@ prev_anio <- aggregate(theta[, marcos, drop = FALSE], by = list(anio = anio), FU
 prev_gob <- aggregate(theta[, marcos, drop = FALSE], by = list(gobierno = gob), FUN = mean)
 prev_gob[, marcos] <- round(prev_gob[, marcos] * 100, 1)
 prev_gob
-
+n_parrafos <- as.vector(table(gob))
+tabla_gob <- cbind(prev_gob, n_parrafos)
+tabla_gob
 # b) % de párrafos cuyo tópico PRINCIPAL es cada uno de sus tópicos
 principal <- topics(slda)
 round(prop.table(table(gob, principal), 1)[, marcos] * 100, 1)
@@ -232,6 +242,16 @@ legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
 abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
        lty = 3, col = "grey60")             # cambios de gobierno
 # Para guardarlo: en la pestaña Plots, Export > Save as Image...
+dir.create("../output", showWarnings = FALSE)
+png("../output/grafico_peso_por_anio.png", width = 1600, height = 900, res = 150)
+matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
+        col = colores, xlab = "Año de la cuenta pública",
+        ylab = "Peso promedio del tópico (%)",
+        main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
+legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
+abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
+       lty = 3, col = "grey60")
+dev.off()
 
 # d) Solo las PRIMERAS cuentas de cada mandato (la comparación más justa con Kast,
 #    que tiene una sola).

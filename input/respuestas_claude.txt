@@ -739,3 +739,100 @@ FUENTES
 3. Comunicado de la presentación del programa de gobierno (Apruebo Dignidad): https://www.infogate.cl/wp-content/uploads/2021/11/Comunicado_Presentacio_n-Programa-de-Gobierno.pdf
 
 -----
+
+PREGUNTA: ¿qué cambio acá? (su bloque del Paso 6 del guion)
+
+El código funciona tal como está. No hace falta cambiarlo para que corra; lo que sigue son mejoras para cumplir la rúbrica y evitar confusiones. No edité el guion.
+
+CAMBIOS RECOMENDADOS (por importancia)
+
+1. GRÁFICO 6c: FALTA EL TÍTULO (la rúbrica descuenta 1 punto por figura sin título o sin ejes)
+Reemplacen el matplot por:
+  matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
+          col = colores, xlab = "Año de la cuenta pública",
+          ylab = "Peso promedio del tópico (%)",
+          main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
+Los ejes ya tienen nombre; falta main.
+
+2. TABLA POR GOBIERNO 6a: AGREGAR EL N DE PÁRRAFOS
+Para poder decir en el informe que Kast tiene una sola cuenta (223 párrafos) y que los demás gobiernos tienen muchos más:
+  n_parrafos <- as.vector(table(gob))
+  cbind(prev_gob, n_parrafos)
+(El orden de table(gob) coincide con prev_gob porque ambos siguen el orden de orden_gob.)
+
+3. TABLA POR AÑO: AGREGAR LA COLUMNA DEL AÑO
+La línea que tienen (round(prev_anio[, marcos] * 100, 1)) muestra los valores sin el año. Cámbienla por:
+  tabla_anio <- cbind(anio = prev_anio$anio, round(prev_anio[, marcos] * 100, 1))
+  tabla_anio
+
+4. BORRAR LA LÍNEA REPETIDA
+prev_anio <- aggregate(...) aparece dos veces (arriba y en 6c). Basta con una; borren la de 6c o la de arriba.
+
+5. 6b: CÓMO LEER LA TABLA
+round(prop.table(table(gob, principal), 1)[, marcos] * 100, 1) da, para cada gobierno, el % de párrafos cuyo tópico principal es cada uno de sus tres tópicos. No suman 100% porque hay 15 tópicos libres que no se muestran (se dividen entre todos los tópicos). No es un error; anótenlo en el informe.
+
+6. 6d: AGREGAR EL N DE PÁRRAFOS TAMBIÉN
+  n_primeras <- as.vector(table(gob[primeras]))
+  cbind(prev_primeras, n_parrafos = n_primeras)
+Sirve para decir que la comparación de Kast (1 cuenta) con las primeras cuentas de los otros gobiernos (1 cuenta cada uno) es de tamaño comparable.
+
+7. 6e: NO LO CAMBIEN
+dfm_group(dfm_lookup(dtm, dic), groups = gobierno) y el cálculo por 1.000 palabras funcionan. Tienen que decir en el informe que es una medida distinta (solo las palabras del diccionario) y compararla con 6a. Pueden coincidir o no; las diferencias son parte de la interpretación.
+
+8. class(slda): déjenlo si quieren comprobar que el modelo existe; en el guion final se puede borrar.
+
+PARA GUARDAR EL GRÁFICO
+Plots > Export > Save as Image..., PNG, a la carpeta "output". O con código (ejecutar todo el bloque junto):
+  dir.create("../output", showWarnings = FALSE)
+  png("../output/grafico_peso_por_anio.png", width = 1600, height = 900, res = 150)
+  matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
+          col = colores, xlab = "Año de la cuenta pública",
+          ylab = "Peso promedio del tópico (%)",
+          main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
+  legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
+  abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
+         lty = 3, col = "grey60")
+  dev.off()
+
+SI QUIEREN QUE LO APLIQUE
+Díganme y los pongo en el guion con la marca "# cambio listo - bastian - *...*", como la vez anterior (recuerden el aviso de VS Code: si sale "Resolve save conflict", usen Revert).
+
+QUÉ MANDARME DESPUÉS DE CORRERLO
+Las salidas de: tabla_anio, prev_gob con n_parrafos, la tabla de tópico principal (6b), prev_primeras con n_parrafos, el contraste 6e y el gráfico (captura o PNG). Con eso interpretamos la Parte 2.
+
+-----
+
+PREGUNTA: ¿cómo guardo el gráfico?
+
+OPCIÓN 1 (la más simple, con el mouse en RStudio)
+1. Corran el gráfico (matplot, legend y abline) para que aparezca en la pestaña "Plots" (abajo a la derecha).
+2. En esa pestaña, clic en "Export" > "Save as Image...".
+3. Formato: PNG. Nombre: grafico_peso_por_anio. Carpeta: "output" (Trabajo-de-m-todos/output).
+4. Ajusten el tamaño (por ejemplo, ancho 1200 y alto 700) y clic en "Save".
+Si usan VS Code en vez de RStudio, el gráfico puede abrirse en una ventana aparte: ahí el botón de guardar está en esa ventana, o usen la Opción 2.
+
+OPCIÓN 2 (con código, siempre funciona)
+Corran este bloque COMPLETO de una vez (desde dir.create hasta dev.off()). Ya tiene el título:
+  dir.create("../output", showWarnings = FALSE)
+  png("../output/grafico_peso_por_anio.png", width = 1600, height = 900, res = 150)
+  matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
+          col = colores, xlab = "Año de la cuenta pública",
+          ylab = "Peso promedio del tópico (%)",
+          main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
+  legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
+  abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
+         lty = 3, col = "grey60")
+  dev.off()
+Qué hace: png() abre un archivo de imagen, las líneas siguientes dibujan en ese archivo (no en pantalla) y dev.off() lo cierra y lo guarda. Si olvidan dev.off(), el archivo queda vacío o dañado.
+Requisitos: la carpeta de trabajo debe ser "input" (getwd() termina en /input) y "colores", "prev_anio" y "marcos" deben existir. La ruta "../output" sube una carpeta y entra a "output".
+
+CÓMO VERIFICAR
+Abran la carpeta Trabajo-de-m-todos/output y vean que esté grafico_peso_por_anio.png. Ábranlo: deben verse el título, los dos ejes con nombre, la leyenda y las líneas punteadas.
+
+PARA EL INFORME
+Insértenlo en el Word o PDF (Insertar > Imagen) con un pie de figura: "Figura 1. Peso promedio de cada tópico sembrado, por año de cuenta pública". Ojo: el PNG solo no se entrega; va dentro del informe. Los archivos a subir son tres: el informe, el .R y el .csv de la muestra codificada.
+
+SI NO SE VE O SALE UN ERROR
+Cópienme el mensaje de error. Lo más probable: "no se puede abrir el archivo" (carpeta output inexistente: el dir.create la crea) o "figure margins too large" (el panel Plots es muy chico; con png() no pasa).
+
+-----
