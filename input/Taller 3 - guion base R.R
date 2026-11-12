@@ -40,15 +40,13 @@
 # ---- PASO 0 · Paquetes -------------------------------------------------
 # Los mismos de las sesiones 8, 9 y 10. Si falta alguno, quite el # y corra UNA vez:
 # install.packages(c("quanteda", "seededlda", "readtext", "quanteda.textplots"))
-# Garantiza que el paquete de lint esté disponible para diagnósticos del editor.
-if (!requireNamespace("lintr", quietly = TRUE)) {
-  install.packages("lintr", repos = "https://cloud.r-project.org")
-}
+# cambio listo - bastian - *se borró el bloque que instalaba lintr (no es parte del taller y puede fallar en otro computador)*
 library(quanteda)
 library(seededlda)
 library(readtext)
 library(quanteda.textplots)
-setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")
+# setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")   # cada integrante pone su ruta o usa Session > Set Working Directory
+# cambio listo - bastian - *se comentó el setwd con ruta absoluta para que el guion corra en cualquier computador*
 
 getwd()                                              # ¿estoy en "Taller 3"?
 length(list.files("Cuentas 1990-2026", pattern = "\\.txt$"))   # debe decir 37
@@ -132,9 +130,19 @@ for (m in marcos) {
   cat("\n", m, "\n")
   print(sort(colSums(dfm_select(dtm, pattern = dic[m])), decreasing = TRUE))
 }
-#Aparecen todas, no hay ninguna semilla con 0 apariciones.
+# cambio listo - bastian - *se borró el comentario "no hay ninguna semilla con 0 apariciones": era incorrecto, el bucle solo lista las palabras que SÍ aparecen*
 
 semillas <- featnames(dfm_select(dtm, pattern = dic))
+
+# cambio listo - bastian - *se agregó el conteo por semilla SIN el recorte de dfm_trim, para ver las que tienen 0 apariciones*
+dfm_sin_recorte <- dfm(toks_sin)
+conteo <- unlist(lapply(as.list(dic_A), function(v)
+  sapply(v, function(s) sum(colSums(dfm_select(dfm_sin_recorte, pattern = s))))))
+sort(conteo)
+# Resultado (transformacion): 6 semillas en 0 (capitalis*, imperialis*, oligarq*, unidad_popular,
+# gobierno_popular, área_de_propiedad_social) y 5 entre 1 y 4 (latifund*, nacionalización,
+# socialis*, liberación, monopol*); solo transformaci*, revoluc*, explota*, clase y clases tienen 5 o más.
+# Decisión: se mantiene el diccionario de las sesiones 9 y 10 sin cambios (la hipótesis pone a prueba esa regla).
 
 
 dfm_sin_recorte <- dfm(toks_sin)
@@ -252,8 +260,8 @@ write.csv(muestra, paste0("muestra_validacion_", m, ".csv"), row.names = FALSE,
 
 # c) Una palabra AMBIGUA en contexto (como "seguridad" en la Sesión 9)
 #    >>> CAMBIAR AQUÍ <<< la palabra y los gobiernos que quieran comparar
-palabra <- "seguridad"
-kwic(tokens_subset(toks, gobierno == "Aylwin"), palabra, window = 5) |> head(10)
+palabra <- "revoluc*"   # cambio listo - bastian - *la palabra ambigua pasa de "seguridad" a "revoluc*" (sale como revolución tecnológica, no la de la UP)*
+kwic(tokens_subset(toks, gobierno == "Lagos"), palabra, window = 5) |> head(10)   # cambio listo - bastian - *se compara Lagos (antes: Aylwin)*
 kwic(tokens_subset(toks, gobierno == "Boric"),  palabra, window = 5) |> head(10)
 # ¿Qué palabra viene justo después? Una tabla rápida de sus "apellidos":
 k <- kwic(toks, palabra, window = 2)
@@ -263,8 +271,13 @@ sort(table(k$post), decreasing = TRUE)[1:15]   # las dos palabras que siguen
 #    - otra semilla:         set.seed(1)
 #    - otros tópicos libres: residual = 10 o 20
 #    - quitar la semilla más dudosa de su diccionario
-set.seed(1)                                        # >>> CAMBIAR AQUÍ <<<
-slda_rob <- textmodel_seededlda(dtm, dictionary = dic, residual = 15)
+# cambio listo - bastian - *la decisión que cambia es el diccionario: se quitan las semillas que el kwic mostró en otro sentido (clase, clases, revoluc*, explota*); se mantiene set.seed(2026) para que cambie UNA sola decisión*
+dic_rob <- dictionary(list(
+  transformacion = setdiff(as.list(dic_A)$transformacion, c("clase", "clases", "revoluc*", "explota*")),
+  orden          = as.list(dic_A)$orden,
+  mercado        = as.list(dic_A)$mercado))
+set.seed(2026)
+slda_rob <- textmodel_seededlda(dtm, dictionary = dic_rob, residual = 15)
 terms(slda_rob, 10)[, marcos]
 rob_gob <- aggregate(slda_rob$theta[, marcos, drop = FALSE], by = list(gobierno = gob), FUN = mean)
 rob_gob[, marcos] <- round(rob_gob[, marcos] * 100, 1)
@@ -276,9 +289,9 @@ cbind(prev_gob, rob_gob[, -1, drop = FALSE])   # original y robustez, lado a lad
 # ---- PASO 8 · Coocurrencias: la red de una palabra clave -----------------
 # Las palabras que aparecen a 5 o menos posiciones de su palabra clave, en dos
 # gobiernos. El * incluye los compuestos (seguridad_pública, seguridad_ciudadana...).
-clave <- "seguridad*"                  # >>> CAMBIAR AQUÍ <<<  (p. ej., "famili*", "derechos_humanos", "libertad")
-gob_1 <- "Aylwin"                      # >>> CAMBIAR AQUÍ <<<
-gob_2 <- "Boric"                       # >>> CAMBIAR AQUÍ <<<
+clave <- "transformaci*"              # cambio listo - bastian - *la palabra clave pasa de "seguridad*" a "transformaci*" (la de la hipótesis)*
+gob_1 <- "Bachelet II"                 # cambio listo - bastian - *se compara Bachelet II (antes: Aylwin)*
+gob_2 <- "Boric"                       # (sin cambio)
 
 red_clave <- function(g, n = 25) {
   cerca <- tokens_select(tokens_subset(toks_sin, gobierno == g), clave, window = 5)

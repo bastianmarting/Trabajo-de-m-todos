@@ -466,3 +466,19 @@ CAMBIOS QUE NO HICE (siguen pendientes, son de ustedes)
 3. Elegir qué hacer con las semillas si deciden cambiar el diccionario principal (ahora se mantiene sin cambios).
 
 -----
+
+PREGUNTA: ¿qué hago cuando aparece esto? (captura de VS Code: "Taller 3 - guion base R.R (in file) ↔ (in Visual Studio Code) - Resolve save conflict")
+
+QUÉ ES
+VS Code avisa que el archivo cambió en el disco mientras ustedes lo tenían abierto con otra versión. Es mi edición: el lado izquierdo ("in file") es la versión del disco, con los "cambio listo - bastian"; el lado derecho ("in Visual Studio Code") es lo que tenían abierto en el editor, todavía con el bloque lintr y el setwd.
+
+QUÉ HACER
+1. Si no tenían cambios propios sin guardar en ese archivo: hagan clic en REVERT (la flecha curva hacia atrás, segundo botón de la barra de arriba, al lado del check). Eso descarta la versión del editor y carga la del disco, con mis cambios.
+2. NO hagan clic en el check (Overwrite / "Accept"): guardaría la versión vieja del editor encima y se pierden mis cambios.
+3. Si SÍ tenían cambios propios sin guardar en el archivo: antes de Revert, copien esos cambios a otro lado (por ejemplo, a un archivo nuevo), hagan Revert y después pegan sus cambios en el guion.
+4. Si no están seguros cuál botón es cuál, pasen el mouse por encima: el que dice "Revert" es el correcto.
+
+DESPUÉS
+Debería quedar solo la versión con las marcas "cambio listo". Verifiquen con Ctrl+F "cambio listo": deben salir 8 coincidencias. Cierren la pestaña de comparación y sigan con "ANTES DE CORRER" de la respuesta anterior.
+
+-----
