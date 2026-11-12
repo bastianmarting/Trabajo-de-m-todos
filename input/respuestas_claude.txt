@@ -1007,3 +1007,263 @@ QUÉ MANDARME PARA REVISAR
 3. Cuando lo tengan, su borrador de la sección. Les marco errores conceptuales, cifras que no calzan con las tablas y puntos de la rúbrica que faltan.
 
 -----
+
+PREGUNTA: debo poner las tablas, pero no sé dónde están y cómo las pongo en el texto
+
+DÓNDE ESTÁN LAS TABLAS
+Las tablas no son archivos todavía: son objetos que R crea cuando corren el código (aparecen en la consola y en el panel "Environment"). Son:
+1. tabla15: las 15 palabras con [S] (ya la guardaron en output/tabla_15_palabras.csv).
+2. tabla_gob: promedio por gobierno con n de párrafos.
+3. tabla_primeras: promedio en las primeras cuentas con n de párrafos.
+4. comparacion: todas las cuentas frente a la primera cuenta, lado a lado.
+Si cierran R, desaparecen; por eso conviene guardarlas en un archivo.
+
+PASO 1. CREARLAS (si no lo han hecho) Y GUARDARLAS EN UN SOLO EXCEL
+Corran esto después del Paso 6 (necesitan prev_gob, prev_primeras, gob, primeras, orden_gob y tabla15). Les evita el problema de los acentos, porque el .xlsx no tiene ese problema:
+
+  n_parrafos     <- as.vector(table(gob))
+  tabla_gob      <- cbind(prev_gob, n_parrafos)
+  n_primeras     <- as.vector(table(gob[primeras]))
+  tabla_primeras <- cbind(prev_primeras, n_parrafos = n_primeras)
+  comparacion    <- merge(prev_gob, prev_primeras, by = "gobierno", suffixes = c("_todas", "_primera"))
+  comparacion    <- comparacion[match(orden_gob, comparacion$gobierno), ]
+
+  install.packages("writexl")          # solo la primera vez
+  library(writexl)
+  dir.create("../output", showWarnings = FALSE)
+  write_xlsx(list(palabras_15      = as.data.frame(tabla15),
+                  por_gobierno     = tabla_gob,
+                  primeras_cuentas = tabla_primeras,
+                  comparacion      = comparacion),
+             "../output/tablas_seccion2.xlsx")
+
+Resultado: un archivo Trabajo-de-m-todos/output/tablas_seccion2.xlsx con 4 hojas, una por tabla, con acentos y ñ bien. (La carpeta de trabajo debe ser "input", como siempre.)
+Para ver cada tabla en R: escriban su nombre en la consola (tabla_gob, etc.) y Enter.
+
+PASO 2. PASARLAS A WORD
+1. Abran tablas_seccion2.xlsx (doble clic funciona bien).
+2. En la hoja que corresponda, seleccionen las celdas con datos (encabezado incluido) y copien (Ctrl+C).
+3. En Word, ubiquen el cursor donde va la tabla y peguen (Ctrl+V). Si sale con colores o bordes raros, usen el menú de pegar y elijan "Combinar formato" o "Mantener solo texto" y luego Insertar > Tabla > Convertir texto en tabla.
+4. Ajusten: fuente 9 o 10, ancho de columnas, bordes simples (arriba, bajo el encabezado y abajo). Que cada tabla quepa en el ancho de la página.
+5. Pongan el título. Lo más simple: clic derecho en la tabla > Insertar título (o Referencias > Insertar título), etiqueta "Tabla", y escriban el título ("Tabla 2. Peso promedio de cada tópico por gobierno (%)"). Para las figuras, la misma opción con la etiqueta "Figura".
+6. Citen la tabla en el texto con su número ("como muestra la Tabla 2...").
+
+PARA EL GRÁFICO
+Insertar > Imágenes > Este dispositivo, y elijan output/grafico_peso_por_anio.png. Ajusten al ancho de la página. Título debajo con la misma opción de "Insertar título" ("Figura 1. ...").
+
+DÓNDE VA CADA TABLA EN LA SECCIÓN 2 (ORDEN SUGERIDO)
+1. Tabla 1: palabras_15 (las 15 palabras con [S]).
+2. Figura 1: el gráfico por año.
+3. Tabla 2: por_gobierno.
+4. Tabla 3: primeras_cuentas (o comparacion, si quieren mostrar "todas" y "primera" lado a lado en una sola tabla; es más compacto para el espacio).
+Cada una va justo después del párrafo que la comenta, no al final.
+
+LA TABLA DE LAS 15 PALABRAS EN WORD
+Como el .xlsx tiene encabezado "transformacion, orden, mercado" en la primera fila (columnas), queda bien directo. Si en su Excel salieron "Columna1, 2, 3", arréglenlo escribiendo el nombre del tópico en la primera fila.
+
+SI R DA ERROR AL INSTALAR writexl
+Alternativa: copien la salida de la consola. Seleccionen la tabla impresa en la consola de R, copien y peguen en Word; luego usen Insertar > Tabla > Convertir texto en tabla, con espacios como separador. Es menos prolijo.
+
+-----
+
+PREGUNTA: lo estoy haciendo en documentos de Google
+
+Todo lo de R se mantiene igual (crear tablas_seccion2.xlsx con write_xlsx). Cambia solo cómo llevarlas a Google Docs.
+
+TABLAS A GOOGLE DOCS
+1. Suban output/tablas_seccion2.xlsx a Google Drive (Nuevo > Subir archivo) y ábranlo con Hojas de cálculo de Google. Los acentos y la ñ se ven bien.
+2. En la hoja que corresponda, seleccionen las celdas con datos (con el encabezado) y copien (Ctrl+C).
+3. En el documento, ubiquen el cursor y peguen (Ctrl+V). Docs pregunta: "Vincular a la hoja de cálculo" o "Pegar sin vincular". Elijan "Pegar sin vincular": queda una tabla normal, sin depender de la hoja.
+4. Ajusten la tabla: clic derecho > Propiedades de la tabla (alineación, ancho de columna, grosor de bordes) y bajen la fuente a 9 o 10 para que quepa.
+
+TÍTULOS Y NUMERACIÓN
+Docs no numera títulos de tablas ni figuras solo. Escriban a mano el título en una línea arriba de la tabla o abajo de la figura: "Tabla 1. Las 15 palabras más probables de cada tópico..." Usen la misma posición en todo el informe (por ejemplo, título arriba de las tablas y abajo de las figuras) y numeren en orden. En el texto, refiéranse por número.
+
+GRÁFICO
+Insertar > Imagen > Subir desde el ordenador > output/grafico_peso_por_anio.png. Seleccionen la imagen y ajusten el ancho al de la página (arrastrando una esquina). Debajo, la línea "Figura 1. ...".
+
+CONTROLAR EL LARGO (1 y media planas la Sección 2; 5 planas el informe)
+1. Herramientas > Recuento de palabras muestra páginas y palabras.
+2. Revisen márgenes y fuente: Archivo > Configuración de página. Si el curso no indicó formato, usen margen de 2,5 cm, fuente de 11 o 12, interlineado simple o 1,15. Si tienen una pauta de formato, siga esa.
+3. Las tablas y figuras cuentan para las planas.
+
+ENTREGA
+El informe se sube en Word o PDF, no como link de Google Docs. Cuando esté listo: Archivo > Descargar > Documento de Microsoft Word (.docx) o PDF (.pdf). Nombre: TALLER3_Apellido1_Apellido2.pdf (ver nombres en las instrucciones). Abran el archivo descargado y revisen que las tablas, la imagen y las tildes se vean bien antes de subir.
+
+TRABAJAR LOS DOS A LA VEZ
+Compartan el documento (botón "Compartir") con edición para ambos, y repártanse las secciones (como acordamos: uno hace la Parte 1 y 2, el otro 3 y 4; la 5 juntos). Con "Sugerencias" (arriba a la derecha) pueden comentar lo del otro sin pisarlo.
+
+-----
+
+PREGUNTA: así (captura de Google Docs, sección "Anexos", con Tabla 1, 2, 3 y 4)
+
+LO BUENO
+1. Las tablas se pegaron bien, con acentos, y tienen n de párrafos (la 2 y la 3). Cada una tiene su número.
+2. Kast sale igual en Tabla 2 y Tabla 3 (3,2; 7,0; 3,8; n = 223): es lo esperado, porque solo tiene una cuenta.
+
+LO QUE HAY QUE ARREGLAR
+
+A. UBICACIÓN: LAS TABLAS NO PUEDEN QUEDAR SOLO EN EL ANEXO
+Hoy están bajo "Anexos". La pauta dice: informe de 5 páginas máximo, MÁS un anexo, y la Parte 2 pide expresamente "un gráfico por año, una tabla por gobierno y la comparación con las primeras cuentas". Eso va en el cuerpo del informe, dentro de la Sección 2 (1 y media planas), no al final. El anexo obligatorio (sin puntaje) es: sessionInfo(), diccionario final completo, semilla y residual. Plan:
+1. En la Sección 2: Tabla 1 (15 palabras), Figura 1 (gráfico), Tabla 2 (por gobierno) y Tabla 3 (primeras cuentas).
+2. En el anexo: sessionInfo, diccionario, semilla (2026), residual (15). Si quieren, la Tabla 4 también.
+
+B. LA TABLA 4 ES REDUNDANTE
+La Tabla 4 repite los datos de la 2 y de la 3 lado a lado. Quítenla del cuerpo (o déjenla en el anexo). Además tiene los encabezados cortados ("mercado_t odas", "transformacion_primera"). Si la dejan, renombren columnas.
+
+C. ENCABEZADOS
+Cambien los nombres crudos de R por nombres legibles:
+1. gobierno > Gobierno
+2. transformacion > Transformación (con tilde)
+3. orden > Orden; mercado > Mercado
+4. n_parrafos > N° de párrafos
+En Tabla 3, aclaren que son solo las primeras cuentas (en el título).
+
+D. TÍTULOS CON MÁS INFORMACIÓN
+Hoy dicen solo "Tabla 1:", "Tabla 2:". Cada título debe decir qué muestra y la unidad. Ejemplo de forma: "Tabla 2. Peso promedio de cada tópico por gobierno (% de theta por párrafo)". Y en Tabla 1, una nota: "[S] = semilla del diccionario; sin marca = palabra descubierta". En Tabla 3: "Solo la primera cuenta de cada mandato".
+
+E. LA TABLA 1 SE PARTE ENTRE PÁGINAS
+La última fila (servicios, prevención, eficiencia) pasó a la página siguiente. Soluciones: bajar la fuente a 8 o 9, reducir el espacio sobre y bajo el texto, o poner la tabla en una página donde quepa. En Docs: clic derecho en la tabla > Propiedades de la tabla > marcar "Evitar que las filas se dividan entre páginas", y mantener juntas con el título. Al pasar al cuerpo del informe, la tabla entera debe caber sin cortarse.
+
+F. REVISIÓN MENOR
+La Tabla 1 tiene bien la marca [S] en inversiones (la captura muestra "inversiones [S]"). Revisen que todas las palabras estén completas (en una captura anterior leí "inversions").
+
+LO QUE MUESTRAN LAS TABLAS (lectura mía de la captura; verifíquenla con su R antes de usarla)
+Pesos promedio, Tabla 2 (todas las cuentas):
+1. Transformación: Aylwin 7,8; Frei 7,5; Bachelet II 5,4; Bachelet I 4,8; Boric 4,5; Lagos 4,3; Piñera I 4,0; Piñera II 3,6; Kast 3,2.
+2. Orden: Kast 7,0; Boric 6,6; Aylwin 6,4; Piñera II 6,0; Piñera I 5,9; Frei 4,3; Bachelet II 4,3; Lagos 4,1; Bachelet I 4,0.
+3. Mercado: Aylwin 7,0; Frei 6,9; Bachelet II 5,6; Bachelet I 5,4; Lagos 5,1; Piñera I 4,9; Piñera II 4,6; Boric 4,2; Kast 3,8.
+Primeras cuentas, Tabla 3: Transformación: Frei 8,4; Aylwin 7,8; Bachelet II 6,4; Lagos 5,1; Bachelet I 5,0; Boric 5,0; Piñera I 4,6; Piñera II 3,4; Kast 3,2.
+
+QUÉ IMPLICA PARA SU HIPÓTESIS (importante)
+1. La parte de "cantidad" de la hipótesis decía: Boric tiene más peso del tópico "transformacion" que Lagos y Bachelet. Los datos NO la apoyan. En la Tabla 2 Boric (4,5) está apenas sobre Lagos (4,3) y bajo Bachelet I (4,8) y Bachelet II (5,4). En la Tabla 3 (primeras cuentas) Boric (5,0) queda bajo Lagos (5,1), igual a Bachelet I (5,0) y bajo Bachelet II (6,4). Las diferencias con Lagos son de 0,2 y 0,1 puntos: no hay una diferencia apreciable.
+2. Eso está bien y se puede reportar tal cual: la rúbrica evalúa la calidad del análisis, no la confirmación. Lo que NO deben hacer es reescribir la hipótesis ahora para que calce con estos resultados. Mantengan la hipótesis como la formularon (con la nota de transparencia que acordamos) y digan que no se apoya.
+3. El tópico "transformacion" pesa más en Aylwin y Frei (los años 90). Esto es consistente con que el tópico mide programas y administración pública (por ejemplo, los párrafos de pueblos indígenas, regiones y desarrollo regional que salieron en el Paso 7a), no con el lenguaje de 1971 a 1973. Cuidado: es una lectura, no una explicación causal.
+4. "Orden": Kast tiene el valor más alto (7,0), pero con una sola cuenta (n = 223). Boric (6,6) y Aylwin (6,4) están muy cerca de él, y Boric queda sobre Piñera I (5,9) y Piñera II (6,0). Es decir, el tópico "orden" (que en su modelo mide seguridad y delito) no separa claramente a Kast de los demás. Mencionen la cautela y que el orden no distingue derecha de izquierda.
+5. "Mercado": pesa más en Aylwin y Frei (7,0 y 6,9) que en Piñera I y II (4,9 y 4,6), lo contrario de lo que se esperaría si "mercado" fuera un rótulo de derecha. Recuerden que mide vocabulario (inversión, modernización, empresas), y la modernización del Estado y la inversión eran temas centrales de los años 90. No lo presenten como "ideología".
+6. Lo que no pueden concluir: por qué cambian los pesos (causas), ni qué querían decir los presidentes.
+
+PUNTO DE CALIDAD PARA LA SECCIÓN 2
+Comparen siempre con promedios (como hicieron) y den la diferencia en puntos porcentuales. Para decir que un gobierno "pesa más" que otro, la diferencia debe ser apreciable (la prueba de robustez del Paso 7d dice si el orden se mantiene). Con diferencias de 0,1 o 0,2 puntos, digan "sin diferencia apreciable".
+
+QUÉ SIGUE
+1. Mover las tablas al cuerpo de la Sección 2 (Tabla 1, Tabla 2, Tabla 3) y el gráfico (Figura 1); dejar el anexo para sessionInfo, diccionario, semilla y residual.
+2. Mandarme el gráfico por año para revisar su lectura.
+3. Escribir ustedes los párrafos (veredicto de cada tópico, lectura del gráfico, tablas) y mandármelos para revisar.
+
+-----
+
+Títulos para las tablas y la figura (Sección 2):
+
+Tabla 1. Las 15 palabras más probables de cada tópico sembrado (transformación, orden, mercado). [S] = semilla del diccionario; sin marca = palabra descubierta por el modelo.
+
+Figura 1. Peso promedio anual de cada tópico sembrado en las Cuentas Públicas, 1990-2026. Las líneas verticales marcan los cambios de gobierno.
+
+Tabla 2. Peso promedio de cada tópico por gobierno, 1990-2026 (promedio del peso theta por párrafo, en %). N° de párrafos = total analizado en cada gobierno.
+
+Tabla 3. Peso promedio de cada tópico en la primera cuenta pública de cada mandato (promedio por párrafo, en %). Kast coincide con la Tabla 2 porque tiene una sola cuenta.
+
+Si dejan la comparación en el anexo: Tabla A1. Peso promedio por gobierno, todas las cuentas vs. primera cuenta del mandato (en %).
+
+Nota: confirmen en su R si los valores están en % o en proporción, y ajusten "en %" según eso.
+
+-----
+
+Revisión de la Sección 1 (pregunta, hipótesis y semillas):
+
+Lo que está bien: la pregunta A está clara, la hipótesis habla de un desplazamiento de sentido (no solo de cantidad) y tiene dos anclajes teóricos (Baño 2020 y Hurtado Bodell et al. 2026), sin apoyarse en lo que ya sabemos de los datos.
+
+Cambios a hacer:
+1. Hipótesis operable. Falta decir qué debería verse en los datos si es cierta y qué la refutaría. Ejemplo de estructura: "Esperamos que en Lagos, Bachelet I y II y Boric, 'transformaci*' aparezca más cerca de vocabulario institucional (reforma, Estado, ley, gestión) que de vocabulario de clase o ruptura (clase, revolución, explotación). Si el kwic y los coocurrentes muestran lo contrario, la hipótesis se desmiente." Definan "centroizquierda reciente" con los gobiernos concretos.
+2. Falta el polo de Allende. La hipótesis dice "desde un encuadre propio de Allende" pero no hay fuente de qué lenguaje era ese. Citen una fuente (literatura o los textos 1971 a 1973 que vieron en clase), sin inventar la cita; que esté en referencias.bib.
+3. Frases que sobran o exageran: "Esta hipótesis surge de la ausencia de una alternativa verdaderamente revolucionaria en los tiempos en que vivimos" es opinión; sáquenla o reemplácenla por el argumento de Baño. "Tal como lo demuestra" cámbienlo por "es consistente con". "Nos permite demostrar empíricamente" cámbienlo por "contrastar". "Ligadas al ámbito administrativo" es vago; digan reformas legales e institucionales y ya. "Palabra o vocablo": una sola.
+4. Una línea sobre los otros dos marcos (orden, mercado): para qué están (contraste/control) y qué predicen.
+5. Chequeen que Baño 2020 (año y título) y Hurtado Bodell 2026 estén bien en referencias.bib.
+6. Nota de transparencia: el diccionario y los kwic se exploraron antes de la medición final; dígalo en una línea.
+
+Lo que falta poner (el "Diccionario:" quedó vacío):
+- El dic_A final, un marco por fila (transformación, orden, mercado) con sus semillas, y una línea de justificación por marco.
+- Los cambios hechos tras el conteo y el kwic (hasta 5), cada uno con su razón. Ejemplo: clase/clases, revoluc* y explota* con sentido tecnológico, económico o minero; subversi* y marxis* con 1 aparición.
+- Que la semilla (2026) y el residual (15) van en el anexo.
+
+Largo: la pauta pide media plana. Con el diccionario en tabla, recorten el segundo párrafo a 3 o 4 líneas.
+Pásenme la versión corregida y la reviso.
+
+-----
+
+Aclaración: qué hicimos con el diccionario (corrige mi respuesta anterior, donde asumí que había cambios):
+
+El diccionario final es el dic_A original, sin cambios. Lo que sí hicimos:
+1. Contamos las apariciones de cada semilla en el texto original (sin el recorte de dfm_trim). Resultado: 4 compuestos sin ninguna mención, y subversi* y marxis* con 1 aparición cada una.
+2. Leímos con kwic clase, clases, revoluc* y explota*. Encontramos sentidos distintos al de la Unidad Popular: revolución tecnológica o económica (cambio de siglo), explotación minera y de recursos naturales.
+3. Decidimos no sacarlas del diccionario principal. Las probamos en una corrida de robustez (Paso 7d, dic_rob sin esas cuatro, misma semilla 2026 y residual 15) para ver si cambia el orden entre gobiernos.
+4. Hicimos kwic de "transformaci*" en Boric y, en el Paso 7c, de revoluc* en Lagos vs Boric.
+
+Para la Sección 1 entonces: "diccionario final = dic_A sin modificaciones; el conteo y el kwic mostraron ambigüedad en 4 semillas y la manejamos con una corrida de robustez, no cambiando el diccionario". Los resultados de 7d van en la Sección 3 (validación) o 5.
+
+Sobre el punto 1 de la hipótesis (hacerla contrastable): lo que hemos hecho hasta ahora mide el peso del tópico "transformacion" por gobierno, y eso no prueba por sí solo un cambio de sentido. El top 15 de ese tópico no tiene semillas (nacional, gobierno, recursos, desarrollo, regiones, programas...), es vocabulario administrativo general, y sus párrafos más típicos son de Aylwin. Para contrastar el sentido hay que apoyarse en el kwic de "transformaci*" y en la red de coocurrencias (Paso 8, Bachelet II vs Boric). Eso aún falta, así que la hipótesis debe plantear la predicción en esos términos (vecinos de "transformaci*"), no en el peso del tópico.
+
+-----
+
+¿Hay que cambiar el diccionario obligatoriamente?
+
+No. La instrucción dice "hasta 5 cambios" y "usar los cambios solo si el kwic lo justifica". Es un máximo, no un mínimo; cero cambios es válido si lo justifican. Lo que sí es obligatorio es el diccionario final en el anexo (el dic_A tal como quedó) y que la Sección 1 diga si cambió o no y por qué.
+
+Dos caminos, ambos defendibles:
+A) Dejarlo igual y decir: el kwic mostró que clase, clases, revoluc* y explota* tienen otros sentidos, pero se mantuvieron en el modelo principal y se probó la robustez sin ellas (7d).
+B) Sacarlas del diccionario, reestimar (Pasos 2 a 4, set.seed(2026), residual 15) y guardar el modelo nuevo.
+
+Si eligen A, no reestiman nada. Si eligen B, todas las tablas y el gráfico cambian y hay que rehacerlos. Como ya tienen tablas y gráfico listos, A es lo más simple, con la robustez como respaldo. Revisen en la pauta del Taller 3 que no exija el cambio explícitamente; en lo que me pasaron no lo exige.
+
+-----
+
+Cambio de diccionario en el R (1 solo cambio) y análisis para revisar:
+
+CAMBIO ÚNICO: se quita "explota*" del marco transformacion. Todo lo demás del dic_A queda igual (revoluc*, clase y clases se mantienen).
+Justificación: el kwic de explota* mostró explotación minera y de recursos naturales, no la explotación de clase de la UP. Además, el top 15 del tópico anterior tenía "recursos" y "desarrollo", coherente con que esa semilla arrastre vocabulario de recursos (es una pista, no una prueba). Por qué solo esta: es la de sentido más ajeno al marco. revoluc* tiene un sentido tecnológico pero sigue siendo palabra clave del marco, y clase/clases se usan en el kwic de la Sección 3; se discuten en el informe sin quitarlas.
+
+Qué cambia en el diccionario:
+- transformacion pasa de 16 a 15 semillas. Las que tenían 5 o más apariciones pasan de 5 (transformaci*, revoluc*, explota*, clase, clases) a 4.
+- orden (12) y mercado (11) no cambian.
+- El resto de las semillas ya tenía 0 a 4 apariciones, así que el marco depende casi por completo de transformaci*, revoluc*, clase y clases. Eso va como límite en la Sección 5.
+
+Cambios en el R (todos marcados "# cambio listo - bastian - ..."):
+1. dic_final definido justo antes del Paso 4 (después del kwic), con dic <- dic_final, marcos y semillas recalculadas.
+2. El modelo nuevo se guarda como slda_taller3_v2.rds. El anterior (slda_taller3.rds, con dic_A) NO se pisa, porque se usa en la comparación.
+3. Paso 6f nuevo: compara antes y después (semillas, top 15 de transformacion con palabras que entran y salen, peso por gobierno, correlación del peso por párrafo, párrafos que cambian de tópico principal). Ese es el análisis que hay que correr y mirar.
+4. Robustez 7d: como el diccionario ya cambió, la decisión que se cambia ahora es la semilla (set.seed(1) en vez de 2026), con el dic_final.
+5. Tablas que no van: se quitó la comparación (Tabla 4) del xlsx, tabla_anio y un bloque repetido de n_parrafos. Se arregló el error de tipeo "aas.vector" y un n_primeras que se usaba antes de crear "primeras" (daba error).
+
+Qué tienen que hacer ahora:
+- Correr desde el Paso 3 hasta el 7d en orden (el modelo tarda alrededor de 1 minuto por corrida). Todas las tablas y el gráfico cambian: hay que rehacer Tabla 1, 2 y 3, la Figura 1 y el xlsx.
+- Leer el Paso 6f: si el top 15 de transformacion casi no cambia y la correlación es alta (cercana a 1), el diccionario es estable y lo reportan así. Si cambia mucho, reportan qué entra y sale.
+- Sección 1: diccionario final = dic_A menos explota*, con la justificación de arriba. Sección 3 y 5: robustez con otra semilla.
+- Ojo: los números que les di antes (Boric 4,5, Lagos 4,3...) eran del modelo anterior y ya no valen; usen los nuevos.
+- Si el modelo anterior no está en la carpeta, 6f falla; no borren slda_taller3.rds.
+
+-----
+
+ANULADO: el cambio de diccionario (quitar explota*) y los cambios al guion de la respuesta anterior quedan sin efecto; el usuario se arrepintió. El diccionario final sigue siendo el dic_A sin modificaciones (opción A: dejarlo igual y justificar con el conteo, el kwic y la robustez del Paso 7d original, que quita clase, clases, revoluc* y explota*).
+
+Estado del guion en el disco (revisado en este momento): no tiene dic_final, ni slda_taller3_v2, ni el Paso 6f. Pero tampoco tiene el código de tabla15, tabla_gob y el png del gráfico que sí estaba en la versión de 20.854 bytes. Esa versión previa está guardada en el contenedor por si quieren restaurarla; no la escribí en el disco para no pisar lo que hicieron.
+
+-----
+
+Quitar las semillas que no se mencionan (nuevo diccionario):
+
+Cambio hecho en el R (marcado "# cambio listo - bastian - ..."): dic_final = dic_A menos 5 semillas de transformacion con 0 apariciones: capitalis*, imperialis*, oligarq*, gobierno_popular, área_de_propiedad_social. Se deja unidad_popular (término emblemático; su kwic dio 0 casos) porque la regla es máximo 5 cambios por lista y son 6 semillas en 0. Si prefieren sacar las 6, justifíquenlo en el informe como excepción, o dejen la que prefieran.
+Otros cambios en el guion: dic <- dic_final y marcos/semillas recalculadas justo antes del Paso 4; el modelo nuevo se guarda como slda_taller3_v2.rds (no pisa slda_taller3.rds); dic_rob (Paso 7d) ahora parte de dic_final; el comentario "se mantiene sin cambios" cambió a la decisión nueva.
+
+Dato clave para el informe: quitar semillas con 0 apariciones NO cambia el modelo. Esas palabras no están en la matriz, así que el modelo ya no las veía. Lo mismo pasa con las de 1 a 4 apariciones: dfm_trim(min_termfreq = 5) las saca de la matriz. Es decir, antes y después el marco transformacion actúa solo con transformaci*, revoluc*, explota*, clase y clases (+ unidad_popular que no pesa). Con la misma semilla (2026) el resultado debería ser igual al anterior. El cambio limpia el diccionario y lo hace honesto, pero no mueve las tablas ni el gráfico. Para confirmar, corran Pasos 3 a 4 y comparen terms(slda, 15) con el anterior; si sale igual, no hace falta rehacer tablas.
+Límite para la Sección 5: el marco depende casi solo de 5 palabras.
+Revisen también el conteo de orden y mercado (sort(conteo) completo): si ahí hay semillas en 0 (por ejemplo junta_de_gobierno), cada lista tiene su propio máximo de 5 cambios.
+
+Aviso: la versión del guion que está en el disco no tiene el código de tabla15, tabla_gob ni el png del gráfico (sí lo tenía la versión de 20.854 bytes). No lo restauré.
+
+-----
+
+Conflicto de guardado en VS Code (captura "Resolve save conflict"):
+
+A la izquierda está el archivo en el disco, con mi cambio (dic_final, en rojo). A la derecha está la versión que tienen abierta en el editor, sin ese cambio. Para quedarse con mi cambio: botón Revert (la flecha curva, arriba a la derecha de la barra de la comparación). NO Overwrite, porque pisa el disco con la versión de la derecha y se pierde dic_final. Después de Revert, no escriban nada hasta ver el bloque "cambio listo - bastian - se quitan 5 semillas..." antes del Paso 4.
+
+-----

@@ -45,7 +45,7 @@ library(quanteda)
 library(seededlda)
 library(readtext)
 library(quanteda.textplots)
-setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")   # cada integrante pone su ruta o usa Session > Set Working Directory
+# setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")   # cada integrante pone su ruta o usa Session > Set Working Directory
 # cambio listo - bastian - *se comentó el setwd con ruta absoluta para que el guion corra en cualquier computador*
 
 getwd()                                              # ¿estoy en "Taller 3"?
@@ -142,7 +142,7 @@ sort(conteo)
 # Resultado (transformacion): 6 semillas en 0 (capitalis*, imperialis*, oligarq*, unidad_popular,
 # gobierno_popular, área_de_propiedad_social) y 5 entre 1 y 4 (latifund*, nacionalización,
 # socialis*, liberación, monopol*); solo transformaci*, revoluc*, explota*, clase y clases tienen 5 o más.
-# Decisión: se mantiene el diccionario de las sesiones 9 y 10 sin cambios (la hipótesis pone a prueba esa regla).
+# Decisión: se quitan 4 semillas con 0 apariciones y se agrega 'reforma' a transformacion: 5 cambios en total (ver dic_final antes del Paso 4).
 
 
 dfm_sin_recorte <- dfm(toks_sin)
@@ -171,13 +171,25 @@ head(as.data.frame(kb)[, c("docname","pre","keyword","post")], 20)
 
 kb <- kwic(tokens_subset(toks, gobierno == "Boric"), "transformaci*", window = 6)
 head(as.data.frame(kb)[, c("docname","pre","keyword","post")], 20)
+# cambio listo - bastian - *5 cambios en transformacion: se quitan 4 semillas con 0 apariciones en el corpus (imperialis*, oligarq*, gobierno_popular, área_de_propiedad_social; no pueden medir nada) y se agrega "reforma"; se mantienen capitalis* y unidad_popular*
+dic_final <- dictionary(list(
+  transformacion = c(setdiff(as.list(dic_A)$transformacion,
+                             c("imperialis*", "oligarq*", "gobierno_popular", "área_de_propiedad_social")),
+                     "reforma"),
+  orden          = as.list(dic_A)$orden,
+  mercado        = as.list(dic_A)$mercado))
+dic <- dic_final
+marcos <- names(dic)
+semillas <- featnames(dfm_select(dtm, pattern = dic))
+dic
+
 # ---- PASO 4 · Estimar el modelo de tópicos semillado --------------------
 # residual = 15: además de sus tópicos sembrados, 15 tópicos libres para todo
 # lo demás (salud, vivienda, política exterior...). Con pocos tópicos libres,
 # los sembrados se "tragan" palabras ajenas. Tarda alrededor de 1 minuto.
 set.seed(2026)                                   # >>> puede cambiarla en el Paso 7d
 slda <- textmodel_seededlda(dtm, dictionary = dic, residual = 15)
-saveRDS(slda, "slda_taller3.rds")   # guárdelo: lo necesitarán para reproducir sus cifras
+saveRDS(slda, "slda_taller3_v2.rds")   # cambio listo - bastian - *el modelo con el diccionario final se guarda aparte, sin pisar slda_taller3.rds*   # guárdelo: lo necesitarán para reproducir sus cifras
 # Para volver a cargarlo otro día sin estimarlo de nuevo:
 # slda <- readRDS("slda_taller3.rds")
 
@@ -190,68 +202,31 @@ top20 <- terms(slda, 20)
 for (m in marcos) cat("\n", m, "->", paste(setdiff(top20[, m], semillas), collapse = ", "), "\n")
 # Pregunta para el informe: ¿las palabras descubiertas confirman su concepto,
 # lo amplían o muestran que el tópico mide OTRA cosa?
-# Tabla hecha junto a la IA:
-top15 <- terms(slda, 15)[, marcos]
-semillas_por_marco <- lapply(marcos, function(m) featnames(dfm_select(dtm, pattern = dic[m])))
-names(semillas_por_marco) <- marcos
-tabla15 <- sapply(marcos, function(m)
-  ifelse(top15[, m] %in% semillas_por_marco[[m]], paste0(top15[, m], " [S]"), top15[, m]))
-tabla15
-sapply(marcos, function(m) sum(top15[, m] %in% semillas_por_marco[[m]]))
-write.csv(tabla15, "../output/tabla_15_palabras.csv", row.names = FALSE, fileEncoding = "UTF-8")
+
 
 # ---- PASO 6 · Medir: ¿cuánto pesa cada tópico, en quién y cuándo? -------
-class(slda)
 theta <- slda$theta
 gob   <- factor(docvars(dtm, "gobierno"), levels = orden_gob)
 anio  <- docvars(dtm, "anio")
-prev_anio <- aggregate(theta[, marcos, drop = FALSE], by = list(anio = anio), FUN = mean)
-  round(prev_anio[, marcos] * 100, 1)       # la tabla que alimenta el gráfico
 
 # a) Peso promedio (theta, en %) por gobierno
 prev_gob <- aggregate(theta[, marcos, drop = FALSE], by = list(gobierno = gob), FUN = mean)
 prev_gob[, marcos] <- round(prev_gob[, marcos] * 100, 1)
 prev_gob
-n_parrafos <- as.vector(table(gob))
-tabla_gob <- cbind(prev_gob, n_parrafos)
-tabla_gob
+
 # b) % de párrafos cuyo tópico PRINCIPAL es cada uno de sus tópicos
 principal <- topics(slda)
 round(prop.table(table(gob, principal), 1)[, marcos] * 100, 1)
 
-# c) Gráfico por año (una línea por tópico sembrado) IA ayudó a crear grafico y tablas.
+# c) Gráfico por año (una línea por tópico sembrado)
 prev_anio <- aggregate(theta[, marcos, drop = FALSE], by = list(anio = anio), FUN = mean)
 colores <- c("#4E3239", "#2A5260", "#9FB4BD")[seq_along(marcos)]
-
 matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
-        col = colores, xlab = "Año de la cuenta pública",
-        ylab = "Peso promedio del tópico (%)",
-        main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
-
-n_parrafos <- as.vector(table(gob))
-cbind(prev_gob, n_parrafos)
-
-tabla_anio <- cbind(anio = prev_anio$anio, round(prev_anio[, marcos] * 100, 1))
-
-tabla_anio
-
-n_primeras <- as.vector(table(gob[primeras]))
-cbind(prev_primeras, n_parrafos = n_primeras)
-
+        col = colores, xlab = "Año", ylab = "Peso promedio del tópico (%)")
 legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
 abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
        lty = 3, col = "grey60")             # cambios de gobierno
 # Para guardarlo: en la pestaña Plots, Export > Save as Image...
-dir.create("../output", showWarnings = FALSE)
-png("../output/grafico_peso_por_anio.png", width = 1600, height = 900, res = 150)
-matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
-        col = colores, xlab = "Año de la cuenta pública",
-        ylab = "Peso promedio del tópico (%)",
-        main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
-legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
-abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
-       lty = 3, col = "grey60")
-dev.off()
 
 # d) Solo las PRIMERAS cuentas de cada mandato (la comparación más justa con Kast,
 #    que tiene una sola).
@@ -310,9 +285,9 @@ sort(table(k$post), decreasing = TRUE)[1:15]   # las dos palabras que siguen
 #    - quitar la semilla más dudosa de su diccionario
 # cambio listo - bastian - *la decisión que cambia es el diccionario: se quitan las semillas que el kwic mostró en otro sentido (clase, clases, revoluc*, explota*); se mantiene set.seed(2026) para que cambie UNA sola decisión*
 dic_rob <- dictionary(list(
-  transformacion = setdiff(as.list(dic_A)$transformacion, c("clase", "clases", "revoluc*", "explota*")),
-  orden          = as.list(dic_A)$orden,
-  mercado        = as.list(dic_A)$mercado))
+  transformacion = setdiff(as.list(dic_final)$transformacion, c("clase", "clases", "revoluc*", "explota*")),
+  orden          = as.list(dic_final)$orden,
+  mercado        = as.list(dic_final)$mercado))
 set.seed(2026)
 slda_rob <- textmodel_seededlda(dtm, dictionary = dic_rob, residual = 15)
 terms(slda_rob, 10)[, marcos]
@@ -350,22 +325,6 @@ set.seed(1); textplot_network(red_clave(gob_2), min_freq = 0.5,
 # frecuente en ese gobierno: elijan otra o bajen min_freq a 0.2.
 
 
-#Cración te tabla con IA, y exportar a word para el informe
-n_parrafos     <- as.vector(table(gob))
-tabla_gob      <- cbind(prev_gob, n_parrafos)
-n_primeras     <- aas.vector(table(gob[primeras]))
-tabla_primeras <- cbind(prev_primeras, n_parrafos = n_primeras)
-comparacion    <- merge(prev_gob, prev_primeras, by = "gobierno", suffixes = c("_todas", "_primera"))
-comparacion    <- comparacion[match(orden_gob, comparacion$gobierno), ]
-
-#install.packages("writexl")      # solo la primera vez
-library(writexl)
-dir.create("../output", showWarnings = FALSE)
-write_xlsx(list(palabras_15      = as.data.frame(tabla15),
-                por_gobierno     = tabla_gob,
-                primeras_cuentas = tabla_primeras,
-                comparacion      = comparacion),
-           "../output/tablas_seccion2.xlsx")
 # ---- PASO 9 · Guardar y dejar constancia ---------------------------------
 write.csv(prev_gob, "resultados_por_gobierno.csv", row.names = FALSE, fileEncoding = "UTF-8")
 write.csv(prev_anio, "resultados_por_anio.csv", row.names = FALSE, fileEncoding = "UTF-8")
