@@ -58,3 +58,9 @@ SIGUIENTE PASO
 Cambiar en el guion la línea "dic <- dic_B" por "dic <- dic_A" (lo hacen ustedes en VS Code), decidir qué hacen con las semillas del punto 1 y estimar el modelo (Paso 4). Persona 1 comparte el .rds. Para el Paso 7 el tópico a validar es marcos[1] (transformación) o marcos[2] (orden), según la hipótesis.
 
 -----
+
+PREGUNTA: dejaste otra respuesta en respuesta_claude. ese no necesitas permiso para cambiar cosas
+
+Entendido: este archivo (respuestas_claude.txt) lo actualizo sin pedir permiso, con cada respuesta separada por -----. Cualquier otro archivo de la carpeta solo lo toco si me lo dices. Al revisar, la copia que estaba en tu carpeta tenía solo la primera respuesta (la de la división del trabajo), así que volví a escribir el archivo completo con todas las respuestas. Si lo tienes abierto en VS Code, recárgalo para ver los cambios y evita guardar la versión vieja encima.
+
+-----

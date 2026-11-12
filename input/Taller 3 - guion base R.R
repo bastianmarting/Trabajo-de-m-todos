@@ -48,6 +48,7 @@ library(quanteda)
 library(seededlda)
 library(readtext)
 library(quanteda.textplots)
+setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")
 
 getwd()                                              # ¿estoy en "Taller 3"?
 length(list.files("Cuentas 1990-2026", pattern = "\\.txt$"))   # debe decir 37
@@ -122,32 +123,7 @@ dic_A <- dictionary(list(
                      "eficien*", "iniciativa*", "libertad", "moderniza*",
                      "subsidiari*", "empresarios")))
 
-# B. ¿De quién es la seguridad?  (seguridad y delito frente a derechos sociales)
-dic_B <- dictionary(list(
-  seguridad = c("delincuen*", "delito*", "crimen", "criminal*", "crimen_organizado",
-                "narcotráfico", "narco*", "carabineros", "policía*", "cárcel*",
-                "homicidio*", "seguridad_pública", "seguridad_ciudadana"),
-  derechos  = c("desigualdad*", "derechos_sociales", "dignidad", "pensiones",
-                "gratuidad", "protección_social", "equidad", "inclusión",
-                "redistribu*", "abusos")))
-
-# C. Memoria y transición  (el pasado dictatorial y la política de los acuerdos)
-dic_C <- dictionary(list(
-  memoria    = c("derechos_humanos", "reconciliación", "verdad", "víctimas",
-                 "memoria", "detenidos_desaparecidos", "desaparecidos", "tortura",
-                 "reparación", "rettig", "valech"),
-  transicion = c("consenso*", "acuerdo*", "transición", "gobernabilidad",
-                 "diálogo", "unidad", "convivencia", "paz", "entendimiento")))
-
-# D. ¿Dos derechas?  (un lenguaje liberal frente a uno nacional-conservador)
-dic_D <- dictionary(list(
-  liberal       = c("libertad*", "emprend*", "oportunidades", "innovación",
-                    "mercado*", "competencia", "clase_media", "mérito",
-                    "productividad", "inversión"),
-  conservadora  = c("familia*", "patria", "nación", "soberanía", "frontera*",
-                    "orden", "autoridad", "vida", "valores", "orden_público")))
-
-dic <- dic_B          # >>> CAMBIAR AQUÍ <<<  dic_A, dic_B, dic_C o dic_D
+dic <- dic_A          # >>> CAMBIAR AQUÍ <<<  dic_A
 marcos <- names(dic)  # los nombres de sus tópicos sembrados
 dic
 
@@ -157,8 +133,9 @@ for (m in marcos) {
   cat("\n", m, "\n")
   print(sort(colSums(dfm_select(dtm, pattern = dic[m])), decreasing = TRUE))
 }
-semillas <- featnames(dfm_select(dtm, pattern = dic))
+#Aparecen todas, no hay ninguna semilla con 0 apariciones.
 
+semillas <- featnames(dfm_select(dtm, pattern = dic))
 
 # ---- PASO 4 · Estimar el modelo de tópicos semillado --------------------
 # residual = 15: además de sus tópicos sembrados, 15 tópicos libres para todo
