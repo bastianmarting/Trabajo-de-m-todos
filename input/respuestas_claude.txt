@@ -34,3 +34,27 @@ ORDEN SUGERIDO
 5. Chequeo con la lista de errores de la rúbrica: comparar promedios y no totales; mencionar que Kast tiene una sola cuenta; no afirmar causas a partir de frecuencias; no confundir el nombre del tópico con lo que mide; que estén la semilla, el residual, el diccionario y sessionInfo().
 
 -----
+
+PREGUNTA: vamos a usar la pregunta A (solo cambia cosas en vscode si yo te lo digo)
+
+Anotado: pregunta A (¿volvió el lenguaje de Allende?, diccionario dic_A). No toco nada de tus archivos en VS Code salvo este txt, donde pones que vaya cada respuesta. En este equipo no tengo R instalado, así que no puedo correr el modelo desde aquí; el análisis lo corren ustedes en su computador.
+
+REVISIÓN DE dic_A ANTES DE ESTIMAR (Parte 1 de la rúbrica: ninguna semilla con 0 apariciones)
+1. Cuatro semillas son expresiones de varias palabras que NO están en la lista "compuestos" del Paso 2: unidad_popular, gobierno_popular, área_de_propiedad_social, junta_de_gobierno. (fuerzas_armadas sí está.) Si no se agregan a "compuestos", quedan con 0 apariciones. Opciones: agregarlas a "compuestos" ("unidad popular", "gobierno popular", "área de propiedad social", "junta de gobierno"), o cambiarlas y justificar. Ojo: el máximo es 5 cambios por lista.
+2. Corran el bucle del Paso 3 (colSums por tópico) y anoten toda semilla con 0 o muy pocas apariciones. Esa tabla es la base de la justificación de cambios en el informe.
+3. "clase_media" ya es un compuesto, así que "clase" y "clases" no cuentan la expresión "clase media". Conviene mencionarlo al justificar.
+4. "seguridad" cuenta solo cuando va sola: "seguridad social", "seguridad pública" y "seguridad ciudadana" son compuestos aparte. Cuidado al interpretar el tópico "orden".
+5. "libertad" está en mercado, pero el marco de 1971 a 1973 también la usa en otro sentido ("liberación"); es buena candidata para el kwic() de la Parte 3c.
+
+BORRADOR DE HIPÓTESIS (para que la reescriban con sus palabras)
+Debe ser contrastable, anclada en un hecho del período y en una lectura del curso. Ejemplo de forma:
+"El tópico 'transformación' pesa más en las cuentas de Boric que en las de Lagos y Bachelet (comparando promedios por párrafo), mientras que 'orden' pesa más en la de Kast que en las de Piñera."
+- Hecho del período que pueden usar: el estallido social de 2019 y los procesos constitucionales (2022 y 2023), o el programa de Boric. Verifiquen la fecha y el dato antes de citarlo.
+- Lectura del curso: el ejemplo Allende y Pinochet de las sesiones 9 y 10 (diccionario y modelo semillado). Citen la lectura exacta que vieron en clases.
+- Recuerden que Kast tiene una sola cuenta: comparen con las primeras cuentas de cada mandato (Paso 6d) y dígalo en el informe.
+- Se evalúa la calidad de la validación, no que se confirme la hipótesis.
+
+SIGUIENTE PASO
+Cambiar en el guion la línea "dic <- dic_B" por "dic <- dic_A" (lo hacen ustedes en VS Code), decidir qué hacen con las semillas del punto 1 y estimar el modelo (Paso 4). Persona 1 comparte el .rds. Para el Paso 7 el tópico a validar es marcos[1] (transformación) o marcos[2] (orden), según la hipótesis.
+
+-----
