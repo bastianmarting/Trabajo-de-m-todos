@@ -680,3 +680,62 @@ QUÉ MANDARME PARA INTERPRETARLO
 Con eso les digo qué se observa, cuidando la interpretación (observaciones del gráfico, no causas), y les marco qué errores de la rúbrica evitar. La redacción del informe es de ustedes.
 
 -----
+
+PREGUNTA: dime cómo fundamentar la hipótesis sin basarse en lo que ya sabemos, según los criterios de la pauta y las exigencias
+
+QUÉ PIDE LA PAUTA (Parte 1, media página) Y LA RÚBRICA (criterio 1, 6 pts)
+1. Una hipótesis de una o dos frases.
+2. Anclada en al menos un HECHO DEL PERÍODO (algo externo al corpus, con fecha y fuente).
+3. Anclada en al menos una LECTURA DEL CURSO.
+4. El diccionario usado, con cada cambio justificado.
+Nivel máximo: "hipótesis precisa y contrastable, anclada en un hecho del período y en una lectura; semillas presentadas y cada cambio justificado". Nivel insuficiente: "hipótesis vaga o no contrastable; semillas sin revisar".
+
+IDEA CLAVE: LA FUNDAMENTACIÓN VIENE DE AFUERA DE LOS RESULTADOS
+El hecho y la lectura no pueden ser "los datos mostraron X". Tienen que existir antes de medir y poder revisarse en una fuente. La cadena es:
+hecho del período (externo) + lectura del curso → qué esperaríamos encontrar → qué indicador lo mide → qué resultado la refutaría.
+
+PASO A PASO
+
+1. ELEGIR EL HECHO DEL PERÍODO (con fuente, fecha y que no dependa de sus resultados)
+Para una hipótesis sobre Boric y "transformación", un hecho verificable que encontré: el 1 de noviembre de 2021 Boric presentó su programa de gobierno, un documento de 227 páginas titulado "Programa para un Nuevo Chile" (The Clinic). En esa presentación dijo que iban a hacer "transformaciones importantes", y señaló que la Constituyente era la primera (El Mostrador). Su comando, además, planteó que los cambios debían implementarse con gradualidad y responsabilidad (comunicado de la presentación del programa).
+Es un buen hecho porque: es público, tiene fecha, lo dijo el propio candidato y no depende de sus datos. Antes de citarlo, abran la fuente ustedes (el programa está en boricpresidente.cl) y cítenla con su formato de curso.
+Otros hechos posibles, que NO verifiqué y deben comprobar antes de usarlos: el estallido social de octubre de 2019, el plebiscito constitucional de 2022, la elección de Kast. Un solo hecho bien citado basta ("al menos uno").
+
+2. ELEGIR LA LECTURA DEL CURSO
+La pauta pide una lectura del curso, y es de ustedes elegirla y citarla: miren el programa del curso o las láminas de la Sesión 10 (láminas 30 a 37) y la unidad de análisis de texto (Unidad V). No inventen una referencia: yo no tengo acceso a la lista de lecturas del curso. Algo que sí aparece en el guion del taller y pueden usar como idea de partida: "cada diccionario es una hipótesis: estas palabras indican este concepto". Eso conecta directamente con por qué la hipótesis habla de qué mide el diccionario.
+
+3. FORMULAR UNA HIPÓTESIS CON DOS PARTES (una cantidad y un sentido)
+Esto evita basarse solo en lo que ya vieron:
+Parte 1 (cantidad, confirmatoria, todavía no la han visto): "Si el programa de Boric anunció transformaciones, entonces el peso promedio del tópico 'transformacion' será mayor en Boric que en Lagos y Bachelet." Se contrasta con el Paso 6 (tabla por gobierno y primeras cuentas). La refuta: que Boric sea igual o menor que esos gobiernos.
+Parte 2 (sentido, exploratoria): "Esa palabra se usa en un sentido reformista e institucional y no con el vocabulario de clase de 1971 a 1973." Se contrasta con kwic() y con las palabras del Paso 5. La refutaría: que el kwic mostrara "clase", "explotación" o ruptura dominando los contextos.
+OJO CON LA HONESTIDAD: la Parte 2 ya se apoya en lo que vieron (11 usos de "transformaci*" en Boric, y el conteo de semillas). No la presenten como una predicción hecha antes de mirar los datos. Díganlo en la Parte 1 del informe: "El diccionario y los kwic exploratorios se revisaron antes de la medición final; la Parte 2 de la hipótesis es exploratoria". Eso es lo que corresponde a un análisis honesto y no les quita puntos; ocultarlo sí sería un problema (la rúbrica castiga "afirmar más de lo que los datos permiten").
+
+4. FUNDAMENTAR LOS CAMBIOS DEL DICCIONARIO (si hay)
+En su caso el diccionario se mantiene sin cambios; la justificación es de método, no de resultado: "Se mantiene el diccionario de las sesiones 9 y 10 porque la pregunta A pregunta si ese marco, definido antes, se reconoce en 1990 a 2026". El conteo de semillas es parte de revisarlo (la rúbrica lo exige), pero no cambia la regla de medida.
+
+ESQUELETO PARA ESCRIBIRLA (ustedes completan con sus palabras)
+1. Hecho: "[Quién] [qué hizo/dijo] el [fecha] ([fuente])."
+2. Lectura: "[Autor/lámina] plantea que [idea del curso relevante]."
+3. Hipótesis: "Si [hecho], esperamos que [indicador] sea [mayor/menor] en [gobierno] que en [gobiernos de comparación], y que el sentido sea [reformista/otro]; la hipótesis se refuta si [resultado contrario]."
+4. Diccionario y cambios: "Usamos dic_A sin cambios [o: cambiamos X por Y porque ...]; [n] semillas tienen menos de 5 apariciones."
+5. Nota de transparencia: "El diccionario y los kwic se exploraron antes de la medición final."
+
+CRITERIOS PARA REVISAR SU PROPIA REDACCIÓN
+1. ¿Se puede decir en una o dos frases?
+2. ¿El hecho es de fuera del corpus, con fecha y fuente?
+3. ¿La lectura del curso está citada con precisión?
+4. ¿Dice qué la refutaría?
+5. ¿Compara promedios (no totales) y menciona que Kast tiene una sola cuenta?
+6. ¿Evita atribuir causas o intenciones?
+7. ¿Cabe en media página?
+Cuando la tengan escrita con sus palabras, péguenla aquí y la reviso contra estos criterios y la rúbrica.
+
+NOTA SOBRE EL USO DE IA
+La rúbrica permite usar IA para explicar código y revisar redacción. Escribir la hipótesis y la Parte 1 es de ustedes; yo reviso y marco problemas. Declaren el uso al final del informe.
+
+FUENTES
+1. The Clinic, 1 de noviembre de 2021: https://www.theclinic.cl/2021/11/01/algunos-decian-que-lo-escondiamos-gabriel-boric-presento-su-programa-de-gobierno-con-foco-en-cuatro-reformas/
+2. El Mostrador, 1 de noviembre de 2021: https://www.elmostrador.cl/elecciones-2021/2021/11/01/boric-presenta-programa-a-20-dias-de-la-eleccion-algunos-que-decian-que-lo-escondiamos-todo-lo-contrario-decidimos-tomar-un-camino-mas-largo/
+3. Comunicado de la presentación del programa de gobierno (Apruebo Dignidad): https://www.infogate.cl/wp-content/uploads/2021/11/Comunicado_Presentacio_n-Programa-de-Gobierno.pdf
+
+-----

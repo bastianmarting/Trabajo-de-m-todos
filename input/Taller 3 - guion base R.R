@@ -193,9 +193,12 @@ for (m in marcos) cat("\n", m, "->", paste(setdiff(top20[, m], semillas), collap
 
 
 # ---- PASO 6 · Medir: ¿cuánto pesa cada tópico, en quién y cuándo? -------
+class(slda)
 theta <- slda$theta
 gob   <- factor(docvars(dtm, "gobierno"), levels = orden_gob)
 anio  <- docvars(dtm, "anio")
+prev_anio <- aggregate(theta[, marcos, drop = FALSE], by = list(anio = anio), FUN = mean)
+  round(prev_anio[, marcos] * 100, 1)       # la tabla que alimenta el gráfico
 
 # a) Peso promedio (theta, en %) por gobierno
 prev_gob <- aggregate(theta[, marcos, drop = FALSE], by = list(gobierno = gob), FUN = mean)
@@ -206,11 +209,25 @@ prev_gob
 principal <- topics(slda)
 round(prop.table(table(gob, principal), 1)[, marcos] * 100, 1)
 
-# c) Gráfico por año (una línea por tópico sembrado)
+# c) Gráfico por año (una línea por tópico sembrado) IA ayudó a crear grafico y tablas.
 prev_anio <- aggregate(theta[, marcos, drop = FALSE], by = list(anio = anio), FUN = mean)
 colores <- c("#4E3239", "#2A5260", "#9FB4BD")[seq_along(marcos)]
+
 matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
-        col = colores, xlab = "Año", ylab = "Peso promedio del tópico (%)")
+        col = colores, xlab = "Año de la cuenta pública",
+        ylab = "Peso promedio del tópico (%)",
+        main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
+
+n_parrafos <- as.vector(table(gob))
+cbind(prev_gob, n_parrafos)
+
+tabla_anio <- cbind(anio = prev_anio$anio, round(prev_anio[, marcos] * 100, 1))
+
+tabla_anio
+
+n_primeras <- as.vector(table(gob[primeras]))
+cbind(prev_primeras, n_parrafos = n_primeras)
+
 legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
 abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
        lty = 3, col = "grey60")             # cambios de gobierno
