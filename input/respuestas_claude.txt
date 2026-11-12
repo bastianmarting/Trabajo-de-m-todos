@@ -1,0 +1,36 @@
+RESPUESTAS DE CLAUDE · TALLER 3
+(cada pregunta va separada con -----)
+
+PREGUNTA: revisa todo, como me divido este trabajo con mi compañero
+
+Revisé la carpeta: están las 37 cuentas, el guion base, el CSV de metadatos, la rúbrica y un slda_taller3.rds ya estimado. Por el .Rhistory, alguien ya corrió el guion hasta el paso 8, pero no queda claro con qué pregunta: aparecen dic_A y dic_B y marcos[2]. Antes de repartir, definan cuál pregunta (A, B, C o D) usan, porque de eso depende todo lo demás.
+
+REGLA PARA QUE LAS CIFRAS CALCEN
+El modelo varía entre computadores, y el informe debe ser coherente con el script. Una sola persona estima el modelo (Paso 4) y le pasa el .rds al otro, que lo carga con readRDS(). Así los dos trabajan con los mismos números. Usen también el mismo script final, con la semilla y el residual anotados.
+
+DIVISIÓN PROPUESTA
+Persona 1 (modelo y medición)
+  Código: Pasos 0 a 6 (elegir y revisar el diccionario, estimar, palabras descubiertas, gobierno, año y primeras cuentas).
+  Informe: Parte 1 (hipótesis y semillas, 6 pts) y Parte 2 (medición, 10 pts).
+  Anexo: sessionInfo(), diccionario final, semilla y residual.
+
+Persona 2 (validación y redes)
+  Código: Pasos 7 y 8 (lectura de párrafos, kwic(), robustez, tabla de vecinos y las dos redes).
+  Informe: Parte 3 (validación, 10 pts) y Parte 4 (coocurrencias, 6 pts).
+  Anexo: ayuda a revisar que esté completo.
+
+LO QUE HACEN JUNTOS
+- Codificar los 20 párrafos: cada uno por separado (1, 0 o 9) y después calculan el acuerdo. La rúbrica prohíbe usar IA para esto.
+- Parte 5 (interpretación, límites y ética, 8 pts): la escriben entre ambos, con dos límites y una consideración ética propios de su análisis.
+- Revisión cruzada: cada uno lee la parte del otro; todos deben poder explicar el código.
+- Declaración de uso de IA al final del informe (herramienta, finalidad y cómo verificaron). Solo se permite para depurar o explicar código y revisar redacción.
+- Entrega: TALLER3_Apellido1_Apellido2 más la extensión (.pdf, .R, .csv).
+
+ORDEN SUGERIDO
+1. Elegir pregunta y revisar semillas (ninguna con 0 apariciones). Persona 1 estima el modelo y comparte el .rds.
+2. Persona 2 parte con Pasos 7 y 8 apenas exista el .rds. Persona 1 hace la medición.
+3. Codificación independiente de los 20 párrafos.
+4. Redacción en paralelo y revisión cruzada.
+5. Chequeo con la lista de errores de la rúbrica: comparar promedios y no totales; mencionar que Kast tiene una sola cuenta; no afirmar causas a partir de frecuencias; no confundir el nombre del tópico con lo que mide; que estén la semilla, el residual, el diccionario y sessionInfo().
+
+-----
