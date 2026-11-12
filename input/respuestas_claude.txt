@@ -64,3 +64,52 @@ PREGUNTA: dejaste otra respuesta en respuesta_claude. ese no necesitas permiso p
 Entendido: este archivo (respuestas_claude.txt) lo actualizo sin pedir permiso, con cada respuesta separada por -----. Cualquier otro archivo de la carpeta solo lo toco si me lo dices. Al revisar, la copia que estaba en tu carpeta tenía solo la primera respuesta (la de la división del trabajo), así que volví a escribir el archivo completo con todas las respuestas. Si lo tienes abierto en VS Code, recárgalo para ver los cambios y evita guardar la versión vieja encima.
 
 -----
+
+PREGUNTA: length(list.files("Cuentas 1990-2026", pattern = "\\.txt$")) aparece que son 0
+
+CAUSA PROBABLE: el directorio de trabajo de R no es la carpeta donde está "Cuentas 1990-2026". El guion usa rutas relativas, y en tu proyecto las cuentas, el CSV y el guion están dentro de la subcarpeta "input", no en la raíz "Trabajo-de-m-todos". Si R está parado en la raíz, list.files() no encuentra la carpeta y devuelve 0. (Los 37 archivos sí existen en input/Cuentas 1990-2026.)
+
+SOLUCIÓN, la más simple (en la consola de R, antes de correr el guion):
+  setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")
+  getwd()
+  length(list.files("Cuentas 1990-2026", pattern = "\\.txt$"))   # debe decir 37
+  file.exists("metadatos_cuentas_1990_2026.csv")                  # debe decir TRUE
+
+Usa barras "/" (o "\\") en Windows; una sola "\" da error en R.
+
+Alternativa sin setwd: dejar el directorio en la raíz y cambiar las rutas del guion a "input/Cuentas 1990-2026" y "input/metadatos_cuentas_1990_2026.csv" (Pasos 0 y 1). Es más trabajo y más fácil de equivocar; para el taller conviene la primera.
+
+Importante: con setwd en input, todo lo que guarde el guion (slda_taller3.rds, muestra_validacion_*.csv, resultados_*.csv) queda en input. Si quieren sus salidas en la carpeta "output", pueden cambiar las rutas de saveRDS() y write.csv() para que empiecen con "../output/". Eso lo deciden y editan ustedes en VS Code.
+
+Si después de setwd sigue en 0, mándame lo que imprime getwd() y list.files(".").
+
+-----
+
+PREGUNTA: ya mira hice esto (salida de R, Pasos 1 a 5), pero no tenemos hipótesis
+
+LO QUE MUESTRAN SUS RESULTADOS (solo lo que está en su salida)
+1. Semillas con 0 apariciones en la matriz (la tabla del Paso 3 no las lista). En "transformacion" solo aparecen 6 de 16: transformaciones, transformación, revolución, clases, clase, explotación. Quedan en 0: socialis*, capitalis*, monopol*, imperialis*, latifund*, oligarq*, liberación, nacionalización, unidad_popular, gobierno_popular, área_de_propiedad_social. En "orden" quedan en 0: junta_de_gobierno, subversi*, marxis*. En "mercado" aparecen todas. (Ojo: dfm_trim elimina palabras con menos de 5 apariciones; una semilla "en 0" puede tener 1 a 4 en el texto original. Compruébenlo antes de justificar.)
+2. El tópico "transformacion" es muy chico en semillas (109 apariciones de transformaciones y transformación, 37 de revolución) y sus palabras más probables no son de clase ni de ruptura: nacional, gobierno, recursos, desarrollo, regiones, programas, participación, municipios, servicios. Mide gestión pública y descentralización, no el marco de 1971 a 1973.
+3. El tópico "orden" suma seguridad, patria y fuerzas_armadas, pero lo descubierto es carabineros, delincuencia, delitos, víctimas, violencia, prevención, control, policías. Mide seguridad y delito más que "orden" al estilo de la Junta.
+4. El tópico "mercado" sí es coherente: inversión, privado, modernización, empresas, mercados, eficiencia.
+5. "clase", "revolución" y "explotación" son ambiguas: pueden ser clases escolares, revolución digital o explotación minera o forestal. Buenas candidatas para el kwic() de la Parte 3c.
+Nota: nada de esto es todavía un resultado por gobierno; eso viene del Paso 6.
+
+HIPÓTESIS POSIBLES (elijan una o mézclenlas; deben ser contrastables con el Paso 6)
+Hipótesis 1 (la más sólida con lo que ya vieron): "El léxico de transformación de 1971 a 1973 casi no reaparece en las cuentas públicas: sus semillas son escasas y el tópico sembrado captura gestión y regiones. Boric tendrá un peso promedio mayor que Lagos y Bachelet, pero por el sentido reformista y administrativo y no por el vocabulario de clase."
+Hipótesis 2: "El tópico 'orden' mide seguridad y delito. Su peso promedio por párrafo será mayor en Piñera II y en Kast que en la Concertación y en Boric."
+Hipótesis 3 (combinada, en dos frases): H1 + H2.
+Anclaje en un hecho del período (verifiquen fecha y dato antes de citar): el estallido social de octubre de 2019 y el estado de emergencia, durante Piñera II, para "orden"; el programa de gobierno de Boric y los procesos constitucionales para "transformación".
+Anclaje en una lectura del curso: el ejemplo Allende y Pinochet de las sesiones 9 y 10. Citen la lectura exacta.
+Recuerden: la rúbrica premia la validación, no confirmar. Mostrar que el tópico mide otra cosa puede dar el puntaje máximo. Kast tiene una sola cuenta: comparen con las primeras cuentas (Paso 6d).
+
+QUÉ HACER CON LAS SEMILLAS (máximo 5 cambios por lista; cada uno justificado)
+Hay 11 semillas muertas en "transformacion", más de las 5 que pueden cambiar. Sugerencia: priorizar las 5 más importantes para su hipótesis, y en el informe declarar que el resto del diccionario original sigue sin apariciones, como hallazgo (el vocabulario de 1971 a 1973 no aparece), no como error. Antes de cambiar nada, revisen en el texto original (sin dfm_trim):
+  toks_sin |> dfm() |> dfm_select(pattern = c("socialis*","capitalis*","monopol*","imperialis*","latifund*","oligarq*","nacionaliz*","liberaci*","junta*","subversi*","marxis*")) |> colSums() |> sort(decreasing = TRUE)
+Para las semillas compuestas, agreguen "unidad popular", "gobierno popular", "área de propiedad social" y "junta de gobierno" a la lista "compuestos" y vuelvan a correr Pasos 2 a 3. Si siguen en 0, es un hallazgo.
+Candidatas de reemplazo (verifiquen primero que existan en su matriz, no las doy por hechas): reformas, cambios, desigualdad, derechos, justicia, participación popular. Cada reemplazo debe estar justificado por el concepto de transformación, no por su frecuencia.
+
+IMPORTANTE ANTES DE SEGUIR
+Si cambian el diccionario o "compuestos", hay que reestimar el modelo (Paso 4), guardar el nuevo .rds y anotar semilla (2026) y residual (15). Las cifras del informe tienen que salir del modelo final.
+
+-----
