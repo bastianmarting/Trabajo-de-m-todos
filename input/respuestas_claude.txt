@@ -1295,3 +1295,118 @@ Qué hacer ahora (después de agregar "reforma"):
 Pendiente mío: el guion en el disco no tiene el código de tabla15, tabla_gob, png del gráfico ni write_xlsx. Para el paso 5 y 6 hace falta; ofrecí restaurarlo y falta su respuesta.
 
 -----
+
+ERROR en el modelo actual (revisión de la salida de la consola):
+
+En la consola corrieron DOS veces dic_final. La segunda (la que quedó) tiene las listas cruzadas: "transformacion" recibió las semillas de orden (patria, orden, seguridad, fuerzas_armadas... + reforma) y "orden" recibió las semillas de Allende (socialis*, revoluc*, clase...). Se ve en dic: [transformacion] empieza con patria y [orden] empieza con socialis*. Esa versión no está en el guion, solo en la consola. El modelo guardado en slda_taller3_v2.rds y todo lo que salió después (terms, top20) es de ese diccionario cruzado: por eso "transformacion" sale con reforma, seguridad, patria, fuerzas_armadas, y "orden" sale con chile, país, futuro (sin semillas, tópico basura). No sirve para el informe.
+
+Lo bueno: el guion en el disco tiene el bloque correcto. Lo que se veía en la consola como segunda definición fue escrito aparte. Mi corrección: en el guion, orden = setdiff(orden, "junta_de_gobierno") (era 0 apariciones, intención aparente del usuario) y transformacion = 4 semillas en 0 quitadas + reforma. Total: 5 cambios en transformacion, 1 en orden.
+
+Qué hacer: (1) Revert si sale el aviso de conflicto. (2) Correr el bloque dic_final del GUION (no escribir otro a mano) y revisar con dic que [transformacion] empiece con socialis* y termine con reforma, y [orden] empiece con patria. (3) Correr Paso 4 de nuevo (pisa slda_taller3_v2.rds). (4) Recién ahí Paso 5 en adelante.
+
+Hallazgo del kwic de reforma: los 10 primeros son de Aylwin 1990: reforma tributaria y reforma constitucional (plebiscito). O sea, sentido institucional, que es el polo 2 de su hipótesis. Al ponerla en el marco de Allende, el tópico mezclará reformas de todos los gobiernos. Hay que justificarlo en la Sección 1 (Allende también hablaba de reforma agraria, pero este kwic no lo muestra) o reconsiderar agregarla.
+Otros datos útiles de su salida: junta_de_gobierno tiene 0; "unidad popular", "gobierno popular" y "área de propiedad social" dieron 0 en el kwic; clase aparece como "ninguna clase", "clase política"; clases como "sala de clases"; revoluc* como revolución tecnológica o del conocimiento; explota* como explotación de recursos naturales y minas. Todo eso va a la Sección 1 y 3.
+
+-----
+
+Respuesta al mensaje "Ya lo pusimos en el informe: así quedó :" (llegó vacío) y a la salida de consola adjunta:
+
+1. El texto del informe no llegó: el mensaje termina en "así quedó :". Pásenlo y lo reviso.
+2. La consola adjunta sigue mostrando el diccionario CRUZADO: [transformacion] con patria, orden, seguridad... + reforma, y [orden] con socialis*, revoluc*... Si el informe describe ese diccionario, está mal. El modelo (terms: reforma, seguridad, democracia, patria / chile, país, futuro) también es del cruzado. Hay que correr el bloque dic_final del guion, revisar con dic y repetir el Paso 4.
+3. En esta consola el modelo se guardó con saveRDS(slda, "slda_taller3.rds"), o sea pisó el archivo anterior. Da lo mismo: el modelo anterior ya no se va a usar, pero conviene que el .rds que quede sea el del diccionario correcto.
+4. Dato nuevo útil: el kwic de "transformaci*" en Boric tiene solo 11 casos. Ejemplos: "transformaciones de largo plazo", "transformaciones profundas requieren convicción y persistencia", "transformaciones sociales que sean estables", "importantes transformaciones para tener más justicia y una democracia", "transformación integral del Estado", "transformación de la matriz energética", "transformación... proyecto de reforma", y una de deporte (presupuesto). Es una mezcla: unos casos hablan de cambio social de fondo, otros del Estado o de sectores específicos. No muestra un desplazamiento limpio hacia lo administrativo, pero 11 casos es poco para concluir; hay que decirlo así y compararlo con el kwic de Bachelet II (falta).
+
+-----
+
+Cómo corregir el diccionario cruzado y repetir el modelo (paso a paso):
+
+1. Abrir el guion en VS Code. Si sale el aviso de conflicto, Revert (flecha curva), nunca Overwrite. No escribir en la consola el diccionario a mano.
+2. En el guion, buscar el bloque que parte con el comentario "# cambio listo - bastian - *5 cambios en transformacion...*" y llega hasta la línea que dice solo "dic". Seleccionarlo completo con el mouse (desde "dic_final <- dictionary(list(" hasta "dic") y correrlo con Ctrl + Enter. Corre el bloque entero de una vez.
+3. Revisar lo que imprime dic. Tiene que salir:
+   [transformacion]: socialis*, revoluc*, capitalis*, explota*, clase, clases, monopol*, latifund*, liberación, nacionalización, transformaci*, unidad_popular, reforma (13 palabras)
+   [orden]: patria, orden, seguridad, fuerzas_armadas, reconstrucción, caos, disciplina, soberan*, autoridad*, subversi*, marxis* (11, sin junta_de_gobierno)
+   [mercado]: mercado*, privad*, inversión... (11)
+   Si [transformacion] empieza con patria, está cruzado: no seguir.
+4. Seleccionar las 3 líneas del Paso 4 (set.seed(2026), slda <- textmodel_seededlda(dtm, dictionary = dic, residual = 15), saveRDS(...)) y correr con Ctrl + Enter. Tarda alrededor de 1 minuto. La línea de readRDS no hace falta correrla.
+5. Revisar: terms(slda, 15)[, marcos]. Ahora "transformacion" debería mostrar palabras de ese marco (transformación, reforma, revolución, clases...) y "orden" debería tener seguridad, patria, fuerzas_armadas. Si "orden" sale con chile, país, futuro, sigue cruzado.
+6. Pasar a Paso 5 y 6 con ese modelo.
+Si el informe ya tiene el diccionario descrito, reemplazar con el de arriba.
+
+-----
+
+Corrección hecha en el guion (diccionario cruzado):
+
+El guion del disco tenía DOS definiciones de dic_final seguidas: la correcta y, justo debajo, una segunda con transformacion y orden cruzadas (la que quedó guardada al pisar la primera). Dejé UNA sola, la correcta: transformacion = 4 semillas en 0 quitadas + "reforma" (13 palabras); orden = sin junta_de_gobierno (11); mercado igual (11). Marcado "# cambio listo - bastian - ...".
+No toqué el resto (ni su cambio de saveRDS a "slda_taller3.rds", ni la línea de readRDS sin comentar).
+
+Ahora tienen que: Revert si hay aviso de conflicto; correr desde dic_final hasta dic y confirmar que [transformacion] empieza con socialis* y [orden] con patria; correr el Paso 4 de nuevo (~1 minuto) y revisar terms(slda, 15)[, marcos].
+
+-----
+
+Tablas y cifras para la Sección 2 (agregué el bloque al guion, antes del Paso 7, marcado "# cambio listo - bastian - ..."):
+
+El bloque arma y exporta:
+Tabla 1: 15 palabras por tópico con [S] en las semillas (tabla15).
+Tabla 2: peso promedio por gobierno (%) con N° de párrafos (tabla_gob).
+Tabla 3: peso promedio en la primera cuenta de cada mandato (tabla_primeras).
+Proporciones: % de párrafos de cada gobierno cuyo tópico PRINCIPAL es cada tópico (tabla_prop). Es la que corresponde a "las proporciones"; la pauta no la pide, es complemento a la Tabla 2 (el peso promedio theta y la proporción de párrafos no son lo mismo, no los mezclen).
+Figura 1: ../output/grafico_peso_por_anio.png (Año vs peso %, líneas en los cambios de gobierno).
+Excel: ../output/tablas_seccion2.xlsx con 4 hojas (palabras_15, por_gobierno, primeras_cuentas, proporciones). Sin la Tabla 4 de comparación.
+
+Qué correr: desde el Paso 5 hasta el bloque nuevo, en orden. Los encabezados ya salen en español (Gobierno, Transformación, Orden, Mercado, N° de párrafos). Abrir el xlsx normal; si hay tildes raras, usar Datos > Desde texto/CSV... (el xlsx no debería tener ese problema).
+Después: pasar el gráfico y las tablas por aquí para revisar la lectura. Los números anteriores (Boric 4,5 etc.) eran del modelo anterior; usar solo los nuevos.
+
+-----
+
+Lectura del Paso 5 con el diccionario correcto (salida del usuario):
+
+1. Ahora el modelo está bien: transformacion = reforma, gobierno, sistema, política, constitucional, acuerdo, nacional, comisión, reformas, transformación, transformaciones, diputados, cámara, senado, poder. orden = seguridad, patria, democracia, orden, fuerzas_armadas... mercado = inversión, privado, modernización...
+2. El bucle de "palabras descubiertas" que salió abajo es VIEJO: top20 no se recalculó (se interrumpió con Ctrl+C) y muestra el modelo cruzado. Hay que correr de nuevo: top20 <- terms(slda, 20) y el for.
+3. Conteo de semillas en el top 15 (S = semilla):
+   transformacion: 3 de 15 (reforma, transformación, transformaciones). "reformas" NO cuenta como semilla porque "reforma" está escrita exacta (con reforma* sería semilla).
+   orden: 5 de 15 (seguridad, patria, orden, fuerzas_armadas, autoridades). Descubiertas: democracia, respeto, instituciones, política, debe, responsabilidad, derecho, diálogo, ser, siempre.
+   mercado: 11 de 15. Descubiertas: sector, empresas, economía, crecimiento.
+4. Veredicto de cada tópico (para el informe, lo escriben ustedes): 
+   transformacion: NO confirma el concepto de Allende. Ninguna de las semillas de clase o ruptura (socialis*, revoluc*, clase, clases, explota*) aparece en el top 15; el tópico quedó dominado por "reforma" y por vocabulario legislativo e institucional (constitucional, comisión, diputados, cámara, senado, acuerdo). Mide "reformas legislativas e institucionales", otra cosa que el marco original. Es consecuencia de haber agregado "reforma" (el kwic mostraba reforma tributaria y constitucional). Hay que decirlo así, como hallazgo y como límite.
+   orden: confirma en parte (seguridad, patria, orden, fuerzas armadas, autoridades) y lo amplía con valores cívicos y democráticos (democracia, respeto, instituciones, responsabilidad, diálogo). Ya no sale vocabulario de delincuencia como en el modelo anterior.
+   mercado: confirma y amplía (sector, empresas, economía, crecimiento). Es el más limpio.
+5. Consecuencia para la hipótesis: el tópico "transformacion" ahora se parece al polo institucional de su hipótesis, no al polo de Allende. Entonces su peso por gobierno no sirve por sí solo para decir si cambió el sentido de "transformación"; eso lo contrastan el kwic de transformaci* (Bachelet II vs Boric) y la red de coocurrencias del Paso 8. Hay que decirlo explícito en la Sección 2 y 5, sin forzar la lectura.
+6. Alternativa si no les gusta: quitar "reforma" (vuelve a 4 cambios en la lista) y reestimar, pero lo decidieron ustedes; solo hay que justificarlo y rehacer todo.
+
+-----
+
+Palabras descubiertas (top 20, salida correcta del usuario):
+
+transformacion (17 descubiertas): gobierno, sistema, política, constitucional, acuerdo, nacional, comisión, reformas, diputados, cámara, senado, poder, proceso, país, respecto, presidente, democracia. Todas de vocabulario institucional y legislativo. Confirma que el tópico mide reformas y proceso legislativo, no el lenguaje de clase de Allende. Respuesta a la pregunta del guion: "muestra que el tópico mide OTRA cosa".
+orden (15 descubiertas): democracia, respeto, instituciones, responsabilidad, derecho, diálogo, ciudadanos, derechos_humanos, chilenos (más ser, debe, siempre, cada, toda, que son relleno). Amplía el concepto hacia democracia, derechos y diálogo, no solo autoridad y seguridad. Ojo: derechos_humanos dentro de "orden" muestra que el tópico no es solo orden autoritario.
+mercado (6 descubiertas): sector, empresas, economía, crecimiento, desarrollo, nuevos. Confirma y amplía hacia economía y empresas.
+
+Siguiente: correr Paso 6 (a a e) y el bloque de tablas y figura; mandar las tablas y el gráfico.
+
+-----
+
+Guardar cada tabla apenas se crea (cambio en el guion, marcado "# cambio listo - bastian - ..."):
+
+El bloque "TABLAS Y FIGURA PARA LA SECCIÓN 2" ahora guarda cada tabla en ../output justo después de crearla:
+tabla1_15_palabras.xlsx, tabla2_por_gobierno.xlsx, tabla3_primeras_cuentas.xlsx, tabla4_proporciones.xlsx y grafico_peso_por_anio.png, además de tablas_seccion2.xlsx con todas en hojas. Se usa xlsx (no csv) para que las tildes salgan bien al abrir.
+Aviso: el bloque nuevo que les había dado antes ya no estaba en el guion del disco (se perdió al guardar desde el editor); lo volví a poner con los guardados. Revert si hay aviso de conflicto, y corran el bloque completo. Si es la primera vez con writexl, quitar el # de install.packages("writexl").
+Los archivos quedan en la carpeta "output" al lado de "input"; el guion usa "../output", así que el directorio de trabajo debe ser la carpeta input.
+
+-----
+
+Error readRDS("slda_taller3.rds"): "cannot open the connection / No such file or directory":
+
+Causa: R no encuentra el archivo en la carpeta donde está trabajando (el setwd con ruta absoluta está comentado en el guion), o el modelo nunca se guardó en esta sesión. Pasos:
+1. getwd() : tiene que terminar en .../Trabajo-de-m-todos/input. Si no, setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input").
+2. list.files(pattern = "rds") : ver si aparece slda_taller3.rds (o slda_taller3_v2.rds). Si aparece con otro nombre, leer ese.
+3. Si no aparece ninguno, no hace falta leer nada: si el modelo corrió en esta sesión, el objeto slda ya existe (exists("slda") da TRUE). Si exists("slda") da FALSE o abrieron R de nuevo, hay que repetir desde dic_final y el Paso 4 (~1 minuto), que además lo guarda.
+4. La línea readRDS solo sirve para recargar un modelo en otro día; se puede dejar comentada y no correrla.
+Ojo: si corrieron el bloque de tablas y la carpeta "output" no existe, el guion la crea (dir.create), pero con setwd mal puesto la crea en otro lugar.
+
+-----
+
+"exists("slda") es TRUE pero no sé dónde está el archivo":
+
+Son dos cosas distintas. exists("slda") TRUE significa que el modelo está en la memoria de R de esta sesión; no hay archivo .rds en la carpeta (por eso falló readRDS: nunca se guardó ahí). Se puede seguir trabajando con el objeto en memoria sin leer nada. Para dejar el archivo guardado: saveRDS(slda, "slda_taller3.rds") y comprobar con list.files(pattern = "rds"); aparece en la carpeta input, al lado del guion. Conviene guardarlo antes de cerrar RStudio/VS Code, porque si se cierra la sesión el objeto se pierde y habría que reestimar (~1 minuto). Para estar seguros de que el modelo en memoria es el bueno: terms(slda, 5)[, marcos] debe mostrar "reforma" arriba en transformacion y "seguridad" en orden.
+
+-----
