@@ -482,3 +482,201 @@ DESPUÉS
 Debería quedar solo la versión con las marcas "cambio listo". Verifiquen con Ctrl+F "cambio listo": deben salir 8 coincidencias. Cierren la pestaña de comparación y sigan con "ANTES DE CORRER" de la respuesta anterior.
 
 -----
+
+PREGUNTA: Overwrite hice eso, ahora cambia de nuevo lo que te dije
+
+HECHO: volví a aplicar los 9 cambios sobre la versión que quedó en el disco (la que ustedes guardaron con Overwrite). Cada uno lleva "# cambio listo - bastian - *...*"; Ctrl+F "cambio listo" debe dar 9 coincidencias.
+
+CAMBIOS (los mismos de antes)
+1. Se borró el bloque lintr.
+2. Se comentó el setwd con ruta absoluta (y hay un comentario aparte con la marca).
+3. Se borró el comentario incorrecto de la línea "Aparecen todas...".
+4. Se agregó el conteo por semilla (todas las listas) después de "semillas <- ...".
+5. Paso 7c: palabra <- "revoluc*".
+6. Paso 7c: se compara Lagos (antes Aylwin) con Boric.
+7. Paso 7d: robustez cambiando el diccionario (dic_rob) con set.seed(2026).
+8. Paso 8: clave <- "transformaci*".
+9. Paso 8: gob_1 <- "Bachelet II".
+
+LO QUE ESTABA EN SU VERSIÓN Y NO TOQUÉ
+Entre el Paso 3 y el Paso 4 ustedes ya habían agregado: un conteo de "transformacion" (dfm_sin_recorte, semillas_t, conteo), los kwic de "unidad popular", "gobierno popular", "área de propiedad social", "junta de gobierno", los kwic de clase, clases, revoluc*, explota*, el muestreo al azar con set.seed(1) y los kwic de "transformaci*" en Boric. Lo dejé tal cual. Quedan dos cosas repetidas, sin riesgo: (a) mi conteo (todas las listas) y el suyo (solo transformacion) calculan lo mismo para transformacion; (b) dfm_sin_recorte se calcula dos veces. Pueden borrar el bloque que prefieran.
+Ojo: ese set.seed(1) queda antes del Paso 4, pero el Paso 4 vuelve a fijar set.seed(2026), así que el modelo principal no se ve afectado. Por orden, es mejor mover ese bloque de exploración a un apartado aparte (por ejemplo, "PASO 3b · Revisar semillas con kwic") antes del Paso 4, o al final del guion; no es obligatorio.
+
+ANTES DE SEGUIR
+1. No guarden este archivo desde VS Code hasta recargarlo: si les vuelve a salir el aviso "Resolve save conflict", el botón correcto es "Revert" (flecha curva hacia atrás); el check hace Overwrite y borra mis cambios.
+2. Si el guion está abierto con la versión de antes de este cambio, cierren la pestaña sin guardar y ábranlo de nuevo.
+3. Después: Session > Set Working Directory > Choose Directory, carpeta "input", y correr de arriba a abajo (no pude correr el código aquí: no hay R instalado).
+
+-----
+
+PREGUNTA: (pegaron la salida de la consola: getwd, 0, FALSE, source(...), y las salidas de los Pasos 3, 5 y 7a)
+
+1. LO PRIMERO: 0 y FALSE
+Las dos primeras líneas muestran getwd() = ".../Trabajo-de-m-todos" (la raíz, no "input"), y por eso length(list.files(...)) dio 0 y file.exists(...) dio FALSE. Es esperable: el setwd quedó comentado. Antes de correr, fijen la carpeta "input" (Session > Set Working Directory > Choose Directory) y confirmen que salga 37 y TRUE. Después de eso, vuelvan a correr de arriba a abajo. (Después de esas dos líneas, la salida de source() trae los Pasos 3, 5 y 7a; no puedo asegurar desde acá que haya corrido con la carpeta correcta ni que el guion haya terminado sin error. Revisen que no haya mensajes de Error en rojo, y que existan muestra_validacion_transformacion.csv y slda_taller3.rds en "input".)
+
+2. POR QUÉ source() NO MUESTRA TODO
+Con source(), lo que está solo en una línea (prev_gob, sort(conteo), los kwic, la tabla del Paso 6) no se imprime; solo se muestra lo que usa print() o cat() (los bucles del Paso 3, 5 y 7a). Para ver las tablas, corran las líneas una a una con Ctrl+Enter en el editor, o usen source("...", echo = TRUE). Por eso no aparecen el conteo por semilla, el Paso 6 ni los kwic.
+
+3. LO QUE MUESTRA SU SALIDA
+a) Paso 3 y Paso 5: son idénticos a la corrida anterior (mismas palabras y mismos números). El modelo no cambió, como esperábamos: no se modificó el diccionario.
+b) Paso 7a (los 5 párrafos más típicos de "transformacion"), todos de Aylwin 1990 a 1993, con theta entre 0,58 y 0,64:
+   1. Aylwin 1990 párrafo 261: Fondo Nacional de Desarrollo Regional, Fondo Común Municipal, comunas con más pobreza.
+   2. Aylwin 1991 párrafo 57: creación del Instituto Nacional de la Juventud.
+   3. Aylwin 1991 párrafo 92: administración de recursos y logística del Ejército.
+   4. Aylwin 1993 párrafo 457: Comisión Especial de Pueblos Indígenas y programas de desarrollo indígena.
+   5. Aylwin 1990 párrafo 138: participación de los pueblos indígenas y creación de la Comisión Especial.
+Ninguno trata del lenguaje de la Unidad Popular (socialismo, clase, revolución, nacionalización). Tratan de políticas públicas, desarrollo regional y municipal, juventud e indígenas, y uno (el 3) de administración del Ejército, que no tiene relación con "transformación". Esto es evidencia concreta, para la Parte 3a, de que el tópico mide gestión pública y programas del Estado y no el marco de 1971 a 1973.
+c) Cuidado al interpretar: los 5 párrafos salen de los primeros años (1990 a 1993) y de una sola persona (Aylwin). Es una lectura de los más típicos, no una descripción de todo el tópico, y por eso la validación también incluye los 20 párrafos al azar del Paso 7b.
+d) El párrafo 2 termina cortado ("El"): el texto se partió en esa frase al armar los párrafos. No es error de ustedes.
+
+4. QUÉ HACER AHORA, EN ORDEN
+1. Fijar la carpeta "input" y confirmar 37 y TRUE.
+2. Correr el guion línea por línea (Ctrl+Enter) desde el Paso 6 y pegar aquí: prev_gob (6a), la tabla de tópico principal (6b), prev_primeras (6d) y el contraste del diccionario (6e). Describir el gráfico 6c o guardarlo y mandarlo.
+3. Abrir muestra_validacion_transformacion.csv en Excel, y cada uno codifica por separado los 20 párrafos (1 = sí trata del concepto, 0 = no, 9 = duda). Tienen que leerlos y marcarlos ustedes; yo no los puedo codificar.
+4. Para el criterio de codificación: "sí trata del concepto" significa que el párrafo trata del lenguaje de transformación de 1971 a 1973 (cambio profundo de la sociedad, lucha de clases, revolución), no de cualquier "transformación". Con esa definición, es probable que la precisión salga baja, y eso está bien: es el resultado que apoya su hipótesis. Anoten la definición en el informe.
+
+-----
+
+PREGUNTA: ahora sí (salida de R con la carpeta "input" fijada; llega hasta la línea que estima el modelo del Paso 4)
+
+ESTADO
+1. getwd() = ".../Trabajo-de-m-todos/input", 37 archivos y metadatos TRUE: la carpeta está bien.
+2. Los pasos 1 a 3 corrieron sin errores. 11.156 párrafos (Kast 223) y 7.167 palabras en la matriz, igual que antes.
+3. La salida termina en textmodel_seededlda(...): el modelo del Paso 4 está estimándose (alrededor de 1 minuto). Esperen a que vuelva el cursor, y sigan con saveRDS y el Paso 5. Si no terminó, o salió un error, péguenmelo.
+
+HALLAZGOS QUE YA PUEDEN USAR EN EL INFORME
+
+A) Conteo de semillas (Parte 1): dos correcciones a lo que dije antes
+1. "transformacion": 6 semillas con 0 apariciones (capitalis*, imperialis*, oligarq*, unidad_popular, gobierno_popular, área_de_propiedad_social) y 5 con 1 a 4 (latifund* 1, nacionalización 1, socialis* 2, liberación 3, monopol* 4). Confirmado.
+2. "orden": junta_de_gobierno 0, subversi* 1, marxis* 1, caos 5. Corrección: antes dije que subversi* y marxis* estaban en 0; tienen 1 aparición cada una (el dfm_trim las eliminaba). Quedan por debajo de 5: junta_de_gobierno, subversi* y marxis*.
+3. "mercado": subsidiari* 2 (queda bajo 5); el resto está bien.
+Total de semillas con menos de 5 apariciones en la matriz: 6 + 5 + 3 + 1 = 15 de 39. Úsenlo como cifra en la Parte 1.
+
+B) Los compuestos NO existen en el corpus
+kwic de "unidad popular", "gobierno popular", "área de propiedad social" y "junta de gobierno": 0 coincidencias en todas. Entonces no hay que agregarlas a "compuestos": esas expresiones simplemente no aparecen en las cuentas públicas de 1990 a 2026. Es un hallazgo para la pregunta A: los nombres propios del período 1971 a 1973 no están. (Con 0 coincidencias en kwic, descartan que fuera un problema de tokenización.)
+
+C) Parte 3c: kwic de una palabra ambigua
+1. "clases", muestra al azar de 20 (set.seed(1)): las 20 son escolares (horas de clases, sala de clases, preparar clases, volver a clases), incluso en Boric 2022, 2023 y 2025 y en Piñera II. En los dos kwic anteriores (15 más 20) no aparece "lucha de clases" ni "clases sociales" en el sentido político; la única excepción vista es "sectores de clases medias" (Lagos 2002).
+2. "revoluc*": primeras 15 filas, todas de otro sentido (tecnológica, del conocimiento, de internet, industrial, económica) más "revolucionarios" en Aylwin 1990 (leer con window más grande, no está claro aún).
+3. "explota*": primeras 15 filas, todas recursos naturales, minería, bosques, petróleo.
+4. Para el informe pueden presentar una tabla: palabra, conteo en el corpus, filas leídas, filas en sentido político o de clase social, filas en otro sentido. Cuenten ustedes las filas; los números que les di son una lectura mía de lo que pegaron.
+
+D) "transformaci*" en Boric (hipótesis)
+Hay solo 11 coincidencias en las cuentas de Boric (el head(…, 20) devuelve 11 filas, o sea ese es todo el universo). Contexto de las 11:
+1. "transformaciones de largo plazo", "transformaciones profundas requieren convicción y persistencia", "construir transformaciones sociales que sean estables", "las transformaciones que llevaremos a cabo".
+2. "transformación integral del Estado" (en la ley marco de cambio climático), "la transformación de la matriz energética", "herramienta de transformación social", "un proyecto de reforma".
+3. "importantes transformaciones para tener más justicia y una democracia", "las transformaciones que Chile necesita".
+4. "una transformación aumentando el presupuesto destinado al deporte".
+Lectura prudente: en Boric la palabra aparece asociada a reforma, Estado, energía, justicia y democracia, con énfasis en que sean estables y graduales ("de largo plazo", "persistencia", "estables"). No aparece asociada a clase, explotación o ruptura. Esto apoya la hipótesis (sentido reformista e institucional), con una cautela: son 11 usos en total, así que no es una conclusión sobre todo el gobierno ni sobre intenciones. Digan solo qué asociaciones se observan en esos 11.
+
+LO QUE FALTA, EN ORDEN
+1. Esperar el modelo, correr saveRDS y el Paso 5 (terms, palabras descubiertas): deberían salir las mismas palabras que antes, porque el diccionario y la semilla son los mismos.
+2. Paso 6 línea por línea: prev_gob, tabla del tópico principal, prev_primeras, contraste del diccionario, gráfico. Pegarlos aquí.
+3. Paso 7: 7a ya lo vieron (los 5 párrafos típicos). 7b: codificar a mano los 20 párrafos del csv.
+4. Paso 7d (robustez) y Paso 8 (redes, "transformaci*", Bachelet II y Boric). Ojo con Bachelet II: puede tener pocas apariciones de "transformaci*"; si la red sale vacía, bajen min_freq a 0.2 o prueben con Lagos o Piñera II.
+
+-----
+
+PREGUNTA: con lo que llevo, ¿hasta dónde puedo avanzar en el informe?
+
+RESUMEN
+Con lo que ya tienen pueden dejar cerrada la Parte 1, avanzar a medias las Partes 2, 3 y 5, y no pueden avanzar la Parte 4. Mi estimación es que llevan alrededor de 40% del contenido del informe (16 de 40 puntos "disponibles" por material ya generado; es una estimación, no una nota).
+
+PARTE POR PARTE
+
+Parte 1 · Pregunta, hipótesis y semillas (6 pts): se puede cerrar hoy
+Ya tienen: la hipótesis (borrador), la tabla de conteo de semillas (15 de 39 con menos de 5 apariciones), el hallazgo de los 4 compuestos con 0 coincidencias en kwic, y la decisión de mantener el diccionario sin cambios con su justificación.
+Falta: elegir el hecho del período y la lectura del curso que anclan la hipótesis, y verificar que el dato y la fecha sean correctos. Extensión: media página.
+
+Parte 2 · Medición integrada (10 pts): a medias
+Ya tienen (salida del Paso 5, mismo diccionario y semilla): las 15 palabras más probables de cada tópico, las semillas frente a las descubiertas, y el veredicto de cada tópico:
+1. transformacion: mide otra cosa (gestión pública, regiones, programas, participación).
+2. orden: amplía el concepto hacia seguridad y delito (carabineros, delincuencia, delitos, víctimas, violencia).
+3. mercado: confirma el concepto (inversión, privado, modernización, empresas).
+Falta (depende del Paso 6): el gráfico por año, la tabla por gobierno, la comparación con las primeras cuentas y su interpretación. Esa es la parte que más puntos tiene y la que más rápido les destraba el resto. Extensión: página y media.
+
+Parte 3 · Validación (10 pts): a medias
+Hecho: (a) leer los 5 párrafos más típicos (ya salieron y se interpretaron), (c) kwic de una palabra ambigua (ya tienen "clases" con 20 de 20 escolares, "revoluc*" y "explota*").
+Falta: (b) codificar a mano los 20 párrafos y calcular la precisión (hay que hacerlo ustedes; es 1 = sí, 0 = no, 9 = duda) y (d) la prueba de robustez (correr el Paso 7d y decir si el orden de los gobiernos se mantiene). Los cuatro componentes son obligatorios para el puntaje máximo. Extensión: una página.
+
+Parte 4 · Coocurrencias (6 pts): no se puede avanzar todavía
+Falta el Paso 8 (tabla de vecinos y las dos redes). Lo que ya tienen del kwic de "transformaci*" en Boric (11 usos) les sirve de apoyo para la interpretación, no lo reemplaza. Extensión: media página.
+
+Parte 5 · Interpretación, límites y ética (8 pts): se puede dejar el esqueleto
+Ya se pueden anotar:
+1. Límites del corpus: Kast tiene una sola cuenta (223 párrafos); son discursos presidenciales, no programas ni textos de partido; el diccionario viene de un corpus distinto (1971 a 1973).
+2. Límites del método: palabras ambiguas (clase, revolución, explotación); dfm_trim elimina palabras con menos de 5 apariciones; el modelo varía entre computadores.
+3. Una consideración ética a elegir: por ejemplo, no presentar el resultado como prueba de que un gobierno "es" de cierta ideología, o la responsabilidad de interpretar frecuencias sin atribuir intenciones.
+Falta: separar hallazgo de inferencia con las cifras del Paso 6, 7 y 8. Extensión: media página a una.
+
+Anexo (obligatorio, sin puntaje)
+Ya tienen el diccionario final completo y la semilla (2026) y el residual (15). Falta sessionInfo() (Paso 9).
+
+DECLARACIÓN DE USO DE IA (obligatoria)
+Va al final del informe: herramienta (Claude), finalidad (explicar y depurar el código de R, revisar la redacción) y cómo verificaron (corrieron todo el código, comprobaron las salidas con kwic(), y no incluyeron ninguna cifra que no sacaran en R). Ojo con lo siguiente: la rúbrica dice que solo pueden usarla para eso, y no para codificar los 20 párrafos. Por eso la redacción del informe tiene que ser de ustedes. Yo puedo revisar lo que escriban (claridad, errores conceptuales, cumplimiento de la rúbrica), pero no escribirles las secciones. Los borradores de hipótesis que les di antes son orientaciones de forma; reescríbanlos con sus palabras.
+
+LO QUE MÁS PUNTOS DESTRABA, EN ORDEN
+1. Paso 6 (gráfico y tablas): abre la Parte 2 completa.
+2. Codificar los 20 párrafos y la robustez: completa la Parte 3.
+3. Paso 8: abre la Parte 4.
+
+-----
+
+PREGUNTA: hagamos el paso 6 del gráfico
+
+No toqué el guion: no puedo correr R aquí, así que les dejo el código listo para pegar y correr en la consola. Si prefieren que lo inserte en el guion con las marcas "cambio listo", díganmelo.
+
+ANTES DE EMPEZAR
+El modelo del Paso 4 tiene que haber terminado (el objeto "slda" debe existir). Comprueben con: class(slda). Debe decir "textmodel_seededlda" o similar, no un error. Si no, vuelvan a correr el Paso 4.
+
+PASO 1. PREPARAR LOS DATOS (son las primeras líneas del Paso 6 del guion)
+  theta <- slda$theta
+  gob   <- factor(docvars(dtm, "gobierno"), levels = orden_gob)
+  anio  <- docvars(dtm, "anio")
+  prev_anio <- aggregate(theta[, marcos, drop = FALSE], by = list(anio = anio), FUN = mean)
+  round(prev_anio[, marcos] * 100, 1)       # la tabla que alimenta el gráfico
+
+Qué hace: theta es el peso de cada tópico en cada párrafo. aggregate() promedia theta por año. Cada punto del gráfico es el promedio de todos los párrafos de una cuenta pública. Se usa promedio, no suma, porque las cuentas tienen tamaños muy distintos (comparar totales es un error que la rúbrica penaliza).
+
+PASO 2. VER EL GRÁFICO (versión del guion, con título que le falta)
+  colores <- c("#4E3239", "#2A5260", "#9FB4BD")[seq_along(marcos)]
+  matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
+          col = colores, xlab = "Año de la cuenta pública",
+          ylab = "Peso promedio del tópico (%)",
+          main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
+  legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
+  abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
+         lty = 3, col = "grey60")
+
+Qué hacen las líneas punteadas: marcan los cambios de gobierno (1993/94 Aylwin a Frei, 1999/2000 Frei a Lagos, 2005/06 Lagos a Bachelet I, 2009/10 a Piñera I, 2013/14 a Bachelet II, 2017/18 a Piñera II, 2021/22 a Boric, 2025/26 a Kast).
+La rúbrica descuenta 1 punto por figura sin título o sin ejes: por eso agregué main, xlab e ylab.
+
+PASO 3. GUARDARLO COMO IMAGEN PARA EL INFORME
+Opción simple: en la pestaña Plots de RStudio, Export > Save as Image..., formato PNG, y guárdenlo en la carpeta "output".
+Opción por código (ejecutar todo el bloque junto, de png() a dev.off()):
+  dir.create("../output", showWarnings = FALSE)
+  png("../output/grafico_peso_por_anio.png", width = 1600, height = 900, res = 150)
+  matplot(prev_anio$anio, prev_anio[, marcos] * 100, type = "b", pch = 19, lty = 1,
+          col = colores, xlab = "Año de la cuenta pública",
+          ylab = "Peso promedio del tópico (%)",
+          main = "Peso promedio de cada tópico sembrado, por año (1990 a 2026)")
+  legend("topleft", marcos, col = colores, lty = 1, pch = 19, bty = "n")
+  abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
+         lty = 3, col = "grey60")
+  dev.off()
+(la ruta "../output" funciona porque la carpeta de trabajo es "input"; el archivo queda en Trabajo-de-m-todos/output.)
+
+CÓMO LEER EL GRÁFICO (para su interpretación en el informe)
+1. Eje horizontal: años. Eje vertical: peso promedio (%) del tópico en esa cuenta. Las tres líneas son los tópicos sembrados; los 15 tópicos libres no aparecen, por eso las líneas no suman 100%.
+2. Busquen cuándo sube o baja cada línea y comparen contra los cambios de gobierno (líneas punteadas).
+3. Recuerden qué mide cada tópico (esto es lo importante): "transformacion" mide gestión pública y regiones; "orden" mide seguridad y delito; "mercado" mide economía y empresas. Interpreten el gráfico con esos contenidos, no con el nombre del tópico.
+4. Kast tiene una sola cuenta (un solo punto en 2026): no se puede hablar de "tendencia" con un punto. Esa comparación se hace con la tabla de primeras cuentas (6d).
+5. Describan lo que ven (qué línea sube, cuándo); no afirmen causas ("subió porque...") ni intenciones del presidente: con frecuencias no se pueden.
+
+QUÉ MANDARME PARA INTERPRETARLO
+1. La tabla de round(prev_anio[, marcos] * 100, 1) (37 filas, o los valores más altos y más bajos de cada tópico).
+2. Una captura del gráfico (o el PNG).
+3. Si pueden, también prev_gob (Paso 6a): la tabla por gobierno, que es la que va junto con el gráfico en la Parte 2.
+Con eso les digo qué se observa, cuidando la interpretación (observaciones del gráfico, no causas), y les marco qué errores de la rúbrica evitar. La redacción del informe es de ustedes.
+
+-----

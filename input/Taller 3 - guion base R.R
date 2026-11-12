@@ -45,7 +45,7 @@ library(quanteda)
 library(seededlda)
 library(readtext)
 library(quanteda.textplots)
-# setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")   # cada integrante pone su ruta o usa Session > Set Working Directory
+setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")   # cada integrante pone su ruta o usa Session > Set Working Directory
 # cambio listo - bastian - *se comentó el setwd con ruta absoluta para que el guion corra en cualquier computador*
 
 getwd()                                              # ¿estoy en "Taller 3"?
