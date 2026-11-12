@@ -104,8 +104,7 @@ dtm <- dfm_trim(dtm, min_termfreq = 5)   # palabras que aparecen 5 o más veces
 dtm                                      # unos 11.150 párrafos x 7.200 palabras
 topfeatures(dtm, 30)
 
-
-# ---- PASO 3 · Elegir la pregunta y su diccionario de semillas ----------
+  # ---- PASO 3 · Elegir la pregunta y su diccionario de semillas ----------
 # Hay cuatro preguntas. Cada grupo elige UNA (ver la pauta). Cada diccionario es
 # una hipótesis: "estas palabras indican este concepto". Pueden AGREGAR o QUITAR
 # palabras (máximo 5 cambios por lista), pero deben justificarlo en el informe.
@@ -137,6 +136,33 @@ for (m in marcos) {
 
 semillas <- featnames(dfm_select(dtm, pattern = dic))
 
+
+dfm_sin_recorte <- dfm(toks_sin)
+semillas_t <- as.list(dic_A)$transformacion
+conteo <- sapply(semillas_t, function(s) sum(colSums(dfm_select(dfm_sin_recorte, pattern = s))))
+sort(conteo)
+
+kwic(toks, phrase("unidad popular"), window = 5)
+kwic(toks, phrase("gobierno popular"), window = 5)
+kwic(toks, phrase("área de propiedad social"), window = 5)
+kwic(toks, phrase("junta de gobierno"), window = 5) |> head(10)
+
+kwic(toks, "clase", window = 5) |> head(15)
+kwic(toks, "clases", window = 5) |> head(15)
+kwic(toks, "revoluc*", window = 6) |> head(15)
+kwic(toks, "explota*", window = 5) |> head(15)
+
+
+#Para ver más años  
+set.seed(1)
+k <- kwic(toks, "clases", window = 5)
+as.data.frame(k)[sample(nrow(k), 20), c("docname","pre","keyword","post")]
+
+kb <- kwic(tokens_subset(toks, gobierno == "Boric"), "transformaci*", window = 7)
+head(as.data.frame(kb)[, c("docname","pre","keyword","post")], 20)
+
+kb <- kwic(tokens_subset(toks, gobierno == "Boric"), "transformaci*", window = 6)
+head(as.data.frame(kb)[, c("docname","pre","keyword","post")], 20)
 # ---- PASO 4 · Estimar el modelo de tópicos semillado --------------------
 # residual = 15: además de sus tópicos sembrados, 15 tópicos libres para todo
 # lo demás (salud, vivienda, política exterior...). Con pocos tópicos libres,

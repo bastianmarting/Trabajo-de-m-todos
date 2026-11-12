@@ -113,3 +113,356 @@ IMPORTANTE ANTES DE SEGUIR
 Si cambian el diccionario o "compuestos", hay que reestimar el modelo (Paso 4), guardar el nuevo .rds y anotar semilla (2026) y residual (15). Las cifras del informe tienen que salir del modelo final.
 
 -----
+
+PREGUNTA: explícame todo como si fuera tonto. no sé qué estoy haciendo
+
+LA IDEA GENERAL, EN SIMPLE
+Tienen 37 discursos del presidente (uno por año, 1990 a 2026). La pregunta A es: ¿hoy los presidentes hablan como hablaba Allende en 1971 a 1973? Para responderla no leen 37 discursos: le piden al computador que mida cuánto aparece cierto tipo de palabras en cada gobierno, y después revisan que esa medición tenga sentido.
+
+QUÉ ES CADA COSA
+1. Diccionario de semillas: una lista de palabras que ustedes dicen "esto indica tal tema". Ejemplo: "socialismo, revolución, explotación" indican el tema "transformación". Tienen tres temas: transformacion, orden y mercado.
+2. Modelo de tópicos semillado: un programa que lee todos los párrafos, parte de sus semillas y agrupa los párrafos por tema. Además descubre otras palabras que andan juntas con sus semillas.
+3. theta: para cada párrafo, qué porcentaje trata de cada tema. Promediando por gobierno ven cuánto habló cada uno de cada tema.
+4. Validar: comprobar que el programa no se está inventando cosas. Si el tema "orden" en realidad trata de delincuencia, hay que decirlo.
+
+QUÉ PASÓ EN SU CORRIDA (lo importante)
+1. La mayoría de las palabras de Allende casi no aparecen en los discursos modernos (socialismo, capitalismo, imperialismo, etc.). Eso ya es un resultado: la respuesta a "¿volvió su lenguaje?" va hacia "casi no".
+2. El tema "transformacion" terminó midiendo otra cosa: gestión del Estado, regiones, programas. No mide a Allende.
+3. El tema "orden" terminó midiendo seguridad y delincuencia, no a la dictadura.
+4. El tema "mercado" sí mide lo que dice.
+Es decir: el nombre de un tema no es lo que mide. Eso lo tienen que decir en el informe, y está bien: la nota no depende de que les salga lo esperado.
+
+LO QUE FALTA, EN ORDEN (con quién y qué hacer)
+Paso A. Hipótesis (media página). Una frase que diga qué esperan ver. Ejemplo listo: "El lenguaje de transformación de Allende casi no vuelve; el tópico mide gestión pública. Y el tópico orden mide seguridad y delito, que pesa más en Piñera II y en Kast." Elijan una de las hipótesis de la respuesta anterior y cámbienla a sus palabras.
+Paso B. Semillas. Hay semillas con 0 apariciones. Pueden cambiar hasta 5 por lista y tienen que justificar cada cambio en una frase ("se reemplazó X porque no aparece en el corpus"). Si no quieren cambiar nada, lo anotan como hallazgo.
+Paso C. Medir (Paso 6 del guion). Correr el código: les da una tabla por gobierno, un gráfico por año y otra tabla solo con las primeras cuentas. Se copia al informe y se explica en dos frases cada cosa.
+Paso D. Validar (Paso 7). Cuatro cosas: (a) leer 5 párrafos y decir si tratan del tema; (b) leer 20 párrafos y marcar 1, 0 o 9 en el CSV, a mano, ustedes y no la IA; (c) kwic de una palabra ambigua, por ejemplo "clase"; (d) cambiar una cosa (la semilla a set.seed(1)) y ver si el orden de los gobiernos se mantiene.
+Paso E. Redes (Paso 8). Elegir una palabra (por ejemplo "seguridad"), dos gobiernos (por ejemplo Aylwin y Boric) y mirar qué palabras la rodean. Explicar si el sentido cambió.
+Paso F. Interpretar. Responder la pregunta A diciendo qué muestran los datos y qué no, con dos límites (por ejemplo: Kast tiene una sola cuenta; son discursos y no programas) y una consideración ética.
+Paso G. Anexo y entrega: sessionInfo(), el diccionario final, semilla (2026) y residual (15); el informe en PDF o Word, el .R y el .csv.
+
+CÓMO REPARTIRSE, SIMPLE
+Uno hace A, B, C (hipótesis, semillas, medición). El otro hace D, E (validación y redes). Los 20 párrafos los leen y marcan los dos por separado. F lo escriben juntos.
+
+LO PRÓXIMO QUE HAY QUE HACER HOY (el paso más chico)
+1. En R, decidan las semillas (Paso B).
+2. Corran el Paso 6 completo y peguen aquí lo que sale. Con eso les armo la explicación de cada tabla y gráfico en lenguaje simple.
+
+-----
+
+PREGUNTA: vamos a usar la hipótesis de transformación
+
+HIPÓTESIS (borrador para pegar en el informe; cámbienla a sus palabras)
+"El léxico de transformación de 1971 a 1973 casi no reaparece en las cuentas públicas desde 1990: la mayoría de sus semillas tiene pocas o ninguna aparición, y el tópico sembrado captura sobre todo gestión pública y regiones. Si el peso promedio del tópico es mayor en Boric que en Lagos y Bachelet, será por un sentido reformista y administrativo de la palabra 'transformaciones', no por vocabulario de clase."
+
+Por qué sirve: se puede contrastar con sus datos (la tabla por gobierno del Paso 6, el kwic de la Parte 3c y las palabras descubiertas del Paso 5), y dice qué resultado la desmentiría (si Boric usara "clase", "explotación" o "revolución" en sentido de ruptura).
+Anclaje que falta (rúbrica: al menos un hecho del período y una lectura del curso):
+1. Un hecho del período: por ejemplo el estallido social de 2019 y el proceso constitucional de 2022, o el lema de transformaciones del programa de Boric. Verifiquen la fecha y el dato antes de citar.
+2. Una lectura del curso: el ejemplo Allende y Pinochet de las sesiones 9 y 10. Citen la lectura exacta.
+
+QUÉ HACER AHORA, EN ORDEN
+1. Semillas (Parte 1): corran el conteo en el texto original que dejé en la respuesta anterior. Decidan hasta 5 cambios en "transformacion" y escriban una frase por cada uno. Lo no cambiado que siga en 0 se declara como hallazgo.
+2. Si agregan compuestos ("unidad popular", etc.) o cambian semillas, vuelvan a correr Pasos 2, 3 y 4 y guarden el nuevo .rds (semilla 2026, residual 15). Si no cambian nada, no hace falta reestimar.
+3. Corran el Paso 6 completo (a, b, c, d, e) y peguen aquí la salida. Con eso redactamos la Parte 2.
+4. Validación (Paso 7): el tópico a validar es marcos[1], o sea "transformacion". Cambien la línea m <- marcos[1].
+5. kwic (Parte 3c): conviene "clase" o "revolución", porque pueden ser clases escolares o revolución digital. Para el sentido de "transformaciones" en Boric, usen palabra <- "transformaci*".
+6. Robustez (Parte 3d): set.seed(1) y comparen si el orden de los gobiernos se mantiene.
+7. Redes (Parte 4): clave <- "transformaci*" con Bachelet II y Boric. Si una red sale vacía, bajen min_freq a 0.2 o cambien de gobierno.
+
+QUÉ CUIDAR PARA NO PERDER PUNTOS
+1. No digan que "el tópico transformación mide transformación": mide lo que muestran sus palabras (gestión y regiones).
+2. Comparen promedios por gobierno, no totales.
+3. Mencionen que Kast tiene una sola cuenta y usen las primeras cuentas (Paso 6d).
+4. No afirmen intenciones ni causas desde frecuencias.
+
+-----
+
+PREGUNTA: ¿cómo hago eso? (semillas: conteo sobre el texto original, hasta 5 cambios en "transformacion", reestimar el modelo y guardar el nuevo)
+
+Todo esto se hace en R, en la consola o en el script, con el directorio de trabajo en la carpeta input (setwd como en la respuesta anterior). No corrí este código aquí (no tengo R); si da error, péguenme el mensaje.
+
+PASO 1. CONTAR CADA SEMILLA EN EL TEXTO ORIGINAL (sin el recorte de 5 apariciones)
+Corran esto después de haber corrido los Pasos 1 a 3 del guion (necesitan toks_sin y dic_A):
+
+  dfm_sin_recorte <- dfm(toks_sin)          # la matriz SIN dfm_trim
+  semillas_t <- as.list(dic_A)$transformacion
+  conteo <- sapply(semillas_t, function(s) sum(colSums(dfm_select(dfm_sin_recorte, pattern = s))))
+  sort(conteo)
+
+Qué muestra: cada semilla con su número de apariciones. Las que dicen 0 no existen en los discursos. Las que dicen 1 a 4 existen pero dfm_trim las había borrado. Anoten esta tabla: es la base de la Parte 1 del informe.
+Haga lo mismo para "orden" cambiando $transformacion por $orden.
+
+PASO 2. DECIDIR LOS CAMBIOS (máximo 5 en la lista "transformacion")
+Cada cambio puede ser quitar una semilla o agregar una. Cada uno necesita una frase de justificación, por ejemplo: "Se quitó 'latifund*' porque tiene 0 apariciones en el corpus: la reforma agraria de 1971 no es tema de las cuentas posteriores a 1990."
+Cómo elegir:
+1. Las semillas que están en 0 no sirven para medir nada. Quiten las 5 que menos importan a su hipótesis, o reemplácenlas por palabras que sí aparecen.
+2. Para reemplazar, prueben primero que la palabra exista y cuántas veces aparece (palabras candidatas, no las doy por hechas):
+     candidatas <- c("reformas", "cambios", "desigualdad", "derechos", "justicia")
+     sapply(candidatas, function(w) sum(colSums(dfm_select(dfm_sin_recorte, pattern = w))))
+   Elijan solo las que tengan sentido de transformación del país y que no sean palabras genéricas ("cambios" puede ser cualquier cosa).
+3. Las semillas que queden en 0 y no alcancen a cambiar se declaran en el informe como hallazgo: el vocabulario de 1971 a 1973 no aparece en las cuentas públicas. Conviene preguntar al ayudante si esos 11 ceros cuentan dentro del límite de 5 cambios.
+
+PASO 3. COMPUESTOS (alternativa para "unidad_popular", "gobierno_popular", "área_de_propiedad_social", "junta_de_gobierno")
+En el script, en el vector "compuestos" del Paso 2, agreguen al final (con comas):
+  "unidad popular", "gobierno popular", "área de propiedad social", "junta de gobierno"
+Agregar compuestos NO cuenta como cambio de diccionario. Después tienen que volver a correr desde "toks <- tokens(...)" hasta "dtm <- dfm_trim(...)" y repetir el conteo del Paso 1.
+
+PASO 4. ARMAR EL DICCIONARIO NUEVO (sin tocar el original)
+Definan qué quitan y qué agregan, y corran:
+
+  quitar  <- c("latifund*", "oligarq*", "monopol*")        # EJEMPLO: cambien por sus elecciones
+  agregar <- c("reformas")                                  # EJEMPLO: solo si existe en la matriz
+  nueva_t <- c(setdiff(as.list(dic_A)$transformacion, quitar), agregar)
+  dic_nuevo <- dictionary(list(
+    transformacion = nueva_t,
+    orden          = as.list(dic_A)$orden,
+    mercado        = as.list(dic_A)$mercado))
+  dic <- dic_nuevo
+  marcos <- names(dic)
+  dic
+
+Revisen que el diccionario impreso sea el que quieren y repitan el bucle de conteo del Paso 3 del guion para ver que no quedan ceros que no esperaban.
+
+PASO 5. REESTIMAR EL MODELO Y GUARDARLO
+  set.seed(2026)
+  slda <- textmodel_seededlda(dtm, dictionary = dic, residual = 15)
+  saveRDS(slda, "slda_taller3_v2.rds")      # otro nombre, para no pisar el modelo anterior
+Tarda alrededor de 1 minuto. Desde ese momento, todas las cifras del informe (Pasos 5 a 8) deben salir de este modelo. Si no cambiaron nada, no hace falta reestimar ni guardar otro archivo.
+
+PASO 6. REGISTRAR PARA EL INFORME Y EL ANEXO
+1. La tabla de conteo por semilla (antes y después).
+2. La lista de cambios, cada uno con su frase de justificación.
+3. El diccionario final completo (se imprime con "dic").
+4. La semilla (2026) y el residual (15).
+
+-----
+
+PREGUNTA: no entiendo por qué me mencionas a Allende y Pinochet, sobre el éxito de 1971 a 1973, si eso es de otro taller que hicimos en clases como ejemplo
+
+RESPUESTA CORTA
+No es otro taller: es la base de la pregunta A. Los propios materiales de este taller lo dicen. Por eso salió en mis respuestas.
+
+POR QUÉ APARECE EN ESTE TALLER
+1. La pauta dice: "A. ¿Volvió el lenguaje de Allende? ¿Usan Lagos, Bachelet o Boric el marco de transformación de 1971 a 1973? ¿Y Kast el de orden?". Es decir, la pregunta compara los discursos de 1990 a 2026 con el lenguaje de la época de Allende.
+2. En el guion, dic_A tiene el comentario "el mismo diccionario de las sesiones 9 y 10". O sea, el diccionario que están usando es el que ya vieron en clases con el ejemplo Allende y Pinochet.
+3. Ese diccionario tiene un tema por cada lado: "transformacion" (el lenguaje de Allende y la Unidad Popular: socialismo, revolución, explotación, etc.) y "orden" (el lenguaje de Pinochet y la Junta: patria, orden, fuerzas armadas, etc.). Por eso sus semillas incluyen "unidad_popular" y "junta_de_gobierno".
+4. La pauta pide, en la hipótesis, "al menos una lectura del curso". El ejemplo de las sesiones 9 y 10 (con su guion y el modelo slda_s10.rds) es esa lectura.
+
+QUÉ NO TIENEN QUE HACER
+No tienen que analizar a Allende ni a Pinochet. Sus datos son los 37 discursos de 1990 a 2026. Allende y Pinochet son solo el punto de comparación: ustedes usan el diccionario de entonces para medir cuánto de ese lenguaje aparece después.
+
+EN CRISTIANO, CON SU HIPÓTESIS
+"Tomamos las palabras que se usaban en 1971 a 1973 y vemos si los presidentes de 1990 a 2026 las usan. Resultado: casi no las usan, y el tema que armamos termina midiendo otra cosa."
+
+Donde dije "lectura del curso" para anclar la hipótesis, pueden citar la Sesión 10 (láminas y guion) como el ejemplo de donde sale el diccionario. Si en clases leyeron algún texto específico sobre ese período, también sirve; la cita exacta la deben poner ustedes.
+
+-----
+
+PREGUNTA: resultado de sort(conteo) (conteo de cada semilla de "transformacion" en el texto original)
+
+CÓMO LEER SU TABLA
+Semillas en 0 (6): capitalis*, imperialis*, oligarq*, unidad_popular, gobierno_popular, área_de_propiedad_social.
+Semillas con 1 a 4 (5): latifund* (1), nacionalización (1), socialis* (2), liberación (3), monopol* (4).
+Semillas con 5 o más (5): explota* (26), clase (29), clases (36), revoluc* (42), transformaci* (109).
+Total de apariciones de todas las semillas: 253. Solo transformaci* aporta 109, o sea cerca de 43% (109 de 253). Es la semilla que más empuja al tópico.
+
+QUÉ SIGNIFICA (HALLAZGOS QUE SÍ PUEDEN AFIRMAR)
+1. Del vocabulario de 1971 a 1973, las palabras más ideológicas casi no aparecen: capitalis*, imperialis* y oligarq* tienen 0; socialis* tiene 2; nacionalización y latifund*, 1 cada una. Eso ya responde en parte la pregunta A: ese lenguaje casi no está en las cuentas de 1990 a 2026.
+2. Lo que sostiene el tópico son palabras generales: "transformaci*" (109), "revoluc*" (42), "clase/clases" (65) y "explota*" (26). Con esa mezcla, el tópico no mide el lenguaje de la Unidad Popular, sino cuánto se habla de "transformación" en general.
+3. Qué NO pueden afirmar todavía: que "revoluc*", "clase/clases" y "explota*" se usan en sentido político. Pueden ser "revolución digital", "clases" escolares, "explotación" minera o forestal. Eso se comprueba con kwic() (ver abajo).
+4. Un dato técnico que ayuda a decidir: una semilla con 0 apariciones no influye en el modelo (no hay nada que sembrar). Quitarla no cambia las cifras; solo ordena el diccionario. Lo que sí cambia el modelo es quitar o agregar semillas que sí aparecen.
+
+PRIMERO: REVISAR SI LOS COMPUESTOS EXISTEN CON OTRA FORMA
+Los 3 compuestos (unidad_popular, gobierno_popular, área_de_propiedad_social) están en 0 porque no están en la lista "compuestos". Comprueben si la expresión existe en el texto (tokens con "toks", antes de quitar stopwords):
+
+  kwic(toks, phrase("unidad popular"), window = 5)
+  kwic(toks, phrase("gobierno popular"), window = 5)
+  kwic(toks, phrase("área de propiedad social"), window = 5)
+  kwic(toks, phrase("junta de gobierno"), window = 5) |> head(10)
+
+Si salen 0 filas, la expresión no está en el corpus (hallazgo, sin cambiar nada). Si salen 5 o más, agréguenla a "compuestos" y repitan los Pasos 2 a 4 (agregar compuestos no cuenta como cambio de diccionario).
+
+SEGUNDO: REVISAR LAS PALABRAS AMBIGUAS CON kwic()
+
+  kwic(toks, "clase", window = 5) |> head(15)
+  kwic(toks, "clases", window = 5) |> head(15)
+  kwic(toks, "revoluc*", window = 5) |> head(15)
+  kwic(toks, "explota*", window = 5) |> head(15)
+
+Lean las filas y anoten cuántas son sentido político ("clase trabajadora", "lucha de clases") y cuántas no ("clases en el colegio", "revolución digital", "explotación minera"). Esto es material para la Parte 3c del informe (kwic de una palabra ambigua).
+
+QUÉ CAMBIOS PROPONGO (decidan ustedes; máximo 5 en la lista)
+Opción 1, la más simple: no cambiar el diccionario. Se declara en el informe la tabla de conteo y se dice que las semillas en 0 y con 1 a 4 apariciones no aportan, y que el tópico lo sostienen 5 semillas. Como una semilla en 0 no afecta el modelo, no hay que reestimar. Ventaja: no pierden tiempo. Desventaja: dejan semillas "muertas" a la vista; la rúbrica penaliza semillas sin revisar, pero ustedes sí las revisaron y las justificaron.
+Opción 2, la más justificable: usar los cambios solo si el kwic muestra que una semilla mide otra cosa. Ejemplo: si "clase" y "clases" son casi todas escolares, quitarlas (2 cambios), con la frase "se quitó 'clase' y 'clases' porque en el kwic la mayoría de las apariciones son clases escolares, no clase social". Después reestimar (Pasos 4 y 5 de la respuesta anterior) y guardar slda_taller3_v2.rds.
+En ambas opciones se mantienen las ideas de la hipótesis. No conviene agregar palabras modernas ("reformas", "derechos") solo para llenar el tópico: cambiarían qué se mide, y la pregunta A es justamente si vuelve el lenguaje de 1971 a 1973.
+
+LO QUE ME TIENEN QUE MANDAR PARA SEGUIR
+1. La salida de los kwic() de "unidad popular", "gobierno popular", "área de propiedad social" y "junta de gobierno" (aunque sea "0 filas").
+2. Un resumen de lo que ven en los kwic() de "clase", "clases", "revoluc*" y "explota*" (cuántas de 15 son sentido político).
+Con eso decidimos los cambios y pasan al Paso 6.
+
+-----
+
+PREGUNTA: leímos los kwic de "clase", "clases", "revoluc*" y "explota*" (las primeras 15 filas de cada uno). Clase y clases cambian de sentido, revolución es tecnológica y económica, explotación es minería y recursos naturales. ¿Qué hacemos?
+
+SU LECTURA ES CORRECTA Y ES UN HALLAZGO
+Mi lectura de las filas que pegaron (verifíquenla ustedes en R):
+1. "clases": 14 de 15 son escolares (horario de clases, sala de clases, hacer clases). La otra es "sectores de clases medias".
+2. "clase": no hay "lucha de clases" en las 15. Aparece como "ninguna/esta/toda clase de" (que significa "tipo de"), "clase política", "clase dirigente", "clase empresarial" y "de segunda clase".
+3. "revoluc*": revolución del conocimiento, tecnológica, de internet, industrial, económica. Ninguna en el sentido de la Unidad Popular. Hay una fila de Aylwin 1990 ("todo crimen es obra de revolucionarios") que conviene leer con una ventana más grande (window = 15), porque podría ser el único uso político.
+4. "explota*": explotación de recursos naturales, minería, yacimientos, bosques. No es explotación de trabajadores.
+
+CONSECUENCIA PARA EL TÓPICO
+De las 253 apariciones de semillas, 133 (clase y clases 65, revoluc* 42, explota* 26) parecen estar en otro sentido, más de la mitad según lo que leyeron. Otras 109 son "transformaci*", que es una palabra general. Las semillas realmente propias del lenguaje de 1971 a 1973 suman 11 apariciones en total. Entonces el tópico "transformacion" no mide el lenguaje de Allende: mide transformación en sentido general, más usos de clase, revolución y explotación que son de otro tipo. Esto responde la pregunta A: no volvió.
+
+LÍMITE DE LO QUE LEYERON
+head(15) devuelve las primeras filas, ordenadas por año, así que casi todo sale de 1990 a 2010. No vieron los gobiernos de Bachelet II, Piñera II, Boric y Kast. Para que la afirmación sea sólida hay que leer una muestra al azar y también un gobierno reciente:
+
+  set.seed(1)
+  k <- kwic(toks, "clases", window = 5)
+  nrow(k)
+  as.data.frame(k)[sample(nrow(k), 20), c("docname", "pre", "keyword", "post")]
+
+(repetir con "clase", "revoluc*" y "explota*"), y para el gobierno que importa a su hipótesis:
+
+  kb <- kwic(tokens_subset(toks, gobierno == "Boric"), "transformaci*", window = 6)
+  nrow(kb)
+  head(as.data.frame(kb)[, c("docname", "pre", "keyword", "post")], 20)
+
+Anoten en una tabla: palabra, filas revisadas, filas en sentido político o de clase social, filas en otro sentido.
+
+QUÉ HACER CON LAS SEMILLAS (mi recomendación)
+Opción recomendada: NO cambiar el diccionario del modelo principal y usar el kwic de dos maneras.
+1. Parte 3c (kwic de una palabra ambigua): usen "revoluc*" (o "clases") como palabra ambigua. El kwic muestra que el tópico recoge sentidos que no son los de 1971 a 1973.
+2. Parte 3d (robustez): el guion permite elegir "quitar la semilla más dudosa". Esa es la decisión que cambian. Definan la decisión como "quitar las semillas que el kwic mostró en otro sentido: clase, clases, revoluc*, explota*", reestimen y vean si el orden de los gobiernos se mantiene. Si no están seguros de que cuente como "una sola decisión", pregunten al ayudante, o quiten solo "clases", que es la más clara (14 de 15 escolares).
+
+Por qué no cambiar el diccionario principal: la pregunta A usa el diccionario de las sesiones 9 y 10 como regla de medida. Lo que quieren mostrar es justamente que esa regla, aplicada a las cuentas de 1990 a 2026, mide otra cosa. Si le quitan las semillas problemáticas antes de medir, queda casi solo "transformaci*" y pierden esa comparación.
+
+Opción alternativa: si prefieren sacar las semillas del modelo principal (clase, clases, revoluc*, explota*, y quizás las de 0 a 4 apariciones), son 4 a 9 cambios. Solo pueden hacer 5; elijan "clase", "clases", "revoluc*", "explota*" más una, justifiquen cada una con el kwic, reestimen (set.seed(2026), residual = 15) y guarden slda_taller3_v2.rds. El riesgo: el tópico queda casi solo con "transformaci*".
+
+SI NO CAMBIAN NADA, QUÉ DECLARAN EN LA PARTE 1
+1. Tabla de conteo de semillas (la que ya tienen).
+2. "Se mantiene el diccionario de las sesiones 9 y 10 sin cambios porque la hipótesis es poner a prueba esa regla."
+3. "Seis semillas tienen 0 apariciones y cinco entre 1 y 4; no influyen en el modelo."
+4. "El kwic muestra que clase, clases, revoluc* y explota* se usan mayormente en otro sentido; ver Parte 3."
+
+SIGUIENTE PASO
+Corran el Paso 6 completo del guion con el modelo que ya tienen (slda_taller3.rds, diccionario original) y péguenme la salida: la tabla por gobierno, la de tópico principal, el gráfico por año, las primeras cuentas y el diccionario solo. Después armamos la Parte 2.
+
+-----
+
+PREGUNTA: revisa lo que he puesto en el script y dime qué hacer
+
+ARCHIVO REVISADO: input/Taller 3 - guion base R.R (no lo modifiqué). Cambios suyos que encontré: un bloque de lintr (líneas 43 a 46), un setwd con ruta absoluta (línea 51) y un comentario en la línea 136.
+
+LO QUE HAY QUE CORREGIR (por prioridad)
+
+1. LÍNEA 136 ES INCORRECTA Y LES PUEDE COSTAR PUNTOS
+El comentario dice: "Aparecen todas, no hay ninguna semilla con 0 apariciones". Pero el bucle de las líneas 132 a 135 solo lista las palabras que SÍ aparecen; las semillas en 0 no se ven. Su propio conteo mostró que en "transformacion" hay 6 en 0 (capitalis*, imperialis*, oligarq*, unidad_popular, gobierno_popular, área_de_propiedad_social) y 5 con 1 a 4 apariciones. En "orden" faltan junta_de_gobierno, subversi* y marxis*. La rúbrica baja el criterio 1 cuando hay semillas con cero apariciones sin revisar.
+Qué hacer: reemplazar ese comentario y agregar el conteo, pegando esto justo después de la línea 138 (semillas <- ...):
+
+  # Conteo por semilla SIN el recorte de dfm_trim (el bucle de arriba solo muestra las que aparecen)
+  dfm_sin_recorte <- dfm(toks_sin)
+  conteo <- unlist(lapply(as.list(dic_A), function(v)
+    sapply(v, function(s) sum(colSums(dfm_select(dfm_sin_recorte, pattern = s))))))
+  sort(conteo)
+  # Resultado (transformacion): 6 semillas en 0 y 5 entre 1 y 4; solo transformaci*, revoluc*,
+  # explota*, clase y clases tienen 5 o más. Se mantiene el diccionario de las sesiones 9 y 10
+  # sin cambios (ver informe, Parte 1).
+
+(La última línea de comentario es la decisión que recomendé; si deciden cambiar semillas, la ajustan.)
+
+2. SETWD CON RUTA ABSOLUTA (línea 51)
+Funciona en su computador, pero en el de su compañero no (otra carpeta, otro usuario) y el guion entregado debe correr en cualquier equipo. Opciones: ponerle # delante y cada uno elige su carpeta con Session > Set Working Directory > Choose Directory (como dice el propio guion), o dejarlo comentado como ejemplo:
+  # setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")   # cada integrante pone su ruta
+
+3. BLOQUE lintr (líneas 43 a 46)
+"Garantiza que el paquete de lint esté disponible para diagnósticos del editor". No tiene nada que ver con el taller: solo instala un paquete de formato del editor. Mi recomendación es borrarlo del guion que van a entregar (si es un diagnóstico del editor, que lo instale cada uno por su cuenta). Instalar paquetes dentro del script puede fallar en otro computador.
+
+4. KWIC DEL PASO 7c (línea 229)
+Sigue con palabra <- "seguridad", pero la hipótesis es de transformación. Cámbienla por la palabra ambigua que quieren mostrar, por ejemplo "revoluc*" (es la más clara: casi toda es revolución tecnológica) o "clases" (14 de 15 escolares). Y los gobiernos de las líneas 230 y 231: comparen uno antiguo con uno reciente (Aylwin y Boric, o Lagos y Boric).
+
+5. ROBUSTEZ DEL PASO 7d (líneas 240 y 241)
+Está con set.seed(1) y el mismo diccionario, que es la opción "otra semilla". Está bien y es lo más simple. Si prefieren la opción que recomendé (quitar las semillas dudosas), reemplacen las líneas 240 y 241 por:
+
+  dic_rob <- dictionary(list(
+    transformacion = setdiff(as.list(dic_A)$transformacion, c("clase", "clases", "revoluc*", "explota*")),
+    orden          = as.list(dic_A)$orden,
+    mercado        = as.list(dic_A)$mercado))
+  set.seed(2026)                      # MISMA semilla que el modelo principal: así cambia UNA sola decisión
+  slda_rob <- textmodel_seededlda(dtm, dictionary = dic_rob, residual = 15)
+
+Ojo: si cambian el diccionario Y la semilla a la vez, son dos decisiones y no se sabe cuál produjo la diferencia. Elijan una de las dos opciones, no ambas.
+
+6. REDES DEL PASO 8 (líneas 253 a 255)
+Siguen con "seguridad*", Aylwin y Boric. Para su hipótesis conviene clave <- "transformaci*" con gob_1 <- "Bachelet II" y gob_2 <- "Boric" (o Lagos y Boric). Si una red sale vacía, bajen min_freq a 0.2 o cambien de gobierno.
+
+7. LÍNEA 126 Y 200 ESTÁN BIEN
+dic <- dic_A y m <- marcos[1] ("transformacion") corresponden a su hipótesis. Dejen tal cual.
+
+OTRAS COSAS QUE VI EN LA CARPETA (no las toqué)
+1. input/a: archivo de prueba con texto suelto ("aaaa", "adsd", "dsad"). No va en la entrega; pueden borrarlo ustedes.
+2. La carpeta es un repositorio git con historial y remoto. Eso explica por qué respuestas_claude.txt a veces se veía sin mis últimas respuestas: probablemente un pull, checkout o stash lo devolvió a una versión anterior. Si no quieren que el archivo se pise, agréguenlo a .gitignore o no lo incluyan en los commits, y avisen a su compañero. Además el .rds pesa 1,4 MB y está en el repositorio.
+3. Si trabajan los dos en el mismo script, acuerden quién edita qué (ver división del trabajo) para no pelearse con git.
+
+DESPUÉS DE ESTOS CAMBIOS
+Corran todo el script de arriba a abajo (Ctrl+Shift+Enter en RStudio) y confirmen que no da errores. Luego péguenme la salida del Paso 6 (a, b, d, e) y armamos la Parte 2 del informe.
+
+-----
+
+PREGUNTA: ya, ¿qué debo hacer ahora?
+
+ESTADO: el guion en tu carpeta sigue igual que cuando lo revisé (no veo los cambios todavía). Por eso lo siguiente es aplicar las correcciones y correr todo.
+
+HACER AHORA, EN ESTE ORDEN (30 a 40 minutos)
+1. En el guion, línea 136: borrar el comentario "Aparecen todas..." y pegar después de la línea 138 el bloque de conteo por semilla (está en la respuesta anterior, punto 1).
+2. Poner # delante del setwd de la línea 51 y borrar el bloque de lintr (líneas 43 a 46).
+3. Línea 229: palabra <- "revoluc*" (o "clases"). Líneas 253 a 255: clave <- "transformaci*", gob_1 <- "Bachelet II", gob_2 <- "Boric".
+4. Robustez (líneas 240 y 241): elegir UNA opción: dejar set.seed(1) o usar dic_rob con set.seed(2026) (código en la respuesta anterior, punto 5).
+5. Correr el guion completo de arriba a abajo (sin errores). Si algo falla, copien el mensaje de error.
+6. Pegarme aquí la salida del Paso 6: a) prev_gob, b) la tabla del tópico principal, d) prev_primeras, e) el contraste del diccionario, y describirme el gráfico del Paso 6c (o guardarlo y mandarlo).
+
+DESPUÉS DE ESO (en paralelo, entre los dos)
+1. Cada uno codifica por separado los 20 párrafos del archivo muestra_validacion_transformacion.csv (1, 0 o 9). Esto lo hacen ustedes, no la IA.
+2. Leer a mano los 5 párrafos más típicos del Paso 7a.
+3. Registrar el resultado de la robustez (¿se mantiene el orden de los gobiernos?).
+
+-----
+
+PREGUNTA: cambia tú todo eso hasta correr el código, marca con #cambio listo - bastian - *se hace X*
+
+HECHO: edité input/Taller 3 - guion base R.R. Cada cambio lleva al lado la marca "# cambio listo - bastian - *...*". Busquen "cambio listo" (Ctrl+F) para verlos todos. No toqué nada más.
+
+CAMBIOS APLICADOS (8)
+1. Se borró el bloque que instalaba lintr (líneas 43 a 46).
+2. Se comentó el setwd con ruta absoluta (línea 51).
+3. Se borró el comentario incorrecto "no hay ninguna semilla con 0 apariciones" (línea 136).
+4. Se agregó el conteo por semilla sin dfm_trim (después de "semillas <- ..."), con el resultado y la decisión anotados como comentario.
+5. Paso 7c: palabra <- "revoluc*" y se compara Lagos (antes Aylwin) con Boric.
+6. Paso 7d (robustez): la decisión que cambia es el diccionario (dic_rob sin clase, clases, revoluc*, explota*), con set.seed(2026), el mismo que el modelo principal.
+7. Paso 8: clave <- "transformaci*".
+8. Paso 8: gob_1 <- "Bachelet II" (gob_2 sigue siendo Boric).
+
+NO PUDE CORRER EL CÓDIGO
+En el entorno donde trabajo no hay R instalado, y no tengo una terminal en su computador, así que no ejecuté nada. Lo que sí revisé: la sintaxis de los bloques que agregué y que el archivo quedó con los mismos saltos de línea de Windows. Tienen que correrlo ustedes en RStudio.
+
+ANTES DE CORRER
+1. Si el guion está abierto en VS Code o RStudio, recárguenlo (si guardan la versión vieja encima, se pierden los cambios).
+2. Como ahora el setwd está comentado, fijen la carpeta: Session > Set Working Directory > Choose Directory... y elijan "input". Verifiquen con getwd() y que length(list.files("Cuentas 1990-2026", pattern = "\\.txt$")) diga 37.
+3. Corran de arriba a abajo. Debería tardar unos minutos (el modelo del Paso 4 y el de robustez del Paso 7d demoran alrededor de 1 minuto cada uno).
+
+QUÉ DEBERÍAN VER (para saber si salió bien)
+1. Paso 3, sort(conteo): 6 en 0 y 5 entre 1 y 4 en transformacion (los mismos números de su corrida anterior).
+2. Paso 7a: los 5 párrafos más típicos del tópico "transformacion".
+3. Paso 7b: se crea muestra_validacion_transformacion.csv, que usan para codificar los 20 párrafos.
+4. Paso 8: dos redes, una de Bachelet II y otra de Boric. Si una sale vacía, bajen min_freq a 0.2 o cambien de gobierno.
+
+SI SALE UN ERROR
+Copien el mensaje completo y péguenmelo. Los puntos donde es más probable que falle: el conteo nuevo (Paso 3) y el diccionario dic_rob (Paso 7d).
+
+CAMBIOS QUE NO HICE (siguen pendientes, son de ustedes)
+1. Escribir la hipótesis y la Parte 1 en el informe.
+2. Codificar a mano los 20 párrafos.
+3. Elegir qué hacer con las semillas si deciden cambiar el diccionario principal (ahora se mantiene sin cambios).
+
+-----
