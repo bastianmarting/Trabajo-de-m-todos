@@ -350,6 +350,22 @@ set.seed(1); textplot_network(red_clave(gob_2), min_freq = 0.5,
 # frecuente en ese gobierno: elijan otra o bajen min_freq a 0.2.
 
 
+#Cración te tabla con IA, y exportar a word para el informe
+n_parrafos     <- as.vector(table(gob))
+tabla_gob      <- cbind(prev_gob, n_parrafos)
+n_primeras     <- aas.vector(table(gob[primeras]))
+tabla_primeras <- cbind(prev_primeras, n_parrafos = n_primeras)
+comparacion    <- merge(prev_gob, prev_primeras, by = "gobierno", suffixes = c("_todas", "_primera"))
+comparacion    <- comparacion[match(orden_gob, comparacion$gobierno), ]
+
+#install.packages("writexl")      # solo la primera vez
+library(writexl)
+dir.create("../output", showWarnings = FALSE)
+write_xlsx(list(palabras_15      = as.data.frame(tabla15),
+                por_gobierno     = tabla_gob,
+                primeras_cuentas = tabla_primeras,
+                comparacion      = comparacion),
+           "../output/tablas_seccion2.xlsx")
 # ---- PASO 9 · Guardar y dejar constancia ---------------------------------
 write.csv(prev_gob, "resultados_por_gobierno.csv", row.names = FALSE, fileEncoding = "UTF-8")
 write.csv(prev_anio, "resultados_por_anio.csv", row.names = FALSE, fileEncoding = "UTF-8")

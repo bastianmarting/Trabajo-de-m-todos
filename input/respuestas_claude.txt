@@ -836,3 +836,174 @@ SI NO SE VE O SALE UN ERROR
 Cópienme el mensaje de error. Lo más probable: "no se puede abrir el archivo" (carpeta output inexistente: el dir.create la crea) o "figure margins too large" (el panel Plots es muy chico; con png() no pasa).
 
 -----
+
+PREGUNTA: ¿cómo hago esto de la Parte 2? "Las 15 palabras más probables de sus tópicos sembrados, separando semillas de palabras descubiertas, y si cada tópico confirma, amplía o desmiente el concepto. Un gráfico por año, una tabla por gobierno y la comparación con las primeras cuentas de cada mandato."
+
+La Parte 2 son cinco piezas. Cuatro salen de código que ya tienen en el guion; la quinta (el veredicto) es lectura de ustedes. Extensión máxima: página y media.
+
+PIEZA 1. TABLA DE LAS 15 PALABRAS, CON LAS SEMILLAS MARCADAS (código nuevo, para pegar después del Paso 5)
+  top15 <- terms(slda, 15)[, marcos]
+  semillas_por_marco <- lapply(marcos, function(m) featnames(dfm_select(dtm, pattern = dic[m])))
+  names(semillas_por_marco) <- marcos
+  tabla15 <- sapply(marcos, function(m)
+    ifelse(top15[, m] %in% semillas_por_marco[[m]], paste0(top15[, m], " [S]"), top15[, m]))
+  tabla15                                   # [S] = semilla; sin marca = palabra descubierta
+  sapply(marcos, function(m) sum(top15[, m] %in% semillas_por_marco[[m]]))   # cuántas semillas hay en el top 15 de cada tópico
+  write.csv(tabla15, "../output/tabla_15_palabras.csv", row.names = FALSE, fileEncoding = "UTF-8")
+Qué hace: terms() da las 15 palabras más probables de cada tópico. Luego se marca con [S] las que son semillas de ese tópico; las que no tienen marca son palabras descubiertas por el modelo. La suma final cuenta cuántas semillas hay entre las 15.
+Si el modelo y la semilla son los mismos de antes, deberían ver (prueben y usen SUS números): transformacion con 0 semillas en el top 15; orden con alrededor de 6 (seguridad, patria, fuerzas_armadas, orden, autoridades, reconstrucción) y 9 descubiertas (carabineros, delincuencia, gobierno, personas, víctimas, delitos, violencia, defensa, prevención); mercado con alrededor de 11 semillas y 4 descubiertas (sector, empresas, trabajadores, economía). Es lo que se lee de su salida anterior; la rúbrica pide que las cifras salgan de su R, no de acá.
+
+PIEZA 2. EL VEREDICTO: CONFIRMA, AMPLÍA O DESMIENTE (lo escriben ustedes)
+Criterio para decidir en cada tópico:
+1. CONFIRMA: la mayoría de las palabras (semillas y descubiertas) pertenece al mismo concepto del diccionario.
+2. AMPLÍA: las descubiertas pertenecen al concepto, pero lo extienden a un vocabulario cercano que no habían puesto como semilla.
+3. DESMIENTE o MIDE OTRA COSA: las descubiertas (o la ausencia de semillas) muestran un tema distinto al que nombra el tópico.
+Lectura orientativa con su salida anterior (verifiquen con sus datos):
+1. transformacion: mide otra cosa (administración pública, regiones, municipios, programas). No hay semillas en el top 15.
+2. orden: amplía, y lo desplaza hacia seguridad ciudadana (carabineros, delitos, delincuencia, víctimas, violencia), junto a las semillas patria y fuerzas armadas.
+3. mercado: confirma y amplía hacia economía y empresas.
+Cada veredicto necesita un argumento de una o dos frases con las palabras como evidencia. Importante: no usen el nombre del tópico como si fuera lo que mide (la rúbrica descuenta de 2 a 4 puntos).
+
+PIEZA 3. EL GRÁFICO POR AÑO
+Ya lo tienen: Paso 6c. Con título (main), ejes y guardado como PNG (ver respuestas anteriores).
+
+PIEZA 4. LA TABLA POR GOBIERNO
+Paso 6a, con el n de párrafos:
+  n_parrafos <- as.vector(table(gob))
+  tabla_gob <- cbind(prev_gob, n_parrafos)
+  tabla_gob
+  write.csv(tabla_gob, "../output/tabla_por_gobierno.csv", row.names = FALSE, fileEncoding = "UTF-8")
+Es el promedio de theta por párrafo en cada gobierno, en %. Se compara con promedios, no con totales.
+
+PIEZA 5. COMPARACIÓN CON LAS PRIMERAS CUENTAS
+Paso 6d. Para verla al lado de la tabla por gobierno:
+  n_primeras <- as.vector(table(gob[primeras]))
+  tabla_primeras <- cbind(prev_primeras, n_parrafos = n_primeras)
+  comparacion <- merge(prev_gob, prev_primeras, by = "gobierno", suffixes = c("_todas", "_primera"))
+  comparacion <- comparacion[match(orden_gob, comparacion$gobierno), ]
+  comparacion
+  tabla_primeras
+Qué muestra: para cada gobierno, el peso del tópico con todas sus cuentas frente a solo la primera cuenta del mandato. Kast tiene una sola, así que sus dos valores son iguales. Por eso es la comparación más justa para Kast. Si un gobierno cambia mucho entre "todas" y "primera", anótenlo: el resultado depende de qué cuenta se use.
+
+CÓMO REDACTARLO (ESTRUCTURA SUGERIDA PARA LA PARTE 2)
+1. Una tabla de 3 columnas con las 15 palabras de cada tópico, con las semillas marcadas, y una frase con el veredicto de cada uno (confirma, amplía, mide otra cosa).
+2. La Figura 1 (gráfico por año) con 2 o 3 frases que describan lo que se ve: qué línea sube o baja y cuándo, comparado con los cambios de gobierno. Describan; no expliquen causas.
+3. La Tabla 1 (por gobierno) con 2 o 3 frases: quién tiene más y menos de cada tópico, siempre con promedios.
+4. La Tabla 2 (primeras cuentas) con 2 frases: si el orden de los gobiernos se mantiene respecto a la tabla completa, y qué pasa con Kast.
+5. Una frase de cierre: qué significan estos resultados para la hipótesis (a favor, en contra o con matices), cuidando de no afirmar más de lo que muestran.
+
+ERRORES QUE LA RÚBRICA DESCUENTA EN ESTA PARTE
+1. Figuras sin interpretar.
+2. Comparar totales en vez de promedios.
+3. Confundir el nombre del tópico con su contenido.
+4. No comparar con las primeras cuentas.
+5. Olvidar mencionar que Kast tiene una sola cuenta.
+6. Gráfico o tabla sin título o sin ejes.
+
+QUÉ MANDARME
+La salida de tabla15, el conteo de semillas por tópico, tabla_gob, comparacion y tabla_primeras, y el gráfico. Con eso reviso que el veredicto y las frases estén respaldados por las cifras. La redacción del informe es de ustedes; yo reviso lo que escriban.
+
+-----
+
+PREGUNTA: así está la tabla (captura de Excel con tabla15)
+
+LO QUE VEO EN LA TABLA (3 columnas: transformacion, orden, mercado; [S] = semilla)
+
+1. transformacion: 0 semillas entre las 15 palabras (nacional, gobierno, recursos, desarrollo, regiones, programas, programa, participación, regionales, conjunto, ministerio, marcha, regional, municipios, servicios).
+2. orden: 6 semillas de 15 (seguridad, patria, fuerzas_armadas, orden, autoridades, reconstrucción) y 9 descubiertas (carabineros, delincuencia, gobierno, personas, víctimas, delitos, violencia, defensa, prevención).
+3. mercado: 11 semillas de 15 (inversión, privado, modernización, inversiones, libertad, mercados, mercado, iniciativas, empresarios, iniciativa, eficiencia) y 4 descubiertas (sector, empresas, trabajadores, economía).
+Son los mismos números que anticipé (0, 6 y 11). Ahora son sus cifras, salidas de su R, y las pueden usar en el informe. Revisen con sapply(marcos, function(m) sum(top15[, m] %in% semillas_por_marco[[m]])) que dé 0, 6 y 11.
+
+QUÉ DICE PARA EL VEREDICTO (ustedes lo redactan)
+1. transformacion: ninguna de las 15 es semilla, y las palabras son de administración pública y territorio (regiones, municipios, ministerio, programas, servicios). El tópico mide otra cosa. Esto es lo más sólido del informe: el concepto de 1971 a 1973 no aparece entre las palabras más probables.
+2. orden: 6 de 15 son semillas (40%); las descubiertas son sobre delito y policía (carabineros, delincuencia, delitos, víctimas, violencia, prevención). Amplía el concepto desplazándolo hacia la seguridad ciudadana; las semillas patria, fuerzas_armadas y reconstrucción siguen presentes.
+3. mercado: 11 de 15 son semillas (73%); las descubiertas (sector, empresas, trabajadores, economía) son de economía. Confirma y amplía levemente.
+Detalle útil: "gobierno" aparece en dos tópicos (transformacion y orden). Es una palabra muy general; la pueden mencionar como señal de que parte de esos tópicos recoge lenguaje administrativo común. Y si van a decir qué significa "reconstrucción" en "orden" (por ejemplo, referirse al terremoto de 2010), compruébenlo antes con kwic(toks, "reconstrucción"). No lo asuman.
+
+PROBLEMA DE ACENTOS EN LA CAPTURA
+Se ve "inversiÃ³n", "modernizaciÃ³n", "vÃ-ctimas", "economÃ-a". No es un error del código: el csv se guardó en UTF-8 y Excel lo abrió como si fuera otra codificación. Cómo arreglarlo:
+1. Abrir el csv con Datos > Obtener datos > Desde texto o CSV (o "Desde un archivo de texto/CSV"), y en "Origen del archivo" elegir "65001: Unicode (UTF-8)". Luego cargar.
+2. O NO abrirlo por doble clic.
+3. Para el informe, lo más seguro es copiar la tabla directo desde la consola de R, o pegar en Word los valores ya bien escritos. Si pegan desde el Excel con los caracteres rotos, el informe saldrá con esos errores: revisen antes de entregar.
+Esto también afecta al csv de los 20 párrafos que tienen que codificar (muestra_validacion_transformacion.csv): ábranlo con el mismo método (UTF-8) y, al guardarlo, elijan "CSV UTF-8 (delimitado por comas)" para que el R lo lea bien con encoding = "UTF-8".
+
+OTRA COSA
+En la columna mercado, en la sexta fila, veo "inversions [S]". Si en su R dice "inversiones", es el recorte de la captura; si en la tabla dice "inversions", revisen el original. La salida de R dice "inversiones".
+
+FORMATO PARA EL INFORME
+1. Tabla de 3 columnas con los nombres de los tópicos como encabezado (en Excel la primera fila quedó como dato, y los encabezados dicen Columna1, Columna2, Columna3: arréglenlo).
+2. Título y leyenda: "Tabla 1. Las 15 palabras más probables de cada tópico sembrado. [S] = semilla del diccionario; sin marca = palabra descubierta por el modelo".
+3. Debajo, una línea de resumen: "Semillas entre las 15 palabras: transformacion 0, orden 6, mercado 11".
+
+QUÉ SIGUE
+Mandarme tabla_gob, comparacion, tabla_primeras y el gráfico, para revisar la interpretación de la Parte 2.
+
+-----
+
+PREGUNTA: ¿dónde encuentro eso? ("65001: Unicode (UTF-8)")
+
+DÓNDE ESTÁ, EN EXCEL (Windows, Microsoft 365 o Excel 2019 en adelante)
+1. Abran Excel con un libro en blanco (no hagan doble clic en el csv).
+2. Pestaña "Datos" > "Obtener datos" > "Desde un archivo" > "Desde texto o CSV". (En versiones nuevas hay un botón directo "Desde texto/CSV" en la cinta de Datos.)
+3. Elijan el archivo (por ejemplo tabla_15_palabras.csv en la carpeta output, o muestra_validacion_transformacion.csv en input).
+4. Se abre una ventana de vista previa. Arriba, a la izquierda, está el menú desplegable "Origen del archivo". Ahí elijan "65001: Unicode (UTF-8)".
+5. Si la vista previa ya muestra bien los acentos (víctimas, economía), clic en "Cargar".
+6. Para el csv de los 20 párrafos: después de codificar, "Archivo" > "Guardar como" y en "Tipo" elijan "CSV UTF-8 (delimitado por comas) (*.csv)".
+
+SI NO ENCUENTRAN EL MENÚ
+Si usan Excel antiguo (2016 o anterior), la opción está en Datos > "Desde texto". Si no hay forma, abran el csv con el Bloc de notas (clic derecho > Abrir con) para verificar que los acentos estén bien en el archivo: lo están, el problema es solo cómo Excel lo interpreta.
+
+ALTERNATIVA SIN EXCEL
+Para la tabla de 15 palabras, copien el resultado de tabla15 desde la consola de R y péguenlo directo en Word. Para los 20 párrafos, pueden codificar en una hoja de Google Sheets (Archivo > Importar, que lee UTF-8 sin problemas) y descargar como csv.
+
+-----
+
+PREGUNTA: ahora sí, ¿cómo redacto la Sección 2 (Medición integrada, 10 pts, 1 y media planas)? ¿Voy bien? Tengo un gráfico que muestra todos...
+
+¿VOY BIEN?
+Sí en lo que ya tienen: la tabla de las 15 palabras con semillas marcadas, el conteo de semillas (0, 6 y 11) y el gráfico por año. Lo que falta para cerrar la sección: la tabla por gobierno con n de párrafos, la comparación con las primeras cuentas y el veredicto escrito. Todavía no vi su gráfico ni esas tablas; mándenmelos (captura o PNG y las salidas de tabla_gob, comparacion y tabla_primeras) y reviso que su interpretación coincida con las cifras.
+
+LA REDACCIÓN ES DE USTEDES
+La rúbrica permite usar IA para explicar código y revisar redacción, no para escribir el informe. Por eso no les redacto la sección. Les dejo la estructura, qué debe responder cada párrafo y una lista para revisar lo que escriban.
+
+ESTRUCTURA (1 y media planas)
+1. Apertura (2 a 3 líneas): qué se midió. Una palabra para cada dato: unidad (párrafo), modelo (tópicos semillados, 3 sembrados y 15 libres), semilla 2026 y residual 15, y qué es el peso (promedio de theta por párrafo, en %).
+2. Tabla 1 (las 15 palabras, con [S]) y un párrafo con el veredicto de cada tópico.
+   Preguntas que cada veredicto debe responder: ¿cuántas semillas hay entre las 15? ¿qué palabras descubiertas aparecen y de qué tema son? ¿eso confirma, amplía o desmiente el concepto, y por qué?
+3. Figura 1 (gráfico por año) y un párrafo de lectura.
+   Preguntas: ¿qué línea es más alta y cuál más baja en general? ¿hay cambios visibles alrededor de algún cambio de gobierno? ¿alguna línea cambia de nivel en un año concreto? ¿cuánta diferencia hay (en puntos porcentuales), y es grande o pequeña?
+4. Tabla 2 (por gobierno, con n de párrafos) y un párrafo.
+   Preguntas: ¿qué gobierno tiene el mayor y el menor promedio de cada tópico? ¿las diferencias son grandes o de apenas uno o dos puntos? ¿qué pasa con Kast y su n?
+5. Tabla 3 (primeras cuentas de cada mandato) y un párrafo.
+   Preguntas: ¿se mantiene el orden de los gobiernos respecto a la Tabla 2? ¿hay gobiernos que cambian mucho si solo se mira la primera cuenta? ¿cómo queda Kast frente a las primeras cuentas de los demás?
+6. Cierre (1 o 2 frases): qué significa todo esto para la hipótesis (a favor, en contra o con matices), sin afirmar más de lo que muestran los datos.
+
+CRITERIOS DE LA RÚBRICA PARA ESTA SECCIÓN (10 pts)
+Logrado (10 a 9): distingue semillas y palabras descubiertas con un veredicto argumentado; gráfico y tabla correctos e interpretados; compara con las primeras cuentas.
+Suficiente (8 a 6): resultados correctos pero el veredicto no se argumenta, o falta la comparación con las primeras cuentas.
+Insuficiente (5 a 3): figuras sin interpretar, comparar totales en vez de promedios, o confundir el nombre del tópico con su contenido.
+
+CONSEJOS DE REDACCIÓN
+1. Hablen del "peso promedio del tópico X", no de lo que "dijo" o "quiso decir" un gobierno. El modelo mide frecuencia de palabras agrupadas, no intención.
+2. Usen siempre promedios (no totales) y digan que están en % por párrafo.
+3. Cuando comparen gobiernos, den la diferencia en puntos porcentuales y evalúen si es grande o pequeña. Con diferencias de uno o dos puntos, sean cautos: la prueba de robustez (Paso 7d) dice si el orden se mantiene.
+4. Mencionen que Kast tiene una sola cuenta (223 párrafos) en esta sección, no solo en las limitaciones.
+5. Cada tabla y cada figura lleva número, título y nota de qué mide. En el texto, refiéranse a ellas por número ("Tabla 2", "Figura 1").
+6. Para caber en 1 y media planas: Tabla 1 compacta (letra pequeña), figura de ancho de página y 1 sola frase de interpretación por pieza si hace falta. Prefieran párrafos cortos.
+7. Eviten "se confirma la hipótesis" o "se demuestra". Usen "los datos son consistentes con" o "no apoyan".
+
+LISTA PARA REVISAR ANTES DE PASAR A LA SIGUIENTE SECCIÓN
+1. ¿El veredicto de cada tópico usa palabras de la tabla como evidencia?
+2. ¿Las cifras que citan salen de su R (tabla15, tabla_gob, comparacion)?
+3. ¿Figura 1, Tabla 1, Tabla 2 y Tabla 3 tienen título y ejes?
+4. ¿Hay una comparación explícita con las primeras cuentas?
+5. ¿Se menciona a Kast y su única cuenta?
+6. ¿No hay causas ni intenciones?
+7. ¿Cabe en 1 y media planas?
+
+QUÉ MANDARME PARA REVISAR
+1. El gráfico por año (captura o PNG).
+2. tabla_gob, comparacion y tabla_primeras.
+3. Cuando lo tengan, su borrador de la sección. Les marco errores conceptuales, cifras que no calzan con las tablas y puntos de la rúbrica que faltan.
+
+-----
