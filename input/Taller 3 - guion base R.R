@@ -45,7 +45,7 @@ library(quanteda)
 library(seededlda)
 library(readtext)
 library(quanteda.textplots)
-# setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")   # cada integrante pone su ruta o usa Session > Set Working Directory
+setwd("C:/Users/casamg2021/Desktop/Trabajo-de-m-todos/input")   # cada integrante pone su ruta o usa Session > Set Working Directory
 # cambio listo - bastian - *se comentó el setwd con ruta absoluta para que el guion corra en cualquier computador*
 
 getwd()                                              # ¿estoy en "Taller 3"?
@@ -140,9 +140,9 @@ conteo <- unlist(lapply(as.list(dic_A), function(v)
   sapply(v, function(s) sum(colSums(dfm_select(dfm_sin_recorte, pattern = s))))))
 sort(conteo)
 # Resultado (transformacion): 6 semillas en 0 (capitalis*, imperialis*, oligarq*, unidad_popular,
-# gobierno_popular, área_de_propiedad_social) y 5 entre 1 y 4 (latifund*, nacionalización,
+# gobierno_popular, área_de_propiedad_social y junta de gobierno) y 5 entre 1 y 4 (latifund*, nacionalización,
 # socialis*, liberación, monopol*); solo transformaci*, revoluc*, explota*, clase y clases tienen 5 o más.
-# Decisión: se quitan 4 semillas con 0 apariciones y se agrega 'reforma' a transformacion: 5 cambios en total (ver dic_final antes del Paso 4).
+# Decisión: se quitan 5 semillas con 0 apariciones y se agrega 'reforma' a transformacion: 5 cambios en total (ver dic_final antes del Paso 4).
 
 
 dfm_sin_recorte <- dfm(toks_sin)
@@ -154,7 +154,7 @@ kwic(toks, phrase("unidad popular"), window = 5)
 kwic(toks, phrase("gobierno popular"), window = 5)
 kwic(toks, phrase("área de propiedad social"), window = 5)
 kwic(toks, phrase("junta de gobierno"), window = 5) |> head(10)
-
+kwic(toks, phrase("reforma"), window = 5) |> head(10)
 kwic(toks, "clase", window = 5) |> head(15)
 kwic(toks, "clases", window = 5) |> head(15)
 kwic(toks, "revoluc*", window = 6) |> head(15)
@@ -171,12 +171,21 @@ head(as.data.frame(kb)[, c("docname","pre","keyword","post")], 20)
 
 kb <- kwic(tokens_subset(toks, gobierno == "Boric"), "transformaci*", window = 6)
 head(as.data.frame(kb)[, c("docname","pre","keyword","post")], 20)
+
 # cambio listo - bastian - *5 cambios en transformacion: se quitan 4 semillas con 0 apariciones en el corpus (imperialis*, oligarq*, gobierno_popular, área_de_propiedad_social; no pueden medir nada) y se agrega "reforma"; se mantienen capitalis* y unidad_popular*
+
 dic_final <- dictionary(list(
   transformacion = c(setdiff(as.list(dic_A)$transformacion,
                              c("imperialis*", "oligarq*", "gobierno_popular", "área_de_propiedad_social")),
                      "reforma"),
   orden          = as.list(dic_A)$orden,
+  mercado        = as.list(dic_A)$mercado))
+
+  dic_final <- dictionary(list(
+  transformacion = c(setdiff(as.list(dic_A)$orden,
+                             c("junta_de_gobierno")),
+                     "reforma"),
+  orden          = as.list(dic_A)$transformacion,
   mercado        = as.list(dic_A)$mercado))
 dic <- dic_final
 marcos <- names(dic)
@@ -189,9 +198,9 @@ dic
 # los sembrados se "tragan" palabras ajenas. Tarda alrededor de 1 minuto.
 set.seed(2026)                                   # >>> puede cambiarla en el Paso 7d
 slda <- textmodel_seededlda(dtm, dictionary = dic, residual = 15)
-saveRDS(slda, "slda_taller3_v2.rds")   # cambio listo - bastian - *el modelo con el diccionario final se guarda aparte, sin pisar slda_taller3.rds*   # guárdelo: lo necesitarán para reproducir sus cifras
+saveRDS(slda, "slda_taller3.rds")   # cambio listo - bastian - *el modelo con el diccionario final se guarda aparte, sin pisar slda_taller3.rds*   # guárdelo: lo necesitarán para reproducir sus cifras
 # Para volver a cargarlo otro día sin estimarlo de nuevo:
-# slda <- readRDS("slda_taller3.rds")
+slda <- readRDS("slda_taller3.rds")
 
 
 # ---- PASO 5 · Interpretar: semillas y palabras descubiertas -------------

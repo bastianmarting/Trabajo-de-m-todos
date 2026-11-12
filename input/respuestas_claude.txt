@@ -1267,3 +1267,31 @@ Conflicto de guardado en VS Code (captura "Resolve save conflict"):
 A la izquierda está el archivo en el disco, con mi cambio (dic_final, en rojo). A la derecha está la versión que tienen abierta en el editor, sin ese cambio. Para quedarse con mi cambio: botón Revert (la flecha curva, arriba a la derecha de la barra de la comparación). NO Overwrite, porque pisa el disco con la versión de la derecha y se pierde dic_final. Después de Revert, no escriban nada hasta ver el bloque "cambio listo - bastian - se quitan 5 semillas..." antes del Paso 4.
 
 -----
+
+Capitalismo se queda y se agrega "reforma":
+
+Cambio hecho en el R: dic_final ahora tiene 5 cambios en transformacion (el máximo por lista): se quitan 4 semillas con 0 apariciones (imperialis*, oligarq*, gobierno_popular, área_de_propiedad_social) y se agrega "reforma". capitalis* y unidad_popular se mantienen (ambas con 0 apariciones, no pesan en el modelo).
+
+Ojo con "reforma":
+1. Es vocabulario del polo institucional de su hipótesis (reformas legales e institucionales). Si lo ponen como semilla del marco "transformacion", que es el marco de Allende, mezclan los dos polos en el mismo tópico y el tópico deja de ser puro de "clase o ruptura". Se puede defender (Allende hablaba de reforma agraria), pero la justificación tiene que estar escrita en la Sección 1 y tiene que contar con el kwic de "reforma" (no se ha hecho).
+2. Es una palabra frecuente: el tópico va a absorber muchos párrafos de reformas de todos los gobiernos. Esto SÍ cambia el modelo (a diferencia de quitar semillas en 0). Hay que reestimar (Paso 4, set.seed(2026), residual 15), y todas las tablas, el gráfico y la Tabla 1 se rehacen. El modelo nuevo se guarda como slda_taller3_v2.rds.
+3. Como "reforma" está escrita exacta, no captura "reformas" ni "reformar". Si quieren plurales, "reforma*"; avísenme y lo cambio.
+4. Con 5 cambios ya no queda margen para más en esa lista.
+5. Antes de reestimar, hagan kwic(toks, "reforma", window = 5) |> head(15) y escriban en el informe qué sentido tiene.
+
+-----
+
+Qué hacer ahora (después de agregar "reforma"):
+
+1. Si VS Code muestra el aviso de conflicto, Revert. Confirmar que el bloque dic_final (5 cambios) está antes del Paso 4.
+2. kwic de "reforma": kwic(toks, "reforma", window = 5) |> head(15). Anotar qué sentido tiene (reforma agraria, tributaria, educacional, del Estado...). Es la justificación para la Sección 1.
+3. Correr el bloque dic_final, y el Paso 4 (set.seed(2026), residual 15, ~1 minuto). Se guarda slda_taller3_v2.rds.
+4. Paso 5: terms(slda, 15)[, marcos] y ver el top 15 de transformacion. Mirar si "reforma" arrastra vocabulario institucional (ley, proyecto, tributaria, Estado). Eso se reporta como hallazgo o como límite.
+5. Paso 6: prev_gob, primeras, gráfico. Rehacer Tabla 1, 2 y 3 y la Figura 1 con el modelo nuevo; los números anteriores ya no valen.
+6. Paso 7: validar con los 20 párrafos (la muestra cambia porque el tópico principal cambia), 7c kwic, 7d robustez.
+7. Paso 8: redes de "transformaci*" para Bachelet II y Boric.
+8. Escribir Secciones 1 a 5 y el anexo (sessionInfo, dic_final, semilla 2026, residual 15, declaración de uso de IA).
+
+Pendiente mío: el guion en el disco no tiene el código de tabla15, tabla_gob, png del gráfico ni write_xlsx. Para el paso 5 y 6 hace falta; ofrecí restaurarlo y falta su respuesta.
+
+-----
