@@ -40,6 +40,10 @@
 # ---- PASO 0 · Paquetes -------------------------------------------------
 # Los mismos de las sesiones 8, 9 y 10. Si falta alguno, quite el # y corra UNA vez:
 # install.packages(c("quanteda", "seededlda", "readtext", "quanteda.textplots"))
+# Garantiza que el paquete de lint esté disponible para diagnósticos del editor.
+if (!requireNamespace("lintr", quietly = TRUE)) {
+  install.packages("lintr", repos = "https://cloud.r-project.org")
+}
 library(quanteda)
 library(seededlda)
 library(readtext)
