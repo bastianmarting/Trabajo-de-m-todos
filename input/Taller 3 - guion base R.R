@@ -399,6 +399,30 @@ for (g in c(gob_1, gob_2)) {
   cat("\n", g, "\n"); print(topfeatures(dfm(cerca), 12))
 }
 
+
+#para guardar yb exportar la tabla en el documento : 
+vecinos <- function(g, n = 12) {
+  cerca <- tokens_remove(tokens_select(tokens_subset(toks_sin, gobierno == g),
+                                       clave, window = 5), clave)
+  tf <- topfeatures(dfm(cerca), n)
+  d  <- data.frame(palabra = names(tf), n = as.integer(tf), stringsAsFactors = FALSE)
+  d[order(-d$n, d$palabra), ]
+}
+v1 <- vecinos(gob_1); v2 <- vecinos(gob_2)
+
+# Tabla 5: las 12 palabras que más aparecen cerca de transformaci*, en cada gobierno
+tabla_vecinos <- data.frame(
+  Puesto = 1:12,
+  v1$palabra, v1$n,
+  v2$palabra, v2$n)
+names(tabla_vecinos) <- c("Puesto",
+                          paste(gob_1, "palabra"), paste(gob_1, "apariciones"),
+                          paste(gob_2, "palabra"), paste(gob_2, "apariciones"))
+tabla_vecinos
+
+library(writexl)
+write_xlsx(tabla_vecinos, "../output/tabla5_vecinos_transformaci.xlsx")
+
 r1 <- red_clave(gob_1)
 dim(r1)
 sum(r1)          # si da 0, no hay coocurrencias y no hay red posible
