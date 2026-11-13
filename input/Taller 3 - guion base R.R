@@ -209,8 +209,8 @@ for (m in marcos) cat("\n", m, "->", paste(setdiff(top20[, m], semillas), collap
 
 # ---- PASO 6 · Medir: ¿cuánto pesa cada tópico, en quién y cuándo? -------
 theta <- slda$theta
-gob   <- factor(docvars(dtm, "gobierno"), levels = orden_gob)
-anio  <- docvars(dtm, "anio")
+gob   <- factor(docvars(slda$data, "gobierno"), levels = orden_gob)   # cambio listo - bastian - *se usa slda$data para que coincida con theta*
+anio  <- docvars(slda$data, "anio")   # cambio listo - bastian - *se usa slda$data*
 
 # a) Peso promedio (theta, en %) por gobierno
 prev_gob <- aggregate(theta[, marcos, drop = FALSE], by = list(gobierno = gob), FUN = mean)
@@ -233,7 +233,7 @@ abline(v = c(1993.5, 1999.5, 2005.5, 2009.5, 2013.5, 2017.5, 2021.5, 2025.5),
 
 # d) Solo las PRIMERAS cuentas de cada mandato (la comparación más justa con Kast,
 #    que tiene una sola).
-primeras <- docvars(dtm, "primera_cuenta") == "sí"
+primeras <- docvars(slda$data, "primera_cuenta") == "sí"   # cambio listo - bastian - *se usa slda$data*
 prev_primeras <- aggregate(theta[primeras, marcos, drop = FALSE],
                            by = list(gobierno = gob[primeras]), FUN = mean)
 prev_primeras[, marcos] <- round(prev_primeras[, marcos] * 100, 1)
@@ -308,32 +308,48 @@ for (i in order(theta[, m], decreasing = TRUE)[1:5]) {
   cat("\n#", names(texto)[i], " theta =", round(theta[i, m], 2), "\n", texto[i], "\n")
 }
 
-kwic(toks, "plazo*", window = 5) |> head(15)
+kwic(toks, "reforma*", window = 5) |> head(15)
+
 # b) Muestra al azar para CODIFICAR A MANO: 20 párrafos cuyo tópico principal es m.
 #    Se guarda en un archivo .csv que pueden abrir en Excel. En la columna
 #    "codigo" escriban 1 (sí trata del concepto), 0 (no) o 9 (duda).
-set.seed(3)                                       # no la cambien: así su muestra es 
-candidatos <- which(principal == m)
-elegidos <- sample(candidatos, min(20, length(candidatos)))
-muestra <- data.frame(parrafo = names(texto)[elegidos],
-                      gobierno = gob[elegidos],
-                      theta = round(theta[elegidos, m], 2),
-                      texto = texto[elegidos],
-                      codigo = "")
-write.csv(muestra, paste0("muestra_validacion_", m, ".csv"), row.names = FALSE,
-          fileEncoding = "UTF-8")
-# Después de codificar en Excel, guárdenlo como .csv y léanlo de vuelta:
-cod <- read.csv(paste0("muestra_validacion_", m, ".csv"), encoding = "UTF-8")
-table(cod$codigo, useNA = "always")   # cuántos NA hay
-names(cod)                            # qué columnas existen
-mean(cod$codigo == 1)                         # precisión: proporción de "sí"
-tapply(cod$codigo == 1, cod$theta >= 0.4, mean) # ¿mejora con theta alto?
-# Idealmente, dos integrantes codifican por separado y comparan:
-mean(cod$codigo_persona1 == cod$codigo_persona2)  # acuerdo simple
+set.seed(3)
+cod <- read.csv("codificada_final.csv", fileEncoding = "latin1", stringsAsFactors = FALSE)
+names(cod) <- c("parrafo", "p2", "final", "p1", "gobierno", "theta", "texto")  # orden real de la hoja
+names(cod)   # debe mostrar: parrafo p2 final p1 gobierno theta texto
+
+mean(cod$p1 == cod$p2)
+table(p1 = cod$p1, p2 = cod$p2)
+cod[cod$p1 != cod$p2, c("parrafo", "p1", "p2")]
+po <- mean(cod$p1 == cod$p2)
+pe <- sum(prop.table(table(cod$p1)) *
+          prop.table(table(factor(cod$p2, levels = names(table(cod$p1))))))
+(po - pe) / (1 - pe)   # kappa
+
+# desacuerdos para discutir
+cod[cod$p1 != cod$p2, c("parrafo", "p1", "p2")]
+
+# precisión con la columna final (consenso)
+n_si <- sum(cod$final == 1); n_no <- sum(cod$final == 0); n_dud <- sum(cod$final == 9)
+n_si / nrow(cod)               # duda cuenta como no
+n_si / (n_si + n_no)           # sin dudas
+(n_si + n_dud) / nrow(cod)     # duda cuenta como sí
+table(cod$gobierno, cod$final)
+
 
 # c) Una palabra AMBIGUA en contexto (como "seguridad" en la Sesión 9)
 #    >>> CAMBIAR AQUÍ <<< la palabra y los gobiernos que quieran comparar
-palabra <- "revoluc*"   # cambio listo - bastian - *la palabra ambigua pasa de "seguridad" a "revoluc*" (sale como revolución tecnológica, no la de la UP)*
+palabra <- "transforma*"   # cambio listo - bastian - *la palabra ambigua pasa de "seguridad" a "revoluc*" (sale como revolución tecnológica, no la de la UP)*
+
+toks_b2 <- tokens_subset(toks, gobierno == "Bachelet II")
+toks_bo <- tokens_subset(toks, gobierno == "Boric")
+
+k_b2 <- kwic(toks_b2, "transforma*", window = 5)
+k_bo <- kwic(toks_bo, "transforma*", window = 5)
+
+nrow(k_b2); nrow(k_bo)   # cuántos casos hay en cada uno
+head(k_b2, 5)
+head(k_bo, 5)
 kwic(tokens_subset(toks, gobierno == "Lagos"), palabra, window = 5) |> head(10)   # cambio listo - bastian - *se compara Lagos (antes: Aylwin)*
 kwic(tokens_subset(toks, gobierno == "Boric"),  palabra, window = 5) |> head(10)
 # ¿Qué palabra viene justo después? Una tabla rápida de sus "apellidos":
@@ -346,11 +362,14 @@ sort(table(k$post), decreasing = TRUE)[1:15]   # las dos palabras que siguen
 #    - quitar la semilla más dudosa de su diccionario
 # cambio listo - bastian - *la decisión que cambia es el diccionario: se quitan las semillas que el kwic mostró en otro sentido (clase, clases, revoluc*, explota*); se mantiene set.seed(2026) para que cambie UNA sola decisión*
 dic_rob <- dictionary(list(
-  transformacion = setdiff(as.list(dic_final)$transformacion, c("clase", "clases", "revoluc*", "explota*")),
-  orden          = as.list(dic_final)$orden,
-  mercado        = as.list(dic_final)$mercado))
+  transformacion = setdiff(as.list(dic_final)$transformacion,
+                           c("clase", "clases", "revoluc*", "explota*")),
+  orden   = as.list(dic_final)$orden,
+  mercado = as.list(dic_final)$mercado))
+
 set.seed(2026)
-slda_rob <- textmodel_seededlda(dtm, dictionary = dic_rob, residual = 15)
+slda_rob <- textmodel_seededlda(slda$data, dictionary = dic_rob, residual = 15)   # cambio listo - bastian - *mismo dfm que el modelo base* Se demoraaaa
+
 terms(slda_rob, 10)[, marcos]
 rob_gob <- aggregate(slda_rob$theta[, marcos, drop = FALSE], by = list(gobierno = gob), FUN = mean)
 rob_gob[, marcos] <- round(rob_gob[, marcos] * 100, 1)
@@ -362,6 +381,8 @@ cbind(prev_gob, rob_gob[, -1, drop = FALSE])   # original y robustez, lado a lad
 # ---- PASO 8 · Coocurrencias: la red de una palabra clave -----------------
 # Las palabras que aparecen a 5 o menos posiciones de su palabra clave, en dos
 # gobiernos. El * incluye los compuestos (seguridad_pública, seguridad_ciudadana...).
+install.packages(c("ggraph", "igraph", "quanteda.textplots"))
+
 clave <- "transformaci*"              # cambio listo - bastian - *la palabra clave pasa de "seguridad*" a "transformaci*" (la de la hipótesis)*
 gob_1 <- "Bachelet II"                 # cambio listo - bastian - *se compara Bachelet II (antes: Aylwin)*
 gob_2 <- "Boric"                       # (sin cambio)
@@ -377,10 +398,39 @@ for (g in c(gob_1, gob_2)) {
                                        clave, window = 5), clave)
   cat("\n", g, "\n"); print(topfeatures(dfm(cerca), 12))
 }
+
+r1 <- red_clave(gob_1)
+dim(r1)
+sum(r1)          # si da 0, no hay coocurrencias y no hay red posible
+r1[1:5, 1:5]
+
+
+
+library(igraph)
+dibujar_red <- function(g_nombre) {
+  r <- red_clave(g_nombre)
+  m <- as.matrix(r); m <- m + t(m); diag(m) <- 0
+  g <- graph_from_adjacency_matrix(m, mode = "undirected", weighted = TRUE)
+  g <- delete_vertices(g, degree(g) == 0)
+  set.seed(1)
+  plot(g, layout = layout_with_fr(g),
+       vertex.size = 8, vertex.color = "#4E3239", vertex.frame.color = NA,
+       vertex.label.cex = 0.8, vertex.label.color = "black", vertex.label.dist = 1,
+       edge.color = "#2A5260", edge.width = 1 + E(g)$weight,
+       main = paste("Palabras cerca de transformaci* en", g_nombre))
+}
+dibujar_red(gob_1)
+dibujar_red(gob_2)
+
+dir.create("../output", showWarnings = FALSE)
+png("../output/red_Bachelet_II.png", width = 1400, height = 1000, res = 150)
+dibujar_red(gob_1); dev.off()
+png("../output/red_Boric.png", width = 1400, height = 1000, res = 150)
+dibujar_red(gob_2); dev.off()
 # b) Las dos redes (guárdenlas con Export > Save as Image...)
-set.seed(1); textplot_network(red_clave(gob_1), min_freq = 0.5,
+set.seed(1); textplot_network(red_clave(gob_1), min_freq = 0.1,
                               edge_color = "#2A5260", vertex_color = "#4E3239")
-set.seed(1); textplot_network(red_clave(gob_2), min_freq = 0.5,
+set.seed(1); textplot_network(red_clave(gob_2), min_freq = 0.1,
                               edge_color = "#2A5260", vertex_color = "#4E3239")
 # Si la red sale vacía o con muy pocas palabras, la palabra clave es muy poco
 # frecuente en ese gobierno: elijan otra o bajen min_freq a 0.2.

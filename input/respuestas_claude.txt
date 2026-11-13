@@ -1741,3 +1741,61 @@ Qué hacer:
 La cifra del informe sale cuando codigo tiene los 20 códigos finales (1, 0 o 9), sin NA.
 
 -----
+
+codigo sale NA en los 20 y names(cod) tiene solo 5 columnas (parrafo, gobierno, theta, texto, codigo):
+
+DIAGNÓSTICO (revisé el archivo del disco): muestra_validacion_transformacion.csv fue REESCRITO a las 15:39. Tiene 5 columnas y la columna codigo vacía. Es lo que hace el write.csv del bloque 7b: al cerrar Excel, el permiso dejó de bloquear y el write.csv se ejecutó. Se perdió la versión con los códigos.
+Además, la muestra nueva NO es la misma que la que codificaron: comparé gobiernos y theta fila por fila con su captura de las 15:36 y no coinciden (solo coincide la fila de Kast_2026.192). Por ejemplo, la captura tenía Frei_1997.496 y Aylwin_1991.6x; el archivo nuevo tiene Frei_1997.158 y Aylwin_1991.47. Eso significa que el modelo que está hoy en la memoria de R no genera la misma muestra que el de antes (con set.seed(3), la muestra solo cambia si cambia el modelo o el conjunto de párrafos "principal == transformacion"). Los códigos de la persona 1 no se pueden aplicar a esta muestra nueva: son otros párrafos.
+
+Los códigos de la persona 1 según la captura de las 15:36 (filas 2 a 21, en orden): 0, 0, 1, 0, 9, 1, 1, 0, 0, 1, 1, 0, 1, 9, 0, 0, 0, 9, 9, 1 (1 = 7, 0 = 9, 9 = 4). Coinciden con los conteos que tenía el csv de las 15:31. Sirven para recuperar la hoja solo si recuperan los mismos 20 párrafos.
+
+Opciones, en orden:
+1. Recuperar la hoja codificada: Excel > Archivo > Información > Administrar libro > Recuperar libros no guardados (o la carpeta de recuperación automática); o en el Explorador, clic derecho al archivo > Propiedades > Versiones anteriores (Historial de archivos), o el historial de versiones si la carpeta está en OneDrive o Dropbox; o buscar el respaldo "muestra_codificada_respaldo.csv" si alcanzaron a copiarlo; o la ventana de Excel si sigue abierta con la hoja (guardar como nombre nuevo, ahí no hay permiso de por medio). Si la recuperan, guardarla con OTRO nombre y no tocarla.
+2. Si no se puede recuperar: usar la muestra nueva y codificar de nuevo los 20 párrafos (con el mismo criterio escrito). Es una pérdida de tiempo, pero es válido. Antes: asegurarse de que el modelo en memoria sea el final y que la muestra se cree UNA vez y se guarde con otro nombre al terminar.
+3. Para saber qué modelo hay en memoria, comparar terms(slda, 15)[, marcos] con la Tabla 1 que ya pegaron en el informe (transformación: reforma, gobierno, reformas, país, problemas, materia, avanzar...). Si coincide, el modelo es el final y la muestra nueva es la correcta para el informe (la anterior vendría de otro modelo). Si no coincide, hay que volver al modelo final (readRDS("slda_taller3.rds"), que se guardó el 12 de noviembre; mirar su fecha) y repetir todo con él.
+Regla para el futuro: el bloque 7b (write.csv) se corre una sola vez. Después, comentarlo con # o mover el archivo codificado a otro nombre antes de seguir.
+
+-----
+
+Respuesta (13 nov, 15:5x) sobre la hoja codificada que se "cambia" al pasarla a R:
+
+Lo que pasa: la hoja tiene 7 columnas (parrafo, codigo_persona1, codigo, codigo_persona2, gobierno, theta, texto) y el texto sale con tildes rotas porque Excel lo guardó como Windows-1252. Para el análisis NO hace falta el texto. Se lee la hoja, se descarta texto y se trabaja por posición de columna. Y no se vuelve a escribir sobre ese csv desde R.
+
+Reglas: (1) guarden la hoja codificada con otro nombre, por ejemplo codificada_final.csv, y no corran más el write.csv de 7b. (2) Desde R solo se lee.
+
+Código (pegar después del Paso 7b, con el 7b comentado):
+
+# cambio listo - bastian - *se hace lectura de la hoja codificada sin tocar el csv*
+cod <- read.csv("codificada_final.csv", fileEncoding = "latin1", stringsAsFactors = FALSE)
+names(cod)          # revisar el orden
+cod <- cod[, c(1, 2, 3, 4, 5, 6)]
+names(cod) <- c("parrafo", "p1", "final", "p2", "gobierno", "theta")
+
+# acuerdo entre personas
+mean(cod$p1 == cod$p2)
+table(p1 = cod$p1, p2 = cod$p2)
+# kappa de Cohen (a mano)
+po <- mean(cod$p1 == cod$p2)
+pe <- sum(prop.table(table(cod$p1)) * prop.table(table(factor(cod$p2, levels = names(table(cod$p1))))))
+(po - pe) / (1 - pe)
+
+# desacuerdos para discutir y llenar la columna "final" (consenso)
+cod[cod$p1 != cod$p2, c("parrafo", "p1", "p2")]
+
+# precision con la columna final, ya con consenso
+n_si <- sum(cod$final == 1); n_no <- sum(cod$final == 0); n_dud <- sum(cod$final == 9)
+c(si = n_si, no = n_no, duda = n_dud)
+n_si / nrow(cod)               # duda cuenta como no
+n_si / (n_si + n_no)           # sin dudas
+(n_si + n_dud) / nrow(cod)     # duda cuenta como si
+table(cod$gobierno, cod$final) # por gobierno
+
+Nota: en la captura el acuerdo entre p1 y p2 sale cerca de 55% (11 de 20 iguales; la persona 1 marca mas 1 y 9). Eso es bajo: antes de calcular la precision final, discutan el criterio escrito, resuelvan los 9 desacuerdos y llenen "final" juntos. En el informe se reporta el acuerdo y el kappa, y la precision con y sin dudas. El archivo entregable (TALLER3_Apellido1_Apellido2.csv) debe ser el que tenga parrafo, gobierno, theta, codigo final (se puede exportar desde R con write.csv(cod[, c("parrafo","gobierno","theta","final")], "TALLER3_....csv", row.names = FALSE, fileEncoding = "UTF-8")), con otro nombre distinto al de la hoja de trabajo.
+
+-----
+
+Respuesta (13 nov, 15:5x) a "donde pongo eso?":
+
+En el guion "Taller 3 - guion base R.R", en el Paso 7: justo despues del bloque 7b (el write.csv, que ya debe ir comentado con #) y antes del 7c (kwic de revoluc*). Antes: guardar la hoja de Excel como codificada_final.csv en la carpeta input (la del getwd()). Si el nombre de columnas no calza, revisar names(cod). Las lineas del acuerdo y la precision se corren despues de llenar la columna final (consenso).
+
+-----
