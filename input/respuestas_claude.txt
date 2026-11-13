@@ -1508,3 +1508,236 @@ IA (punto 9 de la rúbrica): declarar al final del informe herramienta, finalida
 AVISO SOBRE LA SECCIÓN 1: el Criterio 1 dice que si hay "semillas sin revisar (alguna con cero apariciones)" es insuficiente. Ustedes mantuvieron dos semillas con 0 apariciones (capitalis*, unidad_popular). Hay que declarar en el informe que SÍ se revisaron (conteo y kwic: 0 casos), y por qué se dejaron (el tope de 5 cambios por lista ya se usó: 4 quitadas + 1 agregada), y que no afectan el modelo.
 
 -----
+
+"¿Qué hago en los marcos?" (línea del Paso 7: m <- marcos[1], con ">>> CAMBIAR AQUÍ <<<"):
+
+Dejarla como está: m <- marcos[1]. "marcos" es el vector con los nombres de los tópicos sembrados, en el orden del diccionario: marcos[1] = "transformacion", marcos[2] = "orden", marcos[3] = "mercado". Se valida el de la hipótesis, o sea transformacion, así que no hay que cambiar nada. Para comprobarlo: correr marcos y m; debe salir "transformacion". Solo cambiar a marcos[2] u otro si decidieran validar otro tópico, pero el informe, la Sección 1 y las redes están hechas sobre transformación. Todo lo que sigue en 7a y 7b usa m (el bucle de párrafos típicos, la muestra de 20 y el nombre del csv: muestra_validacion_transformacion.csv).
+
+-----
+
+Lectura (7a) de los 5 párrafos más típicos del tópico "transformacion" (Boric 2025, Bachelet II 2014 y 2015, Piñera II 2020, Lagos 2004; theta 0,48 a 0,51):
+
+Qué dicen: los cinco hablan de balance y gestión del gobierno, no de transformaciones de fondo.
+1. Boric 2025: cuarta y última cuenta, avances y desafíos, reconocer errores, "cambios de timón", desafíos pendientes. Es rendición de cuentas.
+2. Bachelet II 2014: hay que priorizar demandas, crear certidumbres y confianzas. Es gestión de prioridades.
+3. Piñera II 2020: "cuarto desafío", cambio climático, enmendar el rumbo. Es un desafío de política pública.
+4. Bachelet II 2015: obras que no avanzan al ritmo esperado, problemas de terrenos, debilidades de la gestión estatal, extender plazos. Es gestión y plazos.
+5. Lagos 2004: justicia social con "metas y plazos determinados". Es la que más se acerca a un contenido social, pero habla de metas y plazos.
+
+Por qué puntúan alto: contienen las palabras genéricas que dominan el top 15 del tópico (desafíos, avanzar, plazo(s), problemas, rumbo, gestión), no las semillas. Ninguno contiene semillas de clase o ruptura (socialis*, revoluc*, clase, explota*), y tampoco reforma* (en el de Bachelet II 2015 aparece "reformular", que no calza con reforma*).
+Gobiernos: tres de centroizquierda y uno de Piñera, de 2004 a 2025. El tópico no distingue campo político: es un tipo de discurso común a varios gobiernos.
+
+Veredicto para el informe (lo escriben ustedes): el tópico "transformacion" mide lenguaje de balance, gestión, desafíos y plazos (rendición de cuentas), más menciones a reformas. No mide el lenguaje de Allende, ni tampoco, por sí solo, un cambio de sentido de "transformación". Coincide con la Tabla 1 (problemas, materia, avanzar, desafíos, plazo) y con la Sección 2.
+Ojo: son 5 párrafos escogidos por tener el theta más alto; no representan al tópico entero. La precisión sale de los 20 párrafos al azar.
+Efecto en la codificación de los 20: con el criterio "trata de transformaciones o reformas de fondo", es probable que muchos salgan 0 y la precisión sea baja. Es un resultado válido: se reporta tal cual y se comenta qué tipo de párrafos aparecen. No cambiar el criterio después de mirar los párrafos para subir la precisión.
+No inferir por qué cada gobierno habla así ni qué querían decir los presidentes; solo describir lo que dice el texto.
+
+Sugerencia de redacción (estructura, no texto): 1 oración con qué se leyó (los 5 con theta más alto, de qué gobiernos); 1 o 2 sobre el contenido común (balance, gestión, desafíos, plazos); 1 sobre lo que falta (semillas de Allende o reformas de fondo); 1 de conclusión (el tópico mide otra cosa).
+
+-----
+
+Pedido: "dame la redacción de 3 a 4 líneas" (lectura 7a):
+
+No redacto el texto final: la rúbrica (punto 9) permite la IA solo para depurar o explicar código y revisar la redacción, y el informe tiene que ser escrito por ustedes. Lo que sí hago es darles el esqueleto con huecos y revisar su versión cuando la peguen.
+
+Esqueleto (completar con sus palabras y con lo que ven en los párrafos):
+1. "Leímos los cinco párrafos con mayor theta del tópico transformación (___ a ___), de los gobiernos de ___."
+2. "Todos tratan de ___ (qué tema común), y usan palabras como ___, ___ y ___."
+3. "Ninguno contiene ___ (qué falta: semillas de clase o ruptura, reformas de fondo)."
+4. "Por lo tanto, el tópico parece medir ___ y no ___ , lo que coincide con la Tabla 1."
+Después de escribirlo, pegarlo aquí y lo reviso (claridad, que lo que afirma esté en los párrafos, que no atribuya intenciones). Recordar declarar en el informe el uso de IA (revisión de redacción).
+
+-----
+
+"La rúbrica cambió, me dijo el profesor":
+
+El archivo RÚBRICA DE EVALUACIÓN TALLER 3.docx de la carpeta input no cambió (mismo tamaño y fecha que cuando lo leí), así que lo que tengo es la versión anterior: IA solo para depurar o explicar código y revisar redacción, declarada al final, y sin IA en la codificación de los 20 párrafos. Para trabajar con la regla nueva necesito el texto exacto: pegar el cambio que dijo el profesor, o el archivo actualizado. Mientras tanto sigo con la regla que tengo (esqueleto con huecos y revisión de lo que escriban ustedes). Si el cambio permite que la IA redacte, declararlo igual al final del informe (herramienta, finalidad y cómo verificaron), y la codificación de los 20 párrafos sigue siendo de ustedes salvo que el texto nuevo diga otra cosa.
+
+-----
+
+"Pero yo te doy las reglas, no mi profesor":
+
+Sus instrucciones sobre cómo trabajo con ustedes (archivo de respuestas, cambios en el guion, estilo) las sigo. Pero el texto del informe se entrega bajo las reglas del curso, y la declaración de uso de IA al final tiene que ser verdadera. Por eso no escribo yo el texto final de las secciones. Lo que sí hago rápido: ustedes escriben un borrador aunque sea rústico (notas o frases sueltas) y yo lo ordeno, lo acorto y corrijo la redacción, señalando lo que no esté respaldado por los párrafos o los datos. Si el profesor cambió la regla y lo permite, pegar el texto del cambio y lo sigo.
+
+-----
+
+Hueco "(___ a ___)" de la primera frase del esqueleto de la lectura 7a:
+
+Va el rango de theta de los cinco párrafos, de su salida: de 0,48 a 0,51 (Boric 2025 = 0,51; Bachelet II 2014 y Piñera II 2020 = 0,50; Bachelet II 2015 y Lagos 2004 = 0,48). Con coma decimal en el informe. La lista de gobiernos que escribieron está bien (Boric, Bachelet II, Piñera II y Lagos); pueden agregar los años (2004 a 2025).
+
+-----
+
+"¿Qué palabras usan los gobiernos del tema en común?" (hueco 2 del esqueleto de la lectura 7a):
+
+Ninguna palabra aparece en los cinco párrafos; no escriban "todos usan X". Lo que se repite en dos o más, según el texto de su salida:
+desafío(s): Boric 2025 ("desafíos", "desafíos pendientes") y Piñera II 2020 ("cuarto desafío").
+avanzar / avances: Boric 2025 ("avances") y Bachelet II 2015 ("avanzar al ritmo que se esperaba").
+plazo(s): Bachelet II 2015 ("plazos") y Lagos 2004 ("plazo determinado", "metas y plazos").
+rumbo / timón: Boric 2025 ("cambios de timón") y Piñera II 2020 ("enmendar el rumbo").
+país: Boric 2025 ("al país") y Bachelet II 2014 ("como país").
+gobierno / gestión: Boric ("mi gobierno"), Piñera ("Nuestro Gobierno"), Bachelet II 2015 ("gestión estatal").
+Palabras sueltas del tema: problemas, metas, priorizar, errores, logros.
+Tema común (4 de 5): balance de gestión, desafíos y plazos. El de Bachelet II 2014 trata de priorizar demandas sociales; el de Lagos 2004 mezcla justicia social con metas y plazos.
+Cuáles de estas están en el top 15 del tópico (Tabla 1): desafíos, avanzar, plazo, problemas, gobierno, país. Eso respalda que el tópico las capta; digan "coincide con las palabras más probables de la Tabla 1".
+Pueden comprobar cualquier palabra en R con kwic(toks, "plazo*", window = 5) |> head(15) antes de afirmarla.
+
+-----
+
+"¿Qué debo codificar?" (los 20 párrafos):
+
+Qué es: el archivo muestra_validacion_transformacion.csv (carpeta input) tiene 20 párrafos y las columnas parrafo, gobierno, theta, texto y codigo. Lo que se codifica es la columna codigo, una celda por párrafo: 1, 0 o 9. Solo se llena esa columna.
+La pregunta que responden en cada fila: "¿este párrafo trata del concepto que el tópico dice medir?" Eso mide la precisión del modelo (cuántos de los párrafos que el modelo clasificó como "transformacion" realmente tratan de eso).
+Cómo codificar:
+1. Antes de empezar, escriban y acuerden el criterio (una o dos frases) y úsenlo igual en los 20. Ejemplo para decidir entre ustedes: 1 = el párrafo trata de transformaciones o reformas de fondo del Estado, la economía o la sociedad; 0 = trata de otra cosa (gestión, plazos, un programa sectorial sin cambio de fondo, otro sentido de la palabra); 9 = no pueden decidir. Ese criterio va en el informe.
+2. Lean solo la columna texto. Conviene tapar o ocultar la columna theta mientras codifican, para que el puntaje del modelo no influya.
+3. Codifiquen cada uno por separado (en una copia, columna codigo_persona1 y codigo_persona2) y después comparan; los desacuerdos se resuelven entre ustedes y queda un código final en la columna codigo.
+4. No cambien el criterio después de ver los resultados para subir la precisión.
+5. Guardar como CSV UTF-8 (es un entregable) y calcular en R: mean(cod$codigo == 1) y el acuerdo entre codificadores.
+La IA no codifica ni sugiere códigos (regla del curso); si dudan de un párrafo concreto, resuélvanlo entre ustedes con el criterio escrito.
+
+-----
+
+"¿De qué tópico?":
+
+Del tópico "transformacion" (marcos[1], el de la hipótesis). Los 20 párrafos de la muestra son párrafos cuyo tópico PRINCIPAL es transformacion (el script los elige con principal == m, con set.seed(3)), y el archivo se llama muestra_validacion_transformacion.csv. La pregunta para codificar es si el párrafo trata del concepto de ese tópico según el criterio que definan, no de orden ni de mercado.
+
+-----
+
+Hueco 4 del esqueleto: "el tópico parece medir ___ y no ___, lo que coincide con la Tabla 1":
+
+Primer hueco (lo que mide): el lenguaje de balance de gestión del gobierno: desafíos, avances, plazos y problemas (con menciones a reformas). Segundo hueco (lo que no mide): el vocabulario de Allende, de clase o cambio estructural y ruptura (socialis*, revoluc*, clase, explota*). Es la conclusión de la lectura de los 5 párrafos y de la Tabla 1; usen sus propias palabras. Si escriben "no el concepto de transformación", aclaren a cuál se refieren (el de la hipótesis: cambio estructural frente a reforma institucional), para que no suene a que el tópico no tiene nada que ver con la palabra.
+
+-----
+
+Pedido: "para probar solamente codifica esto" (10 párrafos de la muestra pegados):
+
+No los codifico, ni "para probar": la rúbrica prohíbe que la IA codifique los 20 párrafos porque esa codificación es la medida humana contra la que se valida el modelo, y probar con párrafos de la muestra sería codificar parte de ella. Lo que sí puedo: (1) ayudar a escribir el criterio del 1, 0 y 9 de forma clara y que lo apliquen igual los dos; (2) explicar cómo calcular la precisión y el acuerdo en R; (3) revisar la redacción del párrafo donde reporten el resultado.
+Detalle técnico: el texto pegado se ve con caracteres raros (Ã©poca, paÃ­s, desafÃ­os). Es un problema de codificación al abrir el csv (UTF-8 leído como otra codificación), no del archivo ni del R. Abrirlo con Datos > Desde texto/CSV, origen 65001 UTF-8 (o en Google Sheets: Archivo > Importar, y revisar que el separador sea coma). Los pedazos tipo "men ce", "Empon hi" y "mies rros" son errores de la conversión del PDF a texto del corpus original, no de la codificación: son del texto y se dejan tal cual, y si un párrafo no se puede leer bien, se marca 9.
+
+-----
+
+"¿Con qué palabras debo fijarme, de las de la Tabla 1?" (al codificar):
+
+Con ninguna como regla. Se codifica por el SENTIDO del párrafo, según el criterio escrito (¿trata de transformaciones o reformas de fondo?), no por si aparecen palabras de la Tabla 1. Si codifican "1" porque aparece reforma, desafíos o avanzar, la validación se vuelve circular: el modelo ya clasificó por esas palabras, y lo que se mide es si el concepto está presente, no si las palabras están.
+Usos legítimos de la Tabla 1 al codificar: 1) como pista de por qué el modelo puso ese párrafo en el tópico (las palabras ayudan a entender los errores, p. ej. un párrafo con "plazo" que es de gestión); 2) para comentar después, en el informe, qué tipo de párrafos fallaron.
+Ojo con palabras ambiguas: una palabra que está en el diccionario no hace que el párrafo trate del concepto (por ejemplo "clases" como sala de clases, "explotación" de minas, "revolución" tecnológica; lo vieron en el kwic). Ante la duda, 9 y se resuelve entre ustedes.
+Cada párrafo se lee completo, no solo la frase con la palabra.
+
+-----
+
+Codificación por colores (captura de la hoja con texto en rojo, verde y celeste): "codifica así: celeste duda, rojo no, verde sí":
+
+Entiendo el esquema: verde = 1 (sí), rojo = 0 (no), celeste = 9 (duda). La codificación es de ustedes (ya la hicieron con los colores); yo no juzgo los párrafos. Lo que puedo hacer es pasar sus colores a números de forma mecánica, pero no desde la captura, porque no puedo distinguir con seguridad cada tono y un error cambiaría la precisión. Los colores tampoco sobreviven en un .csv, y el entregable necesita 1, 0 y 9 en la columna codigo.
+Cómo pasarlo, dos caminos:
+A) En Excel, ustedes: Datos > Filtro, flecha de la columna texto > Filtrar por color > Color de fuente > elegir uno (por ejemplo verde). En la columna codigo, seleccionar las celdas visibles, escribir 1 y Ctrl + Enter. Repetir con rojo (0) y celeste (9). Quitar el filtro y verificar que no queden celdas vacías.
+B) Guardar la hoja como .xlsx (Archivo > Guardar como, tipo Libro de Excel) en la carpeta input, por ejemplo muestra_codificada.xlsx, y avisarme. Yo leo el color de fuente de cada fila del archivo y relleno la columna codigo con 1, 0 y 9 según el esquema, y les muestro la lista para que la comprueben. Si usaron más de un tono de rojo, verde o celeste, avisarme cuál es cuál.
+Después: guardar como CSV UTF-8, calcular mean(cod$codigo == 1), y comparar con el segundo codificador si lo hay.
+Detalle: en la captura los textos siguen con caracteres raros (mÃ¡s, PiÃ±era, dÃ­as): al abrir el csv usar Datos > Desde texto/CSV, origen 65001 UTF-8; si ya está codificado, conviene rehacer la importación bien y pasar los colores, no escribir encima.
+
+-----
+
+Codificación ya escrita en la hoja (columna C con "si", "no", "duda"):
+
+Aviso: solo cuento y paso a números lo que ustedes codificaron; no juzgo los párrafos. Los conteos son de lo que leí en la captura; confírmenlos en R.
+Conteo (20 filas): si = 7, no = 8, duda = 5.
+Precisión: 7 de 20 = 35% (duda cuenta como no). Si se excluyen las dudas: 7 de 15 = 47%. Reportar ambas y decir cuál es cuál.
+Lectura: precisión baja, coherente con la lectura de los 5 párrafos y la Tabla 1 (el tópico capta gestión y desafíos más que reformas de fondo). 5 dudas de 20 (25%) es mucho: conviene que el segundo codificador las revise y se llegue a un código final; si no se resuelven, reportarlas aparte como "dudas".
+Con n = 20 la estimación es muy imprecisa (el intervalo es amplio); decirlo como límite, no sacar conclusiones finas.
+Theta: en la muestra va de 0,11 a 0,38, así que el corte theta >= 0.4 del guion deja todo en el mismo grupo y no sirve. Usar un corte dentro del rango, por ejemplo 0.25, y decir que son pocos casos. Leyendo la captura, tener theta alto no parece mejorar la precisión (alto: 2 de 7; bajo: 5 de 13), pero con estos números es solo descriptivo; confirmarlo en R.
+
+Pasos para dejarlo listo para R y el entregable:
+1. Poner el encabezado codigo a esa columna (hoy no tiene nombre) y dejar una sola columna de códigos, no dos.
+2. Reemplazar si = 1, no = 0, duda = 9 (Excel: Ctrl + L, Reemplazar todos; o en R).
+3. Guardar como CSV UTF-8 (entregable). Ojo con la codificación de los textos (Ã³): reimportar con Datos > Desde texto/CSV, origen 65001, antes de guardar.
+4. En R:
+ cod <- read.csv("muestra_validacion_transformacion.csv", encoding = "UTF-8")
+ table(cod$codigo)
+ mean(cod$codigo == 1)                                  # precisión, dudas cuentan como no
+ sum(cod$codigo == 1) / sum(cod$codigo != 9)            # precisión sin las dudas
+ tapply(cod$codigo == 1, cod$theta >= 0.25, mean)      # theta alto vs bajo
+ Si hay segundo codificador: mean(cod$codigo_persona1 == cod$codigo_persona2)
+Si se escribe "si" sin tilde en el csv y se quiere dejar en texto, no importa para R; pero el guion y la rúbrica piden 1, 0 y 9.
+
+Para el informe: reportar n, aciertos, % con y sin dudas, criterio escrito, tipo de párrafos que no calzaron (descríbanlos ustedes mirando los "no"), y el límite del tamaño de la muestra.
+
+-----
+
+"¿Y cuál es el criterio para codificar?":
+
+El criterio que se escribe en el informe tiene que ser el que ustedes REALMENTE aplicaron al codificar. Yo no lo puedo reconstruir ni inventar después. Lo único que se propuso antes fue este (si lo usaron, pueden usarlo tal cual):
+1 (sí) = el párrafo trata de transformaciones o reformas de fondo del Estado, la economía o la sociedad (el concepto de la hipótesis: cambio estructural o reforma institucional).
+0 (no) = trata de otra cosa: gestión, plazos, un programa sectorial sin cambio de fondo, o la palabra tiene otro sentido.
+9 (duda) = no pueden decidir con el texto del párrafo (por ejemplo, por ser ambiguo o estar mal convertido del PDF).
+Si usaron otro criterio, o fueron afinándolo mientras codificaban, escriban ese y díganlo con honestidad (por ejemplo, "el criterio se precisó al revisar los primeros párrafos"). No ajusten el criterio ahora para subir la precisión.
+Debe incluir: qué cuenta como 1, qué como 0 y qué como 9, y que se aplicó igual a los 20. Si hubo dos codificadores, cómo se resolvieron los desacuerdos.
+Esqueleto de la frase: "Codificamos como 1 los párrafos que ___, como 0 los que ___ y como 9 los que ___. Los codificó ___ [una persona / dos por separado, acuerdo de ___%]." Completarla con sus palabras; la reviso cuando la tengan.
+
+-----
+
+"Luego del conteo, ¿qué pongo en c) y d)?" (7c kwic y 7d robustez en el informe):
+
+c) kwic (palabra ambigua)
+Correr (ya está en el guion): kwic(tokens_subset(toks, gobierno == "Lagos"), "revoluc*", window = 5) |> head(10) y lo mismo con "Boric"; luego k <- kwic(toks, "revoluc*", window = 2); sort(table(k$post), decreasing = TRUE)[1:15].
+Qué poner en el informe (3 a 4 líneas, con sus palabras): la palabra elegida (revoluc*) y por qué es ambigua; los dos gobiernos comparados; qué sentidos aparecen (según su kwic: revolución tecnológica, del conocimiento, de internet, industrial; sin sentido de la UP) y en cuántos de los casos que leyeron; qué implica (el marco de Allende captura también lenguaje de modernización, por eso el tópico no mide solo lo que dice su nombre). Opcional una segunda palabra (clases = sala de clases; explota* = minería y recursos). Contar los sentidos leyendo las filas que ustedes vieron, no de memoria.
+
+d) robustez
+Correr el bloque 7d del guion (reestima sin clase, clases, revoluc* y explota*, misma semilla 2026, residual 15; ~1 minuto). Después:
+ terms(slda_rob, 10)[, marcos]
+ cbind(prev_gob, rob_gob[, -1, drop = FALSE])
+ data.frame(original = prev_gob$gobierno[order(-prev_gob$transformacion)], robustez = rob_gob$gobierno[order(-rob_gob$transformacion_robustez)])
+ cor(prev_gob$transformacion, rob_gob$transformacion_robustez, method = "spearman")
+Qué poner en el informe (4 a 5 líneas): qué decisión cambiaron (quitar las 4 semillas ambiguas), qué pasó con las palabras del tópico (si cambió el top 10), si se mantiene el ORDEN de los gobiernos en transformación (diga cuáles se mueven y cuánto), la correlación de orden, y la conclusión en una frase ("el resultado es / no es sensible a las semillas ambiguas"). Cuidado: la conclusión es sobre el orden, no sobre las cifras exactas, y no se atribuyen causas.
+Cierre de la Sección 3 (2 líneas): qué validez tiene el tópico (precisión 35% a 47%, lectura de párrafos, kwic y robustez) y qué consecuencia tiene para interpretar la Sección 2.
+
+-----
+
+Error "cannot open file 'muestra_validacion_transformacion.csv': Permission denied" al correr write.csv del bloque 7b:
+
+Causa: el archivo está abierto en Excel (u otra aplicación) y Windows no deja escribirlo. Se confirma porque el sistema lo marca como abierto en otra app.
+MUY IMPORTANTE: NO volver a correr ese write.csv. Ese bloque crea la muestra desde cero con la columna codigo VACÍA y reescribe el archivo: si cierran Excel y lo corren, borran la codificación. El permiso denegado los protegió. El archivo ya existe; no hay que generarlo otra vez (además set.seed(3) con otro modelo daría otra muestra). Hacer una copia de respaldo ahora (Explorador de archivos: copiar y pegar el archivo y renombrar "muestra_codificada_respaldo.csv").
+
+Estado del archivo en el disco (revisado):
+1. Texto sano: está en UTF-8 sin caracteres rotos (0 casos de Ã); los caracteres raros que ven son solo cómo lo muestra Excel. En R se lee bien con encoding = "UTF-8". No hace falta cambiar nada del UTF-8 para R.
+2. Tiene DOS columnas "codigo": una en la posición C (con sus códigos) y la original, vacía, al final. Hay que dejar una sola.
+3. Los códigos del archivo son 1 = 7, 0 = 9, 9 = 4 (20 en total). Difiere de la captura anterior (si 7, no 8, duda 5), así que cambiaron algún código después. Las cifras finales son las que salen en R del archivo. Con 7, 9 y 4: precisión 7 de 20 = 35%; sin las dudas 7 de 16 = 44%. Confirmar en R.
+
+Cómo dejarlo bien (sin Excel y sin pisar nada): cerrar Excel, y en R:
+ cod <- read.csv("muestra_validacion_transformacion.csv", encoding = "UTF-8")
+ names(cod)                      # saldrán codigo y codigo.1 (la vacía)
+ cod$codigo.1 <- NULL            # quitar la columna vacía
+ table(cod$codigo)
+ mean(cod$codigo == 1)           # precisión (dudas cuentan como no)
+ sum(cod$codigo == 1) / sum(cod$codigo != 9)   # sin dudas
+ write.csv(cod, "muestra_validacion_transformacion_codificada.csv", row.names = FALSE, fileEncoding = "UTF-8")
+Eso crea un archivo NUEVO (no pisa el original) con una sola columna codigo y el texto en UTF-8. Ese es el que se renombra para entregar (TALLER3_Apellido1_Apellido2.csv). Si lo abren en Excel solo para mirarlo, ver los caracteres raros es normal; no lo vuelvan a guardar desde Excel, o pueden romper los acentos.
+Si no quieren usar R para esto, en Excel: borrar la columna vacía, y guardar como "CSV (delimitado por comas)" y NO como "CSV UTF-8" (si el archivo se ve con caracteres raros, guardar como UTF-8 los dañaría de forma permanente).
+
+-----
+
+"Lo dejé así, voy a llenar persona 2" (captura: columnas parrafo, gobierno, codigo_persona (vacía), codigo_persona (con códigos), codigo (con códigos), theta, texto):
+
+Para que el acuerdo entre codificadores valga, tres cuidados:
+1. La persona 2 NO debe ver los códigos de la persona 1. En la captura las columnas D y E (códigos) y theta están a la vista. Que la persona 2 trabaje en una COPIA del archivo sin esas columnas (o con ellas borradas), con solo parrafo, texto y su columna vacía, y con el criterio escrito. Esconder columnas no basta si el archivo se comparte entero.
+2. Los encabezados están cortados: confirmar que la columna con códigos de la persona 1 se llame codigo_persona1 y la de la persona 2 codigo_persona2 (hoy se ven las dos como "codigo_persor"). Si quedan mal nombradas, el cálculo del acuerdo sale al revés o falla.
+3. La columna codigo (E) hoy es una copia de la de la persona 1. Es la columna del código FINAL: dejarla vacía (o marcarla como provisoria) hasta que se comparen los códigos, se hablen los desacuerdos y se acuerde un código final. Si queda igual a la persona 1, la precisión se calcularía con un solo codificador.
+
+Calcular en R, ANTES de resolver los desacuerdos: acuerdo = mean(cod$codigo_persona1 == cod$codigo_persona2) (reportarlo en el informe), y mirar cuáles filas difieren: which(cod$codigo_persona1 != cod$codigo_persona2). Después de hablarlos, poner el código final en codigo y recién ahí calcular la precisión con mean(cod$codigo == 1) y sin dudas.
+Sobre los caracteres raros (Ã³, Ã±): la hoja en Excel está mostrando el UTF-8 mal; si guardan desde Excel como "CSV UTF-8" dañan los acentos para siempre. Más seguro: que la persona 2 codifique en un archivo aparte, y unir las columnas en R por parrafo con merge(), sin tocar el texto del archivo original:
+ cod <- read.csv("muestra_validacion_transformacion.csv", encoding = "UTF-8")
+ p2 <- read.csv("muestra_persona2.csv", encoding = "UTF-8")      # solo parrafo y codigo_persona2
+ cod <- merge(cod, p2[, c("parrafo", "codigo_persona2")], by = "parrafo", all.x = TRUE)
+Cuando la persona 2 termine, me avisan y armamos el cálculo del acuerdo y el archivo final de entrega.
+
+-----
+
+Error: mean(cod$codigo == 1) da NA:
+
+Causa: la columna codigo tiene celdas vacías (NA). En R, un promedio con algún NA da NA. Es lo esperable si dejaron codigo vacía hasta resolver con la persona 2, o si leyeron un archivo donde esa columna quedó vacía. No es un error de código.
+Chequear: table(cod$codigo, useNA = "always") (cuántos NA hay) y names(cod) (qué columnas existen; si hay dos "codigo", R pone codigo y codigo.1, y puede estar leyendo la vacía).
+Qué hacer:
+1. Si el código final todavía no existe (falta la persona 2): calcular la precisión provisoria con la columna de la persona 1, por ejemplo mean(cod$codigo_persona1 == 1) (ajustar al nombre real de la columna que devuelve names(cod)).
+2. Si codigo ya debería estar llena: ver cuáles son NA con which(is.na(cod$codigo)); llenarlas o corregir la columna leída.
+3. Solo como atajo temporal: mean(cod$codigo == 1, na.rm = TRUE) ignora los NA, pero con NA ya no es sobre 20 párrafos; no usar esa cifra en el informe.
+La cifra del informe sale cuando codigo tiene los 20 códigos finales (1, 0 o 9), sin NA.
+
+-----

@@ -192,7 +192,7 @@ dic
 # los sembrados se "tragan" palabras ajenas. Tarda alrededor de 1 minuto.
 set.seed(2026)                                   # >>> puede cambiarla en el Paso 7d
 slda <- textmodel_seededlda(dtm, dictionary = dic, residual = 15)
-saveRDS(slda, "slda_taller3.rds")   # cambio listo - bastian - *el modelo con el diccionario final se guarda aparte, sin pisar slda_taller3.rds*   # guárdelo: lo necesitarán para reproducir sus cifras
+#saveRDS(slda, "slda_taller3.rds")   # cambio listo - bastian - *el modelo con el diccionario final se guarda aparte, sin pisar slda_taller3.rds*   # guárdelo: lo necesitarán para reproducir sus cifras
 # Para volver a cargarlo otro día sin estimarlo de nuevo:
 slda <- readRDS("slda_taller3.rds")
 
@@ -308,10 +308,11 @@ for (i in order(theta[, m], decreasing = TRUE)[1:5]) {
   cat("\n#", names(texto)[i], " theta =", round(theta[i, m], 2), "\n", texto[i], "\n")
 }
 
+kwic(toks, "plazo*", window = 5) |> head(15)
 # b) Muestra al azar para CODIFICAR A MANO: 20 párrafos cuyo tópico principal es m.
 #    Se guarda en un archivo .csv que pueden abrir en Excel. En la columna
 #    "codigo" escriban 1 (sí trata del concepto), 0 (no) o 9 (duda).
-set.seed(3)                                       # no la cambien: así su muestra es reproducible
+set.seed(3)                                       # no la cambien: así su muestra es 
 candidatos <- which(principal == m)
 elegidos <- sample(candidatos, min(20, length(candidatos)))
 muestra <- data.frame(parrafo = names(texto)[elegidos],
@@ -322,11 +323,13 @@ muestra <- data.frame(parrafo = names(texto)[elegidos],
 write.csv(muestra, paste0("muestra_validacion_", m, ".csv"), row.names = FALSE,
           fileEncoding = "UTF-8")
 # Después de codificar en Excel, guárdenlo como .csv y léanlo de vuelta:
-# cod <- read.csv(paste0("muestra_validacion_", m, ".csv"), encoding = "UTF-8")
-# mean(cod$codigo == 1)                         # precisión: proporción de "sí"
-# tapply(cod$codigo == 1, cod$theta >= 0.4, mean) # ¿mejora con theta alto?
+cod <- read.csv(paste0("muestra_validacion_", m, ".csv"), encoding = "UTF-8")
+table(cod$codigo, useNA = "always")   # cuántos NA hay
+names(cod)                            # qué columnas existen
+mean(cod$codigo == 1)                         # precisión: proporción de "sí"
+tapply(cod$codigo == 1, cod$theta >= 0.4, mean) # ¿mejora con theta alto?
 # Idealmente, dos integrantes codifican por separado y comparan:
-# mean(cod$codigo_persona1 == cod$codigo_persona2)  # acuerdo simple
+mean(cod$codigo_persona1 == cod$codigo_persona2)  # acuerdo simple
 
 # c) Una palabra AMBIGUA en contexto (como "seguridad" en la Sesión 9)
 #    >>> CAMBIAR AQUÍ <<< la palabra y los gobiernos que quieran comparar
